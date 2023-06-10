@@ -1,1 +1,0 @@
-{"frames":[],"message":"Error in read_csv(\"https://raw.githubusercontent.com/pierrebachas/Globalization_Factor_Taxation/main/globalETR_bfjz.csv\") %>%  : \n  could not find function \"%>%\"\n"}
