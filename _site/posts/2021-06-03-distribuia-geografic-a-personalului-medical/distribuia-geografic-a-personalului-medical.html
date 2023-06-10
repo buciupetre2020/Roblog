@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Petre Buciu">
+<meta name="dcterms.date" content="2021-06-03">
+<meta name="description" content="Cum stăm cu Sănătatea în rural">
+
+<title>Analize socio-economice cu R - Distribuția geografică a personalului medical</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Analize socio-economice cu R</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">Despre blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Distribuția geografică a personalului medical</h1>
+                  <div>
+        <div class="description">
+          <p>Cum stăm cu Sănătatea în rural</p>
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Petre Buciu </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 3, 2021</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>Câți medici avem în țară ? Unde există deficitul ? Vom folosi datele de la INS, mai precis foaia <a href="http://statistici.insse.ro:8077/tempo-online/#/pages/tables/insse-table">SAN104B</a>, pentru a răspunde la aceste întrebări.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(sf)             <span class="co">#pentru harti si date spatiale</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(TEMPO)          <span class="co">#pentru a extrage datele de pe INS</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(gtExtras)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(hrbrthemes)     </span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#tema graficelor</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="fu">theme_set</span>(hrbrthemes<span class="sc">::</span><span class="fu">theme_ipsum_tw</span>(<span class="at">strip_text_size =</span> <span class="dv">14</span>, </span>
+<span id="cb1-11"><a href="#cb1-11"></a>                                     <span class="at">strip_text_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12"></a>                                     <span class="at">strip_text_face =</span> <span class="st">"italic"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13"></a>                                     <span class="at">axis_title_size =</span> <span class="dv">12</span>,</span>
+<span id="cb1-14"><a href="#cb1-14"></a>                                     <span class="at">axis_text_size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-15"><a href="#cb1-15"></a>                                     <span class="at">base_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16"></a>                                     <span class="at">plot_title_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17"></a>                                     <span class="at">subtitle_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18"></a>                                     <span class="at">caption_family =</span> <span class="st">"Roboto"</span>, </span>
+<span id="cb1-19"><a href="#cb1-19"></a>                                     <span class="at">caption_size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-20"><a href="#cb1-20"></a>                                     <span class="at">plot_title_size =</span> <span class="dv">16</span>,</span>
+<span id="cb1-21"><a href="#cb1-21"></a>                                     <span class="at">subtitle_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb1-23"><a href="#cb1-23"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb1-24"><a href="#cb1-24"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)))  <span class="co">#setam tema graficelor </span></span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co">#descarcam foile SAN104B de pe INS:</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">#TEMPO::tempo_bulk(codes="SAN104B", directory = here::here("data/post-4"))</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
+<span id="cb1-30"><a href="#cb1-30"></a>x <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-4/SAN104B.csv"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>     <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"Categorii"</span>, <span class="st">"Proprietate"</span>, <span class="st">"Judete"</span>, </span>
+<span id="cb1-32"><a href="#cb1-32"></a>                 <span class="st">"Localitati"</span>, <span class="st">"Ani"</span>, <span class="st">"Numar"</span>, <span class="st">"Valoare"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-33"><a href="#cb1-33"></a>     <span class="fu">mutate</span>(<span class="at">Ani =</span> <span class="fu">parse_number</span>(Ani)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb1-34"><a href="#cb1-34"></a>     <span class="fu">mutate</span>(<span class="at">Categorii =</span> <span class="fu">gsub</span>(<span class="st">"din total medici.+"</span>, </span>
+<span id="cb1-35"><a href="#cb1-35"></a>                             <span class="st">"Medici familie"</span>, Categorii)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>     <span class="fu">select</span>(<span class="sc">-</span>Numar) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-37"><a href="#cb1-37"></a>     <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"mixta"</span>, Proprietate), Categorii<span class="sc">!=</span><span class="st">"Farmacisti"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38"></a></span>
+<span id="cb1-39"><a href="#cb1-39"></a>harta <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">read_sf</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"post-2"</span>, <span class="st">"ro_uat_poligon.geojson"</span>))</span>
+<span id="cb1-40"><a href="#cb1-40"></a>harta[<span class="fu">grepl</span>(<span class="st">"Bucure.ti"</span>, harta<span class="sc">$</span>name), <span class="st">"natcode"</span>] <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"179132"</span>, <span class="dv">6</span>)</span>
+<span id="cb1-41"><a href="#cb1-41"></a></span>
+<span id="cb1-42"><a href="#cb1-42"></a>     </span>
+<span id="cb1-43"><a href="#cb1-43"></a>x <span class="sc">%&gt;%</span> </span>
+<span id="cb1-44"><a href="#cb1-44"></a>  <span class="fu">filter</span>(Localitati<span class="sc">==</span><span class="st">"TOTAL"</span>, Judete<span class="sc">==</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-45"><a href="#cb1-45"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Ani, <span class="at">y=</span>Valoare, <span class="at">group=</span>Proprietate)) <span class="sc">+</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">colour=</span>Proprietate), <span class="at">size=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Categorii, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">'free'</span>) <span class="sc">+</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Personalul medico-sanitar în România"</span>, <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>,</span>
+<span id="cb1-49"><a href="#cb1-49"></a>       <span class="at">caption=</span><span class="st">"Sursa: INS, SAN104B"</span>) <span class="sc">+</span></span>
+<span id="cb1-50"><a href="#cb1-50"></a>  <span class="fu">scale_y_comma</span>() <span class="sc">+</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a>  <span class="fu">scale_color_tableau</span>() <span class="sc">+</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm un trend general de creștere pentru personalul sanitar angajat în proprietatea privată pentru toate categoriile. În cazul medicilor de familie, numărul celor angajați în proprietate publică a scăzut accentuat după 2012-2013 ajungând în ultima perioadă la o valoare nesemnificativă. Categoria “Medici” trebuie interpretată ca totalul medicilor, incluzând și pe cei de familie. Aceste date pot fi puse și sub forma unui tabel.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>x <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">filter</span>(Localitati<span class="sc">==</span><span class="st">"TOTAL"</span>, Judete<span class="sc">==</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">filter</span>(Ani<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">2003</span>,<span class="dv">2008</span>,<span class="dv">2013</span>,<span class="dv">2018</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">spread</span>(Ani, Valoare) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Judete,<span class="sc">-</span>Localitati) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(Proprietate)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>  gt<span class="sc">::</span><span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"Categorii"</span>, <span class="at">groupname_col =</span> <span class="st">"Proprietate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  gtExtras<span class="sc">::</span><span class="fu">gt_theme_538</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  gt<span class="sc">::</span><span class="fu">cols_width</span>(<span class="fu">matches</span>(<span class="st">"[0-9]+"</span>) <span class="sc">~</span> <span class="st">"100px"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="at">label =</span> <span class="st">"Categorii"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">sep_mark =</span> <span class="st">","</span>, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="st">"#ad0329"</span>, <span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb2-11"><a href="#cb2-11"></a>                <span class="at">locations =</span> <span class="fu">cells_row_groups</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="at">style=</span><span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"#daae91"</span>), </span>
+<span id="cb2-13"><a href="#cb2-13"></a>                <span class="at">locations=</span><span class="fu">cells_row_groups</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">color=</span><span class="st">'black'</span>), </span>
+<span id="cb2-15"><a href="#cb2-15"></a>                <span class="at">locations=</span><span class="fu">cells_column_labels</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>  gt<span class="sc">::</span><span class="fu">tab_options</span>(<span class="at">column_labels.background.color =</span> <span class="st">"#EEA100"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="at">subtitle =</span> <span class="st">"Sursa: INS, SAN104B"</span>, </span>
+<span id="cb2-18"><a href="#cb2-18"></a>                 <span class="at">title=</span><span class="st">"Personal sanitar după forme de proprietate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="oblhbzecpe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+#oblhbzecpe table {
+  font-family: Chivo, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#oblhbzecpe thead, #oblhbzecpe tbody, #oblhbzecpe tfoot, #oblhbzecpe tr, #oblhbzecpe td, #oblhbzecpe th {
+  border-style: none;
+}
+
+#oblhbzecpe p {
+  margin: 0;
+  padding: 0;
+}
+
+#oblhbzecpe .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 3px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#oblhbzecpe .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#oblhbzecpe .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#oblhbzecpe .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #EEA100;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#oblhbzecpe .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #EEA100;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#oblhbzecpe .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#oblhbzecpe .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#oblhbzecpe .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#oblhbzecpe .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#oblhbzecpe .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#oblhbzecpe .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  vertical-align: middle;
+}
+
+#oblhbzecpe .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#oblhbzecpe .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#oblhbzecpe .gt_row {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#oblhbzecpe .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 0px;
+  border-right-color: #FFFFFF;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oblhbzecpe .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#oblhbzecpe .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#oblhbzecpe .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#oblhbzecpe .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oblhbzecpe .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#oblhbzecpe .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oblhbzecpe .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#oblhbzecpe .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oblhbzecpe .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#oblhbzecpe .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#oblhbzecpe .gt_left {
+  text-align: left;
+}
+
+#oblhbzecpe .gt_center {
+  text-align: center;
+}
+
+#oblhbzecpe .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#oblhbzecpe .gt_font_normal {
+  font-weight: normal;
+}
+
+#oblhbzecpe .gt_font_bold {
+  font-weight: bold;
+}
+
+#oblhbzecpe .gt_font_italic {
+  font-style: italic;
+}
+
+#oblhbzecpe .gt_super {
+  font-size: 65%;
+}
+
+#oblhbzecpe .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#oblhbzecpe .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#oblhbzecpe .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#oblhbzecpe .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#oblhbzecpe .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#oblhbzecpe .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#oblhbzecpe .gt_indent_5 {
+  text-indent: 25px;
+}
+
+tbody tr:last-child {
+  border-bottom: 2px solid #ffffff00;
+}
+</style>
+<table class="gt_table" style="table-layout: fixed;" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col>
+    <col style="width:100px;">
+    <col style="width:100px;">
+    <col style="width:100px;">
+    <col style="width:100px;">
+  </colgroup>
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="5" class="gt_heading gt_title gt_font_normal" style="">Personal sanitar după forme de proprietate</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Sursa: INS, SAN104B</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Categorii">Categorii</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000;" scope="col" id="2003">2003</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000;" scope="col" id="2008">2008</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000;" scope="col" id="2013">2013</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000;" scope="col" id="2018">2018</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="5" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; color: #AD0329; font-weight: bold; background-color: #DAAE91;" scope="colgroup" id="Proprietate publica">Proprietate publica</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_1" scope="row" class="gt_row gt_left gt_stub">Medici</th>
+<td headers="Proprietate publica stub_1_1 2003" class="gt_row gt_right">42,538</td>
+<td headers="Proprietate publica stub_1_1 2008" class="gt_row gt_right">42,699</td>
+<td headers="Proprietate publica stub_1_1 2013" class="gt_row gt_right">40,058</td>
+<td headers="Proprietate publica stub_1_1 2018" class="gt_row gt_right">38,064</td></tr>
+    <tr><th id="stub_1_2" scope="row" class="gt_row gt_left gt_stub">Medici familie</th>
+<td headers="Proprietate publica stub_1_2 2003" class="gt_row gt_right">9,623</td>
+<td headers="Proprietate publica stub_1_2 2008" class="gt_row gt_right">8,825</td>
+<td headers="Proprietate publica stub_1_2 2013" class="gt_row gt_right">6,682</td>
+<td headers="Proprietate publica stub_1_2 2018" class="gt_row gt_right">886</td></tr>
+    <tr><th id="stub_1_3" scope="row" class="gt_row gt_left gt_stub">Personal sanitar mediu</th>
+<td headers="Proprietate publica stub_1_3 2003" class="gt_row gt_right">109,668</td>
+<td headers="Proprietate publica stub_1_3 2008" class="gt_row gt_right">112,321</td>
+<td headers="Proprietate publica stub_1_3 2013" class="gt_row gt_right">93,679</td>
+<td headers="Proprietate publica stub_1_3 2018" class="gt_row gt_right">94,355</td></tr>
+    <tr><th id="stub_1_4" scope="row" class="gt_row gt_left gt_stub">Stomatologi</th>
+<td headers="Proprietate publica stub_1_4 2003" class="gt_row gt_right">4,919</td>
+<td headers="Proprietate publica stub_1_4 2008" class="gt_row gt_right">4,067</td>
+<td headers="Proprietate publica stub_1_4 2013" class="gt_row gt_right">2,809</td>
+<td headers="Proprietate publica stub_1_4 2018" class="gt_row gt_right">1,603</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="5" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; color: #AD0329; font-weight: bold; background-color: #DAAE91;" scope="colgroup" id="Proprietate privata">Proprietate privata</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_5" scope="row" class="gt_row gt_left gt_stub">Medici</th>
+<td headers="Proprietate privata stub_1_5 2003" class="gt_row gt_right">4,381</td>
+<td headers="Proprietate privata stub_1_5 2008" class="gt_row gt_right">7,568</td>
+<td headers="Proprietate privata stub_1_5 2013" class="gt_row gt_right">14,028</td>
+<td headers="Proprietate privata stub_1_5 2018" class="gt_row gt_right">22,521</td></tr>
+    <tr><th id="stub_1_6" scope="row" class="gt_row gt_left gt_stub">Medici familie</th>
+<td headers="Proprietate privata stub_1_6 2003" class="gt_row gt_right">1,811</td>
+<td headers="Proprietate privata stub_1_6 2008" class="gt_row gt_right">2,742</td>
+<td headers="Proprietate privata stub_1_6 2013" class="gt_row gt_right">6,054</td>
+<td headers="Proprietate privata stub_1_6 2018" class="gt_row gt_right">11,141</td></tr>
+    <tr><th id="stub_1_7" scope="row" class="gt_row gt_left gt_stub">Personal sanitar mediu</th>
+<td headers="Proprietate privata stub_1_7 2003" class="gt_row gt_right">10,979</td>
+<td headers="Proprietate privata stub_1_7 2008" class="gt_row gt_right">20,143</td>
+<td headers="Proprietate privata stub_1_7 2013" class="gt_row gt_right">33,181</td>
+<td headers="Proprietate privata stub_1_7 2018" class="gt_row gt_right">50,962</td></tr>
+    <tr><th id="stub_1_8" scope="row" class="gt_row gt_left gt_stub">Stomatologi</th>
+<td headers="Proprietate privata stub_1_8 2003" class="gt_row gt_right">4,528</td>
+<td headers="Proprietate privata stub_1_8 2008" class="gt_row gt_right">7,834</td>
+<td headers="Proprietate privata stub_1_8 2013" class="gt_row gt_right">11,473</td>
+<td headers="Proprietate privata stub_1_8 2018" class="gt_row gt_right">14,854</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Să vizualizăm aceleași trenduri doar pentru medici însă pe medii de rezidență. Observăm că trendul constant pentru personalul medical angajat în proprietatea publică este de fapt unul divergent la nivel rural-urbal: pe când în municipii numărul lor a crescut ușor, în rural și urbanul mic el a scăzut, dând astfel un număr relativ constant la nivel național. În privința celor angajați în privat, trendul este de creștere pentru toate mediile, mai accentuat, desigur, pentru urbanul mare. Lecția acestui grafic: ne izbește procentul mic de medici și personal sanitar în general în mediul rural, proporția fiind și de 5-10 ori mai mică în rural față de urbanul mare.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">filter</span>(Judete<span class="sc">!=</span><span class="st">"TOTAL"</span>, Localitati<span class="sc">!=</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">mutate</span>(<span class="at">natcode =</span> <span class="fu">parse_number</span>(Localitati)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">mutate</span>(<span class="at">mediu =</span> <span class="fu">str_extract</span>(Localitati, <span class="st">"ORAS|MUNICIPIUL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5"></a>                 <span class="fu">replace_na</span>(<span class="st">"COMUNA"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">mutate</span>(<span class="at">natcode=</span><span class="fu">as.character</span>(natcode))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">inner_join</span>(harta) <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">group_by</span>(Categorii, Proprietate, mediu, Ani) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="dv">1000</span><span class="sc">*</span><span class="fu">sum</span>(Valoare)<span class="sc">/</span><span class="fu">sum</span>(pop2015)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">filter</span>(Categorii<span class="sc">==</span><span class="st">"Medici"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Ani, <span class="at">y=</span>total, <span class="at">group=</span>mediu)) <span class="sc">+</span> </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">colour=</span>mediu), <span class="at">size=</span><span class="fl">1.2</span>) <span class="sc">+</span> </span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Proprietate, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">'free'</span>) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Medici la 1000 de locuitori pe medii de rezidență"</span>, </span>
+<span id="cb4-9"><a href="#cb4-9"></a>       <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>, <span class="at">colour=</span><span class="st">"Mediu"</span>, <span class="at">caption=</span><span class="st">"Sursa: INS, SAN104B"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>  <span class="fu">scale_y_percent</span>(<span class="at">suffix=</span><span class="st">"‰"</span>, <span class="at">scale =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="fu">scale_color_tableau</span>() <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Să repetăm același lucru și pentru medicii de familie și personalul sanitar mediu.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">inner_join</span>(harta) <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">group_by</span>(Categorii, Proprietate, mediu, Ani) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="dv">1000</span><span class="sc">*</span><span class="fu">sum</span>(Valoare)<span class="sc">/</span><span class="fu">sum</span>(pop2015)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="fu">filter</span>(Categorii<span class="sc">==</span><span class="st">"Medici familie"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Ani, <span class="at">y=</span>total, <span class="at">group=</span>mediu)) <span class="sc">+</span> </span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">colour=</span>mediu), <span class="at">size=</span><span class="fl">1.2</span>) <span class="sc">+</span> </span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Proprietate, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">'free'</span>) <span class="sc">+</span> </span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Medici de familie pe medii de rezidență"</span>, </span>
+<span id="cb5-9"><a href="#cb5-9"></a>       <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>, <span class="at">colour=</span><span class="st">"Mediu"</span>, <span class="at">caption=</span><span class="st">"Sursa: INS, SAN104B"</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span> <span class="cf">function</span>(x) <span class="fu">paste</span>(x, <span class="st">"‰"</span>))<span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>  <span class="fu">scale_color_tableau</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">inner_join</span>(harta) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">group_by</span>(Categorii, Proprietate, mediu, Ani) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="dv">1000</span><span class="sc">*</span><span class="fu">sum</span>(Valoare)<span class="sc">/</span><span class="fu">sum</span>(pop2015)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"Personal"</span>, Categorii)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>Ani, <span class="at">y=</span>total, <span class="at">group=</span>mediu)) <span class="sc">+</span> </span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">colour=</span>mediu), <span class="at">size=</span><span class="fl">1.2</span>) <span class="sc">+</span> </span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Proprietate, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">"free"</span>) <span class="sc">+</span> </span>
+<span id="cb6-8"><a href="#cb6-8"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Personal sanitar mediu pe medii de rezidență"</span>, </span>
+<span id="cb6-9"><a href="#cb6-9"></a>       <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>, <span class="at">colour=</span><span class="st">"Mediu"</span>, <span class="at">caption=</span><span class="st">'Sursa: INS, SAN104B'</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>  <span class="fu">scale_y_percent</span>(<span class="at">suffix=</span><span class="st">"‰"</span>, <span class="at">scale=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>  <span class="fu">scale_color_tableau</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>În aceste două cazuri lucrurile stau simplu: trendurile sunt aceleași ca la nivel național.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>x <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">filter</span>(Ani<span class="sc">==</span><span class="dv">2019</span>, Judete<span class="sc">!=</span><span class="st">"TOTAL"</span>, Localitati<span class="sc">!=</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">group_by</span>(Categorii, Localitati, natcode) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Valoare)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Categorii<span class="sc">==</span><span class="st">"Medici"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="fu">inner_join</span>(harta) <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>() <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">total =</span> <span class="dv">1000</span><span class="sc">*</span>total<span class="sc">/</span>pop2015) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="fu">mutate</span>(<span class="at">total =</span> <span class="fu">cut_number</span>(total, <span class="at">n=</span><span class="dv">10</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill=</span>total), <span class="at">size=</span><span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Număr total medici la 1000 de locuitori"</span>, <span class="at">fill=</span><span class="st">"Total"</span>) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>  <span class="fu">guides</span>(<span class="fu">guide_colorbar</span>(<span class="at">height=</span><span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">"cm"</span>))) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>), </span>
+<span id="cb7-12"><a href="#cb7-12"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>), </span>
+<span id="cb7-13"><a href="#cb7-13"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>),</span>
+<span id="cb7-14"><a href="#cb7-14"></a>        <span class="at">legend.key.height =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>),</span>
+<span id="cb7-15"><a href="#cb7-15"></a>        <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">0.4</span>, <span class="st">"cm"</span>),</span>
+<span id="cb7-16"><a href="#cb7-16"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">6</span>)) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>  <span class="fu">scale_fill_tableau</span>(<span class="at">palette=</span><span class="st">"Classic Orange-Blue"</span>, </span>
+<span id="cb7-18"><a href="#cb7-18"></a>                     <span class="at">type=</span><span class="st">'ordered-diverging'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vedem 288 de localități fără niciun medic, public sau privat. Să le ordonăm după mărimea populației în următorul tabel.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>x <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>    <span class="fu">filter</span>(Ani<span class="sc">==</span><span class="dv">2019</span>, Judete<span class="sc">!=</span><span class="st">"TOTAL"</span>, Localitati<span class="sc">!=</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>    <span class="fu">group_by</span>(Categorii, Localitati, natcode) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4"></a>    <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Valoare)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Categorii<span class="sc">==</span><span class="st">"Medici"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="fu">right_join</span>(harta) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">is.na</span>(total)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(pop2015)) <span class="sc">%&gt;%</span> .[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>),] <span class="sc">%&gt;%</span> <span class="fu">select</span>(name, county, pop2015) <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="fu">rename</span>(<span class="at">Populatie =</span> pop2015, <span class="at">Localitate=</span>name, <span class="at">Judet=</span>county) <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>    rmarkdown<span class="sc">::</span><span class="fu">paged_table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Localitate"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Judet"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Populatie"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"Gălbinași","2":"Călărași","3":"3645"},{"1":"Ojdula","2":"Covasna","3":"3584"},{"1":"Apața","2":"Brașov","3":"3508"},{"1":"Stăncuța","2":"Brăila","3":"3487"},{"1":"Beltiug","2":"Satu Mare","3":"3463"},{"1":"Manoleasa","2":"Botoșani","3":"3433"},{"1":"Zau de Câmpie","2":"Mureș","3":"3348"},{"1":"Târnava","2":"Sibiu","3":"3347"},{"1":"Foltești","2":"Galați","3":"3345"},{"1":"Ploscuțeni","2":"Vrancea","3":"3201"},{"1":"Galbenu","2":"Brăila","3":"3192"},{"1":"Săpânța","2":"Maramureș","3":"3183"},{"1":"Albești","2":"Vaslui","3":"3158"},{"1":"Bălcăuți","2":"Suceava","3":"3155"},{"1":"Bogdan Vodă","2":"Maramureș","3":"3091"},{"1":"Buda","2":"Buzău","3":"3074"},{"1":"Rieni","2":"Bihor","3":"3073"},{"1":"Cavadinești","2":"Galați","3":"3071"},{"1":"Vulcana-Băi","2":"Dâmbovița","3":"3050"},{"1":"Chiochiș","2":"Bistrița-Năsăud","3":"2993"},{"1":"Acâș","2":"Satu Mare","3":"2993"},{"1":"Racșa","2":"Satu Mare","3":"2980"},{"1":"Vadu Izei","2":"Maramureș","3":"2899"},{"1":"Socond","2":"Satu Mare","3":"2899"},{"1":"Reviga","2":"Ialomița","3":"2879"},{"1":"Bretea Română","2":"Hunedoara","3":"2854"},{"1":"Nalbant","2":"Tulcea","3":"2838"},{"1":"Ciceu","2":"Harghita","3":"2802"},{"1":"Roșiori","2":"Brăila","3":"2795"},{"1":"Ivești","2":"Vaslui","3":"2791"},{"1":"Crizbav","2":"Brașov","3":"2723"},{"1":"Sinești","2":"Ialomița","3":"2716"},{"1":"Andrid","2":"Satu Mare","3":"2674"},{"1":"Gura Ialomiței","2":"Ialomița","3":"2661"},{"1":"Porumbești","2":"Satu Mare","3":"2656"},{"1":"Valea Mare","2":"Vâlcea","3":"2652"},{"1":"Salcia Tudor","2":"Brăila","3":"2647"},{"1":"Cosoba","2":"Giurgiu","3":"2638"},{"1":"Santău","2":"Satu Mare","3":"2627"},{"1":"Florești","2":"Mehedinți","3":"2609"},{"1":"Buciumeni","2":"Galați","3":"2585"},{"1":"Strugari","2":"Bacău","3":"2581"},{"1":"Săbăreni","2":"Giurgiu","3":"2561"},{"1":"Golești","2":"Vâlcea","3":"2559"},{"1":"Siliștea-Gumești","2":"Teleorman","3":"2546"},{"1":"Cătina","2":"Buzău","3":"2528"},{"1":"Adâncata","2":"Ialomița","3":"2518"},{"1":"Vișani","2":"Brăila","3":"2511"},{"1":"Frăsinet","2":"Teleorman","3":"2485"},{"1":"Huruiești","2":"Bacău","3":"2468"},{"1":"Armeniș","2":"Caraș-Severin","3":"2466"},{"1":"Șibot","2":"Alba","3":"2466"},{"1":"Băiuț","2":"Maramureș","3":"2445"},{"1":"Borănești","2":"Ialomița","3":"2426"},{"1":"Deleni","2":"Vaslui","3":"2419"},{"1":"Alexeni","2":"Ialomița","3":"2412"},{"1":"Reghiu","2":"Vrancea","3":"2401"},{"1":"Mălușteni","2":"Vaslui","3":"2400"},{"1":"Hoghilag","2":"Sibiu","3":"2392"},{"1":"Găujani","2":"Giurgiu","3":"2372"},{"1":"Suseni","2":"Mureș","3":"2360"},{"1":"Scutelnici","2":"Buzău","3":"2357"},{"1":"Bălășești","2":"Galați","3":"2357"},{"1":"Răsuceni","2":"Giurgiu","3":"2334"},{"1":"Priponești","2":"Galați","3":"2284"},{"1":"Ciucurova","2":"Tulcea","3":"2272"},{"1":"Răscăeți","2":"Dâmbovița","3":"2266"},{"1":"Gura Vadului","2":"Prahova","3":"2264"},{"1":"Saligny","2":"Constanța","3":"2256"},{"1":"Văcăreni","2":"Tulcea","3":"2247"},{"1":"Craidorolț","2":"Satu Mare","3":"2245"},{"1":"Seimeni","2":"Constanța","3":"2215"},{"1":"Sărata","2":"Bacău","3":"2191"},{"1":"Băneasa","2":"Galați","3":"2159"},{"1":"Coroiești","2":"Vaslui","3":"2151"},{"1":"Crucea","2":"Suceava","3":"2123"},{"1":"Poieni-Solca","2":"Suceava","3":"2122"},{"1":"Tanacu","2":"Vaslui","3":"2119"},{"1":"Păcureți","2":"Prahova","3":"2116"},{"1":"Agriș","2":"Satu Mare","3":"2116"},{"1":"Ostrov","2":"Tulcea","3":"2105"},{"1":"Turdaș","2":"Hunedoara","3":"2104"},{"1":"Crivăț","2":"Călărași","3":"2090"},{"1":"Slobozia Ciorăști","2":"Vrancea","3":"2087"},{"1":"Leliceni","2":"Harghita","3":"2071"},{"1":"Bălăbănești","2":"Galați","3":"2071"},{"1":"Vad","2":"Cluj","3":"2042"},{"1":"Găgești","2":"Vaslui","3":"2033"},{"1":"Valea Sării","2":"Vrancea","3":"2012"},{"1":"Păulești","2":"Vrancea","3":"2004"},{"1":"Augustin","2":"Brașov","3":"2000"},{"1":"Alma","2":"Sibiu","3":"1986"},{"1":"Herăști","2":"Giurgiu","3":"1986"},{"1":"Cuci","2":"Mureș","3":"1978"},{"1":"Dămienești","2":"Bacău","3":"1955"},{"1":"Gostinu","2":"Giurgiu","3":"1951"},{"1":"Iepurești","2":"Giurgiu","3":"1939"},{"1":"Platonești","2":"Ialomița","3":"1938"},{"1":"Lemnia","2":"Covasna","3":"1935"},{"1":"Năruja","2":"Vrancea","3":"1932"},{"1":"Andreiașu de Jos","2":"Vrancea","3":"1931"},{"1":"Cârlibaba","2":"Suceava","3":"1926"},{"1":"Vrata","2":"Mehedinți","3":"1924"},{"1":"Fruntișeni","2":"Vaslui","3":"1912"},{"1":"Stelnica","2":"Ialomița","3":"1905"},{"1":"Chirpăr","2":"Sibiu","3":"1901"},{"1":"Braniștea","2":"Mehedinți","3":"1874"},{"1":"Jorăști","2":"Galați","3":"1869"},{"1":"Otelec","2":"Timiș","3":"1840"},{"1":"Racovița","2":"Vâlcea","3":"1830"},{"1":"Voivodeni","2":"Mureș","3":"1829"},{"1":"Gogoșari","2":"Giurgiu","3":"1828"},{"1":"Năeni","2":"Buzău","3":"1806"},{"1":"Dodești","2":"Vaslui","3":"1802"},{"1":"Peceneaga","2":"Tulcea","3":"1794"},{"1":"Luncoiu de Jos","2":"Hunedoara","3":"1788"},{"1":"Chibed","2":"Mureș","3":"1786"},{"1":"Vadu Săpat","2":"Prahova","3":"1751"},{"1":"Gârliciu","2":"Constanța","3":"1748"},{"1":"Schitu","2":"Giurgiu","3":"1742"},{"1":"Cărbunești","2":"Prahova","3":"1741"},{"1":"Pochidia","2":"Vaslui","3":"1735"},{"1":"Lelești","2":"Gorj","3":"1734"},{"1":"Ciocani","2":"Vaslui","3":"1711"},{"1":"Beclean","2":"Brașov","3":"1709"},{"1":"Negrilești","2":"Vrancea","3":"1704"},{"1":"Camăr","2":"Sălaj","3":"1703"},{"1":"Târnova","2":"Caraș-Severin","3":"1685"},{"1":"Arsura","2":"Vaslui","3":"1674"},{"1":"Mădăraș","2":"Mureș","3":"1667"},{"1":"Boița","2":"Sibiu","3":"1662"},{"1":"Vlădaia","2":"Mehedinți","3":"1658"},{"1":"Brădeni","2":"Sibiu","3":"1638"},{"1":"Fântânele","2":"Constanța","3":"1636"},{"1":"Chiojdeanca","2":"Prahova","3":"1633"},{"1":"Beciu","2":"Teleorman","3":"1633"},{"1":"Racu","2":"Harghita","3":"1625"},{"1":"Boghești","2":"Vrancea","3":"1623"},{"1":"Dracea","2":"Teleorman","3":"1622"},{"1":"Șinca Nouă","2":"Brașov","3":"1610"},{"1":"Fântânele","2":"Teleorman","3":"1603"},{"1":"Uda-Clocociov","2":"Teleorman","3":"1603"},{"1":"Beba Veche","2":"Timiș","3":"1600"},{"1":"Stejaru","2":"Tulcea","3":"1599"},{"1":"Ghioroiu","2":"Vâlcea","3":"1595"},{"1":"Poiana Ilvei","2":"Bistrița-Năsăud","3":"1589"},{"1":"Arcuș","2":"Covasna","3":"1577"},{"1":"Largu","2":"Buzău","3":"1573"},{"1":"Bogdănița","2":"Vaslui","3":"1573"},{"1":"Ibănești","2":"Vaslui","3":"1572"},{"1":"Chiheru de Jos","2":"Mureș","3":"1566"},{"1":"Mihăești","2":"Olt","3":"1552"},{"1":"Isvoarele","2":"Giurgiu","3":"1544"},{"1":"Săuca","2":"Satu Mare","3":"1536"},{"1":"Sâmbăta de Sus","2":"Brașov","3":"1534"},{"1":"Surdila-Greci","2":"Brăila","3":"1520"},{"1":"Valea Teilor","2":"Tulcea","3":"1517"},{"1":"Oncești","2":"Maramureș","3":"1514"},{"1":"Benesat","2":"Sălaj","3":"1509"},{"1":"Itești","2":"Bacău","3":"1508"},{"1":"Coșna","2":"Suceava","3":"1495"},{"1":"Giurgeni","2":"Ialomița","3":"1490"},{"1":"Făurești","2":"Vâlcea","3":"1468"},{"1":"Adășeni","2":"Botoșani","3":"1461"},{"1":"Gârnic","2":"Caraș-Severin","3":"1459"},{"1":"Monor","2":"Bistrița-Năsăud","3":"1452"},{"1":"Suhurlui","2":"Galați","3":"1445"},{"1":"Cerchezu","2":"Constanța","3":"1445"},{"1":"Dimăcheni","2":"Botoșani","3":"1444"},{"1":"Lăcusteni","2":"Vâlcea","3":"1434"},{"1":"Lăpugiu de Jos","2":"Hunedoara","3":"1430"},{"1":"Holbav","2":"Brașov","3":"1422"},{"1":"Dumbrava","2":"Mehedinți","3":"1411"},{"1":"Ulmu","2":"Călărași","3":"1410"},{"1":"Coaș","2":"Maramureș","3":"1405"},{"1":"Cămin","2":"Satu Mare","3":"1405"},{"1":"Sărulești","2":"Buzău","3":"1380"},{"1":"Fildu de Jos","2":"Sălaj","3":"1378"},{"1":"Bulbucata","2":"Giurgiu","3":"1362"},{"1":"Beuca","2":"Teleorman","3":"1357"},{"1":"Ciumești","2":"Satu Mare","3":"1357"},{"1":"Domașnea","2":"Caraș-Severin","3":"1350"},{"1":"Spulber","2":"Vrancea","3":"1345"},{"1":"Runcu Salvei","2":"Bistrița-Năsăud","3":"1341"},{"1":"Racovițeni","2":"Buzău","3":"1339"},{"1":"Răchitova","2":"Hunedoara","3":"1335"},{"1":"Cârțișoara","2":"Sibiu","3":"1332"},{"1":"Ilovița","2":"Mehedinți","3":"1331"},{"1":"Gârdani","2":"Maramureș","3":"1330"},{"1":"Boișoara","2":"Vâlcea","3":"1328"},{"1":"Mereni","2":"Covasna","3":"1317"},{"1":"Săcel","2":"Harghita","3":"1278"},{"1":"Pădina","2":"Mehedinți","3":"1272"},{"1":"Săcășeni","2":"Satu Mare","3":"1258"},{"1":"Sărățeni","2":"Ialomița","3":"1254"},{"1":"Bereni","2":"Mureș","3":"1250"},{"1":"Crișan","2":"Tulcea","3":"1244"},{"1":"Hodoșa","2":"Mureș","3":"1239"},{"1":"Poiana Blenchii","2":"Sălaj","3":"1239"},{"1":"Moacșa","2":"Covasna","3":"1227"},{"1":"Lapoș","2":"Prahova","3":"1222"},{"1":"Ciceu-Mihăiești","2":"Bistrița-Năsăud","3":"1215"},{"1":"Hopârta","2":"Alba","3":"1196"},{"1":"Coșeiu","2":"Sălaj","3":"1176"},{"1":"Colelia","2":"Ialomița","3":"1174"},{"1":"Șopotu Nou","2":"Caraș-Severin","3":"1172"},{"1":"Estelnic","2":"Covasna","3":"1160"},{"1":"Grădina","2":"Constanța","3":"1159"},{"1":"Bănița","2":"Hunedoara","3":"1150"},{"1":"Racoviță","2":"Brăila","3":"1139"},{"1":"Șinteu","2":"Bihor","3":"1129"},{"1":"Vrani","2":"Caraș-Severin","3":"1120"},{"1":"Marga","2":"Caraș-Severin","3":"1118"},{"1":"Robeasca","2":"Buzău","3":"1109"},{"1":"Drăguș","2":"Brașov","3":"1096"},{"1":"Bozioru","2":"Buzău","3":"1090"},{"1":"Colți","2":"Buzău","3":"1084"},{"1":"Poșaga","2":"Alba","3":"1076"},{"1":"Salcia","2":"Prahova","3":"1075"},{"1":"Ticușu","2":"Brașov","3":"1069"},{"1":"Talea","2":"Prahova","3":"1062"},{"1":"Buești","2":"Ialomița","3":"1056"},{"1":"Ciuchici","2":"Caraș-Severin","3":"1054"},{"1":"Obârșia-Cloșani","2":"Mehedinți","3":"1049"},{"1":"Cosminele","2":"Prahova","3":"1042"},{"1":"Treznea","2":"Sălaj","3":"1041"},{"1":"Balta","2":"Mehedinți","3":"1041"},{"1":"Zimbor","2":"Sălaj","3":"1022"},{"1":"Cărbunari","2":"Caraș-Severin","3":"996"},{"1":"Mărtinești","2":"Hunedoara","3":"990"},{"1":"Lozna","2":"Sălaj","3":"979"},{"1":"Dalnic","2":"Covasna","3":"977"},{"1":"Runcu","2":"Vâlcea","3":"966"},{"1":"Maliuc","2":"Tulcea","3":"963"},{"1":"Drăgoești","2":"Ialomița","3":"953"},{"1":"Zalha","2":"Sălaj","3":"914"},{"1":"Lunca Cernii de Jos","2":"Hunedoara","3":"909"},{"1":"Poienile Izei","2":"Maramureș","3":"908"},{"1":"Bichiș","2":"Mureș","3":"879"},{"1":"Podeni","2":"Mehedinți","3":"860"},{"1":"Odăile","2":"Buzău","3":"857"},{"1":"Răsmirești","2":"Teleorman","3":"844"},{"1":"Sfântu Gheorghe","2":"Tulcea","3":"844"},{"1":"Burjuc","2":"Hunedoara","3":"834"},{"1":"Cănești","2":"Buzău","3":"833"},{"1":"Goruia","2":"Caraș-Severin","3":"809"},{"1":"Ciocârlia","2":"Ialomița","3":"778"},{"1":"Valea Salciei","2":"Buzău","3":"763"},{"1":"Vulturu","2":"Constanța","3":"748"},{"1":"Ludoș","2":"Sibiu","3":"738"},{"1":"Ocna de Fier","2":"Caraș-Severin","3":"734"},{"1":"Ignești","2":"Arad","3":"730"},{"1":"Băla","2":"Mureș","3":"720"},{"1":"Ploscoș","2":"Cluj","3":"693"},{"1":"Ciudanovița","2":"Caraș-Severin","3":"689"},{"1":"Ceatalchioi","2":"Tulcea","3":"673"},{"1":"Cârjiți","2":"Hunedoara","3":"661"},{"1":"Întregalde","2":"Alba","3":"652"},{"1":"Râu Sadului","2":"Sibiu","3":"629"},{"1":"Godeanu","2":"Mehedinți","3":"612"},{"1":"Chiliile","2":"Buzău","3":"585"},{"1":"Dumbrăveni","2":"Constanța","3":"580"},{"1":"Pardina","2":"Tulcea","3":"577"},{"1":"Ponor","2":"Alba","3":"566"},{"1":"Cozma","2":"Mureș","3":"555"},{"1":"Cireșu","2":"Mehedinți","3":"500"},{"1":"Cerbăl","2":"Hunedoara","3":"472"},{"1":"Pardoși","2":"Buzău","3":"412"},{"1":"Secaș","2":"Timiș","3":"405"},{"1":"Lelese","2":"Hunedoara","3":"402"},{"1":"Șiștarovăț","2":"Arad","3":"336"},{"1":"Bara","2":"Timiș","3":"325"},{"1":"Bunila","2":"Hunedoara","3":"323"},{"1":"Brebu Nou","2":"Caraș-Severin","3":"292"},{"1":"Bulzeștii de Sus","2":"Hunedoara","3":"281"},{"1":"Bătrâna","2":"Hunedoara","3":"131"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<p>Și numărul de localități fără niciun medic după județe:</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>x <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2"></a>    <span class="fu">filter</span>(Ani<span class="sc">==</span><span class="dv">2019</span>, Judete<span class="sc">!=</span><span class="st">"TOTAL"</span>, Localitati<span class="sc">!=</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>    <span class="fu">group_by</span>(Categorii, Localitati, natcode) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4"></a>    <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(Valoare)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-5"><a href="#cb9-5"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Categorii<span class="sc">==</span><span class="st">"Medici"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6"></a>    <span class="fu">right_join</span>(harta) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">is.na</span>(total)) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(pop2015)) <span class="sc">%&gt;%</span> .[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>),] <span class="sc">%&gt;%</span> </span>
+<span id="cb9-8"><a href="#cb9-8"></a>    <span class="fu">select</span>(name, county, pop2015) <span class="sc">%&gt;%</span> <span class="fu">count</span>(county, <span class="at">sort=</span>T) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-9"><a href="#cb9-9"></a>    <span class="fu">mutate</span>(<span class="at">county=</span><span class="fu">fct_reorder</span>(county, n)) <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-10"><a href="#cb9-10"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>county, <span class="at">y=</span>n)) <span class="sc">+</span> </span>
+<span id="cb9-11"><a href="#cb9-11"></a>    <span class="fu">geom_col</span>(<span class="at">fill=</span><span class="st">"#EEA100"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb9-12"><a href="#cb9-12"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Numărul de localități fără niciun medic"</span>, <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>, </span>
+<span id="cb9-13"><a href="#cb9-13"></a>         <span class="at">caption=</span><span class="st">'Sursa: INS, SAN104B'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="distribuia-geografic-a-personalului-medical_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Vedem că cele mai multe sunt în Hunedoara, Buzău, Vaslui.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="buciupetre2020/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

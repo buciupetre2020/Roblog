@@ -1,0 +1,96 @@
+---
+title: "Dinamica datoriei publice în Europa"
+description: |
+  În toate țările a crescut datoria publică, iar România în rând cu media.
+author:
+  - name: Petre Buciu
+date: 06-03-2021
+knitr: 
+  opts_chunk:
+    fig.align: center
+---
+
+Datoria publică este un subiect controversat și creșterea recentă a datoriei publice a României este un fapt pus într-o anumită lumină de unii comentatori politici. Mai exact se caută prezentarea acestui fenomen ca și cum ar fi cauzat factori strict locali: voința partidului de la guvernare, "străinii", UE, freza prim-ministrului, etc. Realitatea este că datoria publică a crescut peste tot în Europa, în mod universal, nicio țară nu a trecut prin anul 2020 fără să adauge la ponderea datoriei în PIB.
+
+```{r}
+library(tidyverse)
+library(hrbrthemes)
+library(eurostat)
+library(gt)
+library(ggthemes)
+
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Frutiger Bold",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 10,
+                                     axis_text_size = 8,
+                                     base_family = "Frutiger",
+                                     plot_title_family = "Frutiger Bold",
+                                     subtitle_family = "Frutiger",
+                                     caption_family = "Frutiger", 
+                                     caption_size = 8,
+                                     plot_title_size = 14,
+                                     subtitle_size = 10) +
+  theme(legend.text = element_text(size=8), 
+        legend.title = element_text(size=10),
+        legend.key.size = unit(0.5, "cm")))
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+
+x <- get_eurostat(id="teina230") %>% 
+     label_eurostat() %>% select(-1,-2) %>% 
+     filter(grepl("Percentage.+", unit)) %>% select(-1) %>%
+     mutate(geo = gsub("\\(.+\\)|\\-.+$", "", geo) %>% trimws())
+
+x %>% 
+  ggplot(aes(x=time, y=values, group=geo)) + 
+  geom_line(aes(colour=geo), size=1.2) + 
+  gghighlight::gghighlight(grepl("Romania|European", geo), 
+                           use_direct_label = F) +
+  theme(legend.position = "top") + 
+  labs(title = "Datoria publică în Europa", x=NULL, y=NULL, 
+       colour="Regiune", caption="Sursa: Eurostat, teina230") + 
+  scale_y_percent(scale=1) +
+  scale_colour_tableau()
+```
+
+Să punem rezultatele și sub forma unui tabel. Delta măsoară diferența dintre procentele lunii octombrie (ultimul punct pentru care avem datele) 2021 față de aceeași lună a anului 2020. Avem astfel acoperită mare parte din perioada pandemiei și a măsurilor fiscale care au fost luate cu ocazia ei.
+
+```{r}
+x %>% filter(grepl("-10-", time)) %>% 
+  spread(time, values) %>% 
+  mutate(Delta = `2021-10-01`-`2020-10-01`) %>% 
+  arrange(desc(Delta)) %>% select(-4) %>%
+  gt::gt() %>% gtExtras::gt_theme_538() %>%
+  tab_header(title = "Datoria publică în Europa", 
+             subtitle="Sursa: Eurostat, teina230") %>%
+  tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>%
+  gtExtras::gt_highlight_rows(rows=c(5, 13))
+
+```
+
+România ocupă locul al cincilea în acest tabel, din treizeci de țări disponibile. Se poate spune că creșterea ei, de doar 1.7 puncte procentuale, iese în evidență în peisaj european.
+
+```{r}
+#| fig-width: 7
+#| fig-height: 7
+#| fig-dpi: 200
+
+x %>% 
+  filter(grepl("2021-10-|2020-10-", time)) %>% 
+  spread(time, values) %>% 
+  mutate(delta = `2021-10-01`-`2020-10-01`) %>% 
+  mutate(geo = fct_reorder(geo, delta)) %>% 
+  ggplot(aes(x=geo, y=`2020-10-01`)) + 
+  geom_point() + coord_flip() + 
+  geom_point(aes(x=geo, y=`2021-10-01`), colour="red2") + 
+  geom_segment(aes(x=geo, xend=geo, y=`2020-10-01`, yend=`2021-10-01`), 
+               colour="grey50", arrow = arrow(angle=30, length = unit(2, "mm"))) +
+  labs(title = "Datoria publică ca procent din PIB", x=NULL, y=NULL, colour="Țară")
+```
+
+Graficul confirmă și vizual același lucru, dar mai greu de citit întrucât diferenţele sunt mici. Nu mai punem la socoteală că România a intrat în această perioadă și cu un deficit bugetar semnificativ.

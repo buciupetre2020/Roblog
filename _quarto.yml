@@ -1,0 +1,27 @@
+project:
+  type: website
+
+execute:
+  warning: false
+  message: false
+  error: false
+
+website:
+  title: "Analize socio-economice cu R"
+  site-url: "https://petrebuciu.netlify.app/"
+  repo-url: "https://github.com/buciupetre2020/Roblog"
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/buciupetre2020/Roblog
+format:
+  html:
+    code-fold: true
+    code-summary: "Arată codul"
+    code-line-numbers: true
+    theme: spacelab
+    css: styles.css
+
+editor: visual
+
