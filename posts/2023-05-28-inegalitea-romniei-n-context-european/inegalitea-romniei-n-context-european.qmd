@@ -5,6 +5,8 @@ description: |
 author:
   - name: Petre Buciu
 date: 2023-05-28
+image: preview.png
+fig-align: center
 ---
 
 ### Cum a evoluat inegalitatea la noi

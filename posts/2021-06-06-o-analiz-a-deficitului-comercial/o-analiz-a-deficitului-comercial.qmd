@@ -9,6 +9,7 @@ knitr:
   opts_chunk:
     fig.align: center
 date: 06-07-2023
+image: preview.png
 ---
 
 ## O privire de ansamblu
@@ -255,6 +256,7 @@ tabel %>% rename(deficit=delta) %>% mutate(deficit=deficit/1000) %>%
 #| fig-width: 10
 #| fig-height: 8
 #| fig-dpi: 200
+#| classes: preview-image
 
 tec <- get_eurostat(id="ext_tec03") %>%  
        label_eurostat() %>%

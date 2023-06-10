@@ -15,13 +15,15 @@ website:
       - about.qmd
       - icon: github
         href: https://github.com/buciupetre2020/Roblog
-format:
-  html:
+format:  
+  html: 
     code-fold: true
     code-summary: "Arată codul"
     code-line-numbers: true
     theme: spacelab
     css: styles.css
-
+    toc: true
+    include-after-body: footer.html
+  
 editor: visual
 

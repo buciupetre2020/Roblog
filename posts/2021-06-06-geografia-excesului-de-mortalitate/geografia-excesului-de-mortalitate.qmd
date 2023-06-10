@@ -9,6 +9,7 @@ knitr:
   opts_chunk:
     fig.align: center
 date: 06-07-2023
+image: preview.png
 ---
 
 ## Analiză exploratorie
@@ -28,7 +29,8 @@ library(eurostat)
 library(hrbrthemes)
 library(ggthemes)
 library(sf)
-
+library(gt)
+library(gtExtras)
 theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
                                      strip_text_family = "Roboto",
                                      strip_text_face = "italic",
@@ -167,3 +169,41 @@ exces_geo %>% inner_join(harta) %>%
 ```
 
 Interesant la această hartă este diviziunea Germaniei de Est de cea de Vest. Istoria contează aparent şi când e vorba de mortalitatea de COVID.
+
+```{r}
+mortalitati <- x %>% 
+    filter(year>2014) %>% filter(week<54, year!=2023) %>%
+    filter(grepl("^[A-Z]{2}$", geo)) %>% 
+    mutate(time = paste0(year, "-W", convert(week), "-3") %>% 
+                  ISOweek::ISOweek2date(.)) %>%
+    mutate(month=lubridate::month(time)) %>%
+    mutate(index = if_else(year%in%c(2015:2019), 0, year)) %>% 
+    mutate(spatial = if_else(grepl("RO", geo), "România", "Europa")) %>%
+    group_by(age, index, spatial) %>% 
+    summarise(normal = mean(values, na.rm=TRUE)) %>% 
+    ungroup() %>% spread(index, normal) %>% drop_na() %>%
+    filter(age!="UNK") %>% filter(age!="Y_GE80") %>% filter(age!="TOTAL") %>%
+    mutate(age = fct_relevel(age, "Y_GE90", after=11)) %>%
+    arrange(age)
+
+mortalitati %>% rename("2015-2019" = `0`) %>% 
+  gt(rowname_col="age", groupname_col = 'spatial') %>%
+  gtExtras::gt_theme_538() %>%
+  gt::opt_table_font(font="Roboto") %>%
+  gt::cols_width(matches("[0-9]+") ~ "100px") %>%
+  gt::tab_stubhead(label = "Regiune") %>%
+  gt::fmt_number(columns=2:6, sep_mark = ",", decimals = 0) %>%
+  gt::tab_style(style = cell_text("black", weight = "bold"), 
+                locations = cells_row_groups()) %>%
+  gt::tab_style(style=cell_fill(color="#daae91"), 
+                locations=cells_row_groups()) %>%
+  gt::tab_style(cell_text(color='black'), 
+                locations=cells_column_labels()) %>%
+  gt::tab_options(column_labels.background.color = "#EEA100") %>%
+  gt::tab_header(title="Numărul mediu de decese săptămânale", 
+                 subtitle="Sursa: Eurostat, r_demo_mwk_3_10") %>%
+  gt::tab_style(cell_text(color='black', weight = "bold"), 
+                cells_title(groups = "title")) %>%
+  gt::tab_style(cell_text(weight='bold'), cells_column_labels()) %>%
+  gtExtras::gt_color_rows(columns=2:6, palette = "ggsci::orange_material")
+```

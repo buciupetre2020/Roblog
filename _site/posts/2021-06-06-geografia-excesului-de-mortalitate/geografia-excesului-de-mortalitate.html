@@ -228,35 +228,36 @@ Exces_{w_i}^{y_j} = \frac{Decese_{w_i}^{y_j} - \frac{1}{4} \sum_{j=2015}^{j=2019
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(hrbrthemes)</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(ggthemes)</span>
 <span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">theme_set</span>(hrbrthemes<span class="sc">::</span><span class="fu">theme_ipsum_tw</span>(<span class="at">strip_text_size =</span> <span class="dv">14</span>, </span>
-<span id="cb1-8"><a href="#cb1-8"></a>                                     <span class="at">strip_text_family =</span> <span class="st">"Roboto"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>                                     <span class="at">strip_text_face =</span> <span class="st">"italic"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10"></a>                                     <span class="at">axis_title_size =</span> <span class="dv">12</span>,</span>
-<span id="cb1-11"><a href="#cb1-11"></a>                                     <span class="at">axis_text_size =</span> <span class="dv">10</span>,</span>
-<span id="cb1-12"><a href="#cb1-12"></a>                                     <span class="at">base_family =</span> <span class="st">"Roboto"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13"></a>                                     <span class="at">plot_title_family =</span> <span class="st">"Roboto"</span>,</span>
-<span id="cb1-14"><a href="#cb1-14"></a>                                     <span class="at">subtitle_family =</span> <span class="st">"Roboto"</span>,</span>
-<span id="cb1-15"><a href="#cb1-15"></a>                                     <span class="at">caption_family =</span> <span class="st">"Roboto"</span>, </span>
-<span id="cb1-16"><a href="#cb1-16"></a>                                     <span class="at">caption_size =</span> <span class="dv">10</span>,</span>
-<span id="cb1-17"><a href="#cb1-17"></a>                                     <span class="at">plot_title_size =</span> <span class="dv">16</span>,</span>
-<span id="cb1-18"><a href="#cb1-18"></a>                                     <span class="at">subtitle_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
-<span id="cb1-20"><a href="#cb1-20"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
-<span id="cb1-21"><a href="#cb1-21"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)))  <span class="co">#setam tema graficelor </span></span>
-<span id="cb1-22"><a href="#cb1-22"></a></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#x &lt;- get_eurostat(id="demo_r_mwk3_10") </span></span>
-<span id="cb1-24"><a href="#cb1-24"></a>x <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"post-5"</span>, <span class="st">"exces.csv"</span>))</span>
-<span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a>convert <span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
-<span id="cb1-27"><a href="#cb1-27"></a>  <span class="cf">if</span>(<span class="fu">nchar</span>(x)<span class="sc">==</span><span class="dv">1</span>){</span>
-<span id="cb1-28"><a href="#cb1-28"></a>    <span class="fu">paste0</span>(<span class="st">"0"</span>, x)</span>
-<span id="cb1-29"><a href="#cb1-29"></a>  } <span class="cf">else</span> {</span>
-<span id="cb1-30"><a href="#cb1-30"></a>    x</span>
-<span id="cb1-31"><a href="#cb1-31"></a>  }</span>
-<span id="cb1-32"><a href="#cb1-32"></a>}</span>
-<span id="cb1-33"><a href="#cb1-33"></a></span>
-<span id="cb1-34"><a href="#cb1-34"></a>convert <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(convert, <span class="at">SIMPLIFY =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(gtExtras)</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="fu">theme_set</span>(hrbrthemes<span class="sc">::</span><span class="fu">theme_ipsum_tw</span>(<span class="at">strip_text_size =</span> <span class="dv">14</span>, </span>
+<span id="cb1-9"><a href="#cb1-9"></a>                                     <span class="at">strip_text_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>                                     <span class="at">strip_text_face =</span> <span class="st">"italic"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11"></a>                                     <span class="at">axis_title_size =</span> <span class="dv">12</span>,</span>
+<span id="cb1-12"><a href="#cb1-12"></a>                                     <span class="at">axis_text_size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-13"><a href="#cb1-13"></a>                                     <span class="at">base_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14"></a>                                     <span class="at">plot_title_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15"></a>                                     <span class="at">subtitle_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16"></a>                                     <span class="at">caption_family =</span> <span class="st">"Roboto"</span>, </span>
+<span id="cb1-17"><a href="#cb1-17"></a>                                     <span class="at">caption_size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-18"><a href="#cb1-18"></a>                                     <span class="at">plot_title_size =</span> <span class="dv">16</span>,</span>
+<span id="cb1-19"><a href="#cb1-19"></a>                                     <span class="at">subtitle_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb1-21"><a href="#cb1-21"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb1-22"><a href="#cb1-22"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"cm"</span>)))  <span class="co">#setam tema graficelor </span></span>
+<span id="cb1-23"><a href="#cb1-23"></a></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">#x &lt;- get_eurostat(id="demo_r_mwk3_10") </span></span>
+<span id="cb1-25"><a href="#cb1-25"></a>x <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"post-5"</span>, <span class="st">"exces.csv"</span>))</span>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a>convert <span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
+<span id="cb1-28"><a href="#cb1-28"></a>  <span class="cf">if</span>(<span class="fu">nchar</span>(x)<span class="sc">==</span><span class="dv">1</span>){</span>
+<span id="cb1-29"><a href="#cb1-29"></a>    <span class="fu">paste0</span>(<span class="st">"0"</span>, x)</span>
+<span id="cb1-30"><a href="#cb1-30"></a>  } <span class="cf">else</span> {</span>
+<span id="cb1-31"><a href="#cb1-31"></a>    x</span>
+<span id="cb1-32"><a href="#cb1-32"></a>  }</span>
+<span id="cb1-33"><a href="#cb1-33"></a>}</span>
+<span id="cb1-34"><a href="#cb1-34"></a></span>
+<span id="cb1-35"><a href="#cb1-35"></a>convert <span class="ot">&lt;-</span> <span class="fu">Vectorize</span>(convert, <span class="at">SIMPLIFY =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
@@ -372,11 +373,660 @@ Exces_{w_i}^{y_j} = \frac{Decese_{w_i}^{y_j} - \frac{1}{4} \sum_{j=2015}^{j=2019
 </div>
 </div>
 <p>Interesant la această hartă este diviziunea Germaniei de Est de cea de Vest. Istoria contează aparent şi când e vorba de mortalitatea de COVID.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Arată codul</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>mortalitati <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="fu">filter</span>(year<span class="sc">&gt;</span><span class="dv">2014</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(week<span class="sc">&lt;</span><span class="dv">54</span>, year<span class="sc">!=</span><span class="dv">2023</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"^[A-Z]{2}$"</span>, geo)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">paste0</span>(year, <span class="st">"-W"</span>, <span class="fu">convert</span>(week), <span class="st">"-3"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5"></a>                  ISOweek<span class="sc">::</span><span class="fu">ISOweek2date</span>(.)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="fu">mutate</span>(<span class="at">month=</span>lubridate<span class="sc">::</span><span class="fu">month</span>(time)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="fu">mutate</span>(<span class="at">index =</span> <span class="fu">if_else</span>(year<span class="sc">%in%</span><span class="fu">c</span>(<span class="dv">2015</span><span class="sc">:</span><span class="dv">2019</span>), <span class="dv">0</span>, year)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="fu">mutate</span>(<span class="at">spatial =</span> <span class="fu">if_else</span>(<span class="fu">grepl</span>(<span class="st">"RO"</span>, geo), <span class="st">"România"</span>, <span class="st">"Europa"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="fu">group_by</span>(age, index, spatial) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="#cb5-10"></a>    <span class="fu">summarise</span>(<span class="at">normal =</span> <span class="fu">mean</span>(values, <span class="at">na.rm=</span><span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> <span class="fu">spread</span>(index, normal) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="fu">filter</span>(age<span class="sc">!=</span><span class="st">"UNK"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(age<span class="sc">!=</span><span class="st">"Y_GE80"</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(age<span class="sc">!=</span><span class="st">"TOTAL"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    <span class="fu">mutate</span>(<span class="at">age =</span> <span class="fu">fct_relevel</span>(age, <span class="st">"Y_GE90"</span>, <span class="at">after=</span><span class="dv">11</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="fu">arrange</span>(age)</span>
+<span id="cb5-15"><a href="#cb5-15"></a></span>
+<span id="cb5-16"><a href="#cb5-16"></a>mortalitati <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="st">"2015-2019"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">0</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-17"><a href="#cb5-17"></a>  <span class="fu">gt</span>(<span class="at">rowname_col=</span><span class="st">"age"</span>, <span class="at">groupname_col =</span> <span class="st">'spatial'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-18"><a href="#cb5-18"></a>  gtExtras<span class="sc">::</span><span class="fu">gt_theme_538</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a>  gt<span class="sc">::</span><span class="fu">opt_table_font</span>(<span class="at">font=</span><span class="st">"Roboto"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a>  gt<span class="sc">::</span><span class="fu">cols_width</span>(<span class="fu">matches</span>(<span class="st">"[0-9]+"</span>) <span class="sc">~</span> <span class="st">"100px"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>  gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="at">label =</span> <span class="st">"Regiune"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>  gt<span class="sc">::</span><span class="fu">fmt_number</span>(<span class="at">columns=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">sep_mark =</span> <span class="st">","</span>, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="st">"black"</span>, <span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb5-24"><a href="#cb5-24"></a>                <span class="at">locations =</span> <span class="fu">cells_row_groups</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-25"><a href="#cb5-25"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="at">style=</span><span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"#daae91"</span>), </span>
+<span id="cb5-26"><a href="#cb5-26"></a>                <span class="at">locations=</span><span class="fu">cells_row_groups</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-27"><a href="#cb5-27"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">color=</span><span class="st">'black'</span>), </span>
+<span id="cb5-28"><a href="#cb5-28"></a>                <span class="at">locations=</span><span class="fu">cells_column_labels</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-29"><a href="#cb5-29"></a>  gt<span class="sc">::</span><span class="fu">tab_options</span>(<span class="at">column_labels.background.color =</span> <span class="st">"#EEA100"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-30"><a href="#cb5-30"></a>  gt<span class="sc">::</span><span class="fu">tab_header</span>(<span class="at">title=</span><span class="st">"Numărul mediu de decese săptămânale"</span>, </span>
+<span id="cb5-31"><a href="#cb5-31"></a>                 <span class="at">subtitle=</span><span class="st">"Sursa: Eurostat, r_demo_mwk_3_10"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-32"><a href="#cb5-32"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">color=</span><span class="st">'black'</span>, <span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb5-33"><a href="#cb5-33"></a>                <span class="fu">cells_title</span>(<span class="at">groups =</span> <span class="st">"title"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-34"><a href="#cb5-34"></a>  gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">weight=</span><span class="st">'bold'</span>), <span class="fu">cells_column_labels</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-35"><a href="#cb5-35"></a>  gtExtras<span class="sc">::</span><span class="fu">gt_color_rows</span>(<span class="at">columns=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">palette =</span> <span class="st">"ggsci::orange_material"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="jybsiuvdqd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+#jybsiuvdqd table {
+  font-family: Roboto, Chivo, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jybsiuvdqd thead, #jybsiuvdqd tbody, #jybsiuvdqd tfoot, #jybsiuvdqd tr, #jybsiuvdqd td, #jybsiuvdqd th {
+  border-style: none;
+}
+
+#jybsiuvdqd p {
+  margin: 0;
+  padding: 0;
+}
+
+#jybsiuvdqd .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 3px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jybsiuvdqd .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jybsiuvdqd .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jybsiuvdqd .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #EEA100;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jybsiuvdqd .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #EEA100;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jybsiuvdqd .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jybsiuvdqd .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jybsiuvdqd .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jybsiuvdqd .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#jybsiuvdqd .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jybsiuvdqd .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  vertical-align: middle;
+}
+
+#jybsiuvdqd .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jybsiuvdqd .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jybsiuvdqd .gt_row {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jybsiuvdqd .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 0px;
+  border-right-color: #FFFFFF;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jybsiuvdqd .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jybsiuvdqd .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jybsiuvdqd .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#jybsiuvdqd .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jybsiuvdqd .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jybsiuvdqd .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jybsiuvdqd .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jybsiuvdqd .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jybsiuvdqd .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jybsiuvdqd .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jybsiuvdqd .gt_left {
+  text-align: left;
+}
+
+#jybsiuvdqd .gt_center {
+  text-align: center;
+}
+
+#jybsiuvdqd .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jybsiuvdqd .gt_font_normal {
+  font-weight: normal;
+}
+
+#jybsiuvdqd .gt_font_bold {
+  font-weight: bold;
+}
+
+#jybsiuvdqd .gt_font_italic {
+  font-style: italic;
+}
+
+#jybsiuvdqd .gt_super {
+  font-size: 65%;
+}
+
+#jybsiuvdqd .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#jybsiuvdqd .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jybsiuvdqd .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jybsiuvdqd .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jybsiuvdqd .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jybsiuvdqd .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jybsiuvdqd .gt_indent_5 {
+  text-indent: 25px;
+}
+
+tbody tr:last-child {
+  border-bottom: 2px solid #ffffff00;
+}
+</style>
+<table class="gt_table" style="table-layout: fixed;" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col>
+    <col style="width:100px;">
+    <col style="width:100px;">
+    <col style="width:100px;">
+    <col style="width:100px;">
+  </colgroup>
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="5" class="gt_heading gt_title gt_font_normal" style="color: #000000; font-weight: bold;">Numărul mediu de decese săptămânale</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Sursa: Eurostat, r_demo_mwk_3_10</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Regiune">Regiune</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000; font-weight: bold;" scope="col" id="2015-2019">2015-2019</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000; font-weight: bold;" scope="col" id="2020">2020</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000; font-weight: bold;" scope="col" id="2021">2021</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; color: #000000; font-weight: bold;" scope="col" id="2022">2022</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="5" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; color: #000000; font-weight: bold; background-color: #DAAE91;" scope="colgroup" id="Europa">Europa</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_1" scope="row" class="gt_row gt_center gt_stub">Y_LT10</th>
+<td headers="Europa stub_1_1 2015-2019" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">13</td>
+<td headers="Europa stub_1_1 2020" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">12</td>
+<td headers="Europa stub_1_1 2021" class="gt_row gt_right" style="background-color: #FFF3DF; color: #000000;">10</td>
+<td headers="Europa stub_1_1 2022" class="gt_row gt_right" style="background-color: #FFF2DF; color: #000000;">11</td></tr>
+    <tr><th id="stub_1_2" scope="row" class="gt_row gt_center gt_stub">Y10-19</th>
+<td headers="Europa stub_1_2 2015-2019" class="gt_row gt_right" style="background-color: #FFF3E0; color: #000000;">5</td>
+<td headers="Europa stub_1_2 2020" class="gt_row gt_right" style="background-color: #FFF3E0; color: #000000;">5</td>
+<td headers="Europa stub_1_2 2021" class="gt_row gt_right" style="background-color: #FFF3E0; color: #000000;">5</td>
+<td headers="Europa stub_1_2 2022" class="gt_row gt_right" style="background-color: #FFF3E0; color: #000000;">5</td></tr>
+    <tr><th id="stub_1_3" scope="row" class="gt_row gt_center gt_stub">Y20-29</th>
+<td headers="Europa stub_1_3 2015-2019" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">14</td>
+<td headers="Europa stub_1_3 2020" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">13</td>
+<td headers="Europa stub_1_3 2021" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">12</td>
+<td headers="Europa stub_1_3 2022" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">13</td></tr>
+    <tr><th id="stub_1_4" scope="row" class="gt_row gt_center gt_stub">Y30-39</th>
+<td headers="Europa stub_1_4 2015-2019" class="gt_row gt_right" style="background-color: #FFF1DA; color: #000000;">28</td>
+<td headers="Europa stub_1_4 2020" class="gt_row gt_right" style="background-color: #FFF1DB; color: #000000;">28</td>
+<td headers="Europa stub_1_4 2021" class="gt_row gt_right" style="background-color: #FFF1DC; color: #000000;">26</td>
+<td headers="Europa stub_1_4 2022" class="gt_row gt_right" style="background-color: #FFF1DB; color: #000000;">26</td></tr>
+    <tr><th id="stub_1_5" scope="row" class="gt_row gt_center gt_stub">Y40-49</th>
+<td headers="Europa stub_1_5 2015-2019" class="gt_row gt_right" style="background-color: #FFECCF; color: #000000;">71</td>
+<td headers="Europa stub_1_5 2020" class="gt_row gt_right" style="background-color: #FFEDD1; color: #000000;">70</td>
+<td headers="Europa stub_1_5 2021" class="gt_row gt_right" style="background-color: #FFEED3; color: #000000;">67</td>
+<td headers="Europa stub_1_5 2022" class="gt_row gt_right" style="background-color: #FFEDD1; color: #000000;">64</td></tr>
+    <tr><th id="stub_1_6" scope="row" class="gt_row gt_center gt_stub">Y50-59</th>
+<td headers="Europa stub_1_6 2015-2019" class="gt_row gt_right" style="background-color: #FFE0B2; color: #000000;">188</td>
+<td headers="Europa stub_1_6 2020" class="gt_row gt_right" style="background-color: #FFE2B6; color: #000000;">190</td>
+<td headers="Europa stub_1_6 2021" class="gt_row gt_right" style="background-color: #FFE4BC; color: #000000;">183</td>
+<td headers="Europa stub_1_6 2022" class="gt_row gt_right" style="background-color: #FFE2B6; color: #000000;">173</td></tr>
+    <tr><th id="stub_1_7" scope="row" class="gt_row gt_center gt_stub">Y60-69</th>
+<td headers="Europa stub_1_7 2015-2019" class="gt_row gt_right" style="background-color: #FFCA7B; color: #000000;">386</td>
+<td headers="Europa stub_1_7 2020" class="gt_row gt_right" style="background-color: #FFCC80; color: #000000;">415</td>
+<td headers="Europa stub_1_7 2021" class="gt_row gt_right" style="background-color: #FFD089; color: #000000;">415</td>
+<td headers="Europa stub_1_7 2022" class="gt_row gt_right" style="background-color: #FFCA7A; color: #000000;">393</td></tr>
+    <tr><th id="stub_1_8" scope="row" class="gt_row gt_center gt_stub">Y70-79</th>
+<td headers="Europa stub_1_8 2015-2019" class="gt_row gt_right" style="background-color: #FFAF3C; color: #000000;">638</td>
+<td headers="Europa stub_1_8 2020" class="gt_row gt_right" style="background-color: #FFAF3C; color: #000000;">716</td>
+<td headers="Europa stub_1_8 2021" class="gt_row gt_right" style="background-color: #FFB74C; color: #000000;">686</td>
+<td headers="Europa stub_1_8 2022" class="gt_row gt_right" style="background-color: #FFAD35; color: #000000;">673</td></tr>
+    <tr><th id="stub_1_9" scope="row" class="gt_row gt_center gt_stub">Y80-89</th>
+<td headers="Europa stub_1_9 2015-2019" class="gt_row gt_right" style="background-color: #FC8E00; color: #000000;">1,061</td>
+<td headers="Europa stub_1_9 2020" class="gt_row gt_right" style="background-color: #FC8F00; color: #000000;">1,180</td>
+<td headers="Europa stub_1_9 2021" class="gt_row gt_right" style="background-color: #FF9B0C; color: #000000;">1,080</td>
+<td headers="Europa stub_1_9 2022" class="gt_row gt_right" style="background-color: #FB8C00; color: #000000;">1,098</td></tr>
+    <tr><th id="stub_1_10" scope="row" class="gt_row gt_center gt_stub">Y_GE90</th>
+<td headers="Europa stub_1_10 2015-2019" class="gt_row gt_right" style="background-color: #FFB241; color: #000000;">610</td>
+<td headers="Europa stub_1_10 2020" class="gt_row gt_right" style="background-color: #FFAF3A; color: #000000;">727</td>
+<td headers="Europa stub_1_10 2021" class="gt_row gt_right" style="background-color: #FFB953; color: #000000;">655</td>
+<td headers="Europa stub_1_10 2022" class="gt_row gt_right" style="background-color: #FFA92C; color: #000000;">716</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="5" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; color: #000000; font-weight: bold; background-color: #DAAE91;" scope="colgroup" id="România">România</th>
+    </tr>
+    <tr class="gt_row_group_first"><th id="stub_1_11" scope="row" class="gt_row gt_center gt_stub">Y_LT10</th>
+<td headers="România stub_1_11 2015-2019" class="gt_row gt_right" style="background-color: #FFF0D9; color: #000000;">34</td>
+<td headers="România stub_1_11 2020" class="gt_row gt_right" style="background-color: #FFF1DB; color: #000000;">28</td>
+<td headers="România stub_1_11 2021" class="gt_row gt_right" style="background-color: #FFF1DB; color: #000000;">27</td>
+<td headers="România stub_1_11 2022" class="gt_row gt_right" style="background-color: #FFF1DB; color: #000000;">26</td></tr>
+    <tr><th id="stub_1_12" scope="row" class="gt_row gt_center gt_stub">Y10-19</th>
+<td headers="România stub_1_12 2015-2019" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">13</td>
+<td headers="România stub_1_12 2020" class="gt_row gt_right" style="background-color: #FFF2DF; color: #000000;">11</td>
+<td headers="România stub_1_12 2021" class="gt_row gt_right" style="background-color: #FFF2DE; color: #000000;">12</td>
+<td headers="România stub_1_12 2022" class="gt_row gt_right" style="background-color: #FFF2DF; color: #000000;">11</td></tr>
+    <tr><th id="stub_1_13" scope="row" class="gt_row gt_center gt_stub">Y20-29</th>
+<td headers="România stub_1_13 2015-2019" class="gt_row gt_right" style="background-color: #FFF1DA; color: #000000;">28</td>
+<td headers="România stub_1_13 2020" class="gt_row gt_right" style="background-color: #FFF1DC; color: #000000;">24</td>
+<td headers="România stub_1_13 2021" class="gt_row gt_right" style="background-color: #FFF1DC; color: #000000;">25</td>
+<td headers="România stub_1_13 2022" class="gt_row gt_right" style="background-color: #FFF1DC; color: #000000;">21</td></tr>
+    <tr><th id="stub_1_14" scope="row" class="gt_row gt_center gt_stub">Y30-39</th>
+<td headers="România stub_1_14 2015-2019" class="gt_row gt_right" style="background-color: #FFEDD1; color: #000000;">63</td>
+<td headers="România stub_1_14 2020" class="gt_row gt_right" style="background-color: #FFEED3; color: #000000;">63</td>
+<td headers="România stub_1_14 2021" class="gt_row gt_right" style="background-color: #FFEDD3; color: #000000;">69</td>
+<td headers="România stub_1_14 2022" class="gt_row gt_right" style="background-color: #FFEED4; color: #000000;">54</td></tr>
+    <tr><th id="stub_1_15" scope="row" class="gt_row gt_center gt_stub">Y40-49</th>
+<td headers="România stub_1_15 2015-2019" class="gt_row gt_right" style="background-color: #FFDEAD; color: #000000;">205</td>
+<td headers="România stub_1_15 2020" class="gt_row gt_right" style="background-color: #FFE1B4; color: #000000;">201</td>
+<td headers="România stub_1_15 2021" class="gt_row gt_right" style="background-color: #FFE0B2; color: #000000;">230</td>
+<td headers="România stub_1_15 2022" class="gt_row gt_right" style="background-color: #FFE1B3; color: #000000;">183</td></tr>
+    <tr><th id="stub_1_16" scope="row" class="gt_row gt_center gt_stub">Y50-59</th>
+<td headers="România stub_1_16 2015-2019" class="gt_row gt_right" style="background-color: #FFC46E; color: #000000;">435</td>
+<td headers="România stub_1_16 2020" class="gt_row gt_right" style="background-color: #FFC673; color: #000000;">470</td>
+<td headers="România stub_1_16 2021" class="gt_row gt_right" style="background-color: #FFC46E; color: #000000;">536</td>
+<td headers="România stub_1_16 2022" class="gt_row gt_right" style="background-color: #FFC56F; color: #000000;">434</td></tr>
+    <tr><th id="stub_1_17" scope="row" class="gt_row gt_center gt_stub">Y60-69</th>
+<td headers="România stub_1_17 2015-2019" class="gt_row gt_right" style="background-color: #FF9800; color: #000000;">919</td>
+<td headers="România stub_1_17 2020" class="gt_row gt_right" style="background-color: #FE9400; color: #000000;">1,090</td>
+<td headers="România stub_1_17 2021" class="gt_row gt_right" style="background-color: #FD9200; color: #000000;">1,235</td>
+<td headers="România stub_1_17 2022" class="gt_row gt_right" style="background-color: #FF9700; color: #000000;">939</td></tr>
+    <tr><th id="stub_1_18" scope="row" class="gt_row gt_center gt_stub">Y70-79</th>
+<td headers="România stub_1_18 2015-2019" class="gt_row gt_right" style="background-color: #F78000; color: #FFFFFF;">1,229</td>
+<td headers="România stub_1_18 2020" class="gt_row gt_right" style="background-color: #F67F00; color: #FFFFFF;">1,396</td>
+<td headers="România stub_1_18 2021" class="gt_row gt_right" style="background-color: #F37700; color: #FFFFFF;">1,646</td>
+<td headers="România stub_1_18 2022" class="gt_row gt_right" style="background-color: #F57C00; color: #FFFFFF;">1,283</td></tr>
+    <tr><th id="stub_1_19" scope="row" class="gt_row gt_center gt_stub">Y80-89</th>
+<td headers="România stub_1_19 2015-2019" class="gt_row gt_right" style="background-color: #E65100; color: #FFFFFF;">1,637</td>
+<td headers="România stub_1_19 2020" class="gt_row gt_right" style="background-color: #E65100; color: #FFFFFF;">1,847</td>
+<td headers="România stub_1_19 2021" class="gt_row gt_right" style="background-color: #E65100; color: #FFFFFF;">2,032</td>
+<td headers="România stub_1_19 2022" class="gt_row gt_right" style="background-color: #E65100; color: #FFFFFF;">1,655</td></tr>
+    <tr><th id="stub_1_20" scope="row" class="gt_row gt_center gt_stub">Y_GE90</th>
+<td headers="România stub_1_20 2015-2019" class="gt_row gt_right" style="background-color: #FFC269; color: #000000;">451</td>
+<td headers="România stub_1_20 2020" class="gt_row gt_right" style="background-color: #FFBD5D; color: #000000;">558</td>
+<td headers="România stub_1_20 2021" class="gt_row gt_right" style="background-color: #FFBD5D; color: #000000;">614</td>
+<td headers="România stub_1_20 2022" class="gt_row gt_right" style="background-color: #FFB64B; color: #000000;">564</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
 
 
 </section>
 
 </main> <!-- /main -->
+<div>
+
+<hr>
+
+<h5> Abonare </h5>
+<form method="post" action="https://blogtrottr.com">
+  <p>Vă place acest blog ? Primiți notificări aici:</p>
+  <input type="text" name="btr_email">
+  <input type="hidden" name="btr_url" value="https://petrebuciu.netlify.app/index.xml">
+  <input type="hidden" name="schedule_type" value="0">
+  <input type="submit" value="Subscribe">
+  <br></form>
+<br>
+
+<h5> Susţineţi financiar blogul cu o mică donaţie </h5>
+
+ <a href="https://www.buymeacoffee.com/petrebuciu"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee !&amp;emoji=&amp;slug=petrebuciu&amp;button_colour=EEA100&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff"></a>
+
+<br>
+<br>
+<h5> Share </h5>
+
+<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-hashtags="#rstats" data-show-count="false">Tweet</a><script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+<div>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -516,4 +1166,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+</div></div></body></html>

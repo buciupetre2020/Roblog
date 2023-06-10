@@ -15,15 +15,15 @@ title-block-banner: true
 
 :::: {.columns height="10%"}
 
-::: {.column width="40%"}
+::: {.column width="60%"}
 # Posturi
 
 :::
 
-::: {.column width="60%"}
-# Subscribe
+::: {.column width="40%"}
+<h3> Abonare </h3>
 <form method='post' action='https://blogtrottr.com'>
-  <p>Vă place acest blog ? Primiți notificări aici:</p>
+  <p>Primiți notificări pe mail:</p>
   <input type='text' name='btr_email' />
   <input type='hidden' name='btr_url'
          value='https://petrebuciu.netlify.app/index.xml'/>
@@ -31,9 +31,13 @@ title-block-banner: true
   <input type='submit' value='Subscribe' />
   <br>
   <br>
- <a href="https://www.buymeacoffee.com/petrebuciu"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee !&emoji=&slug=petrebuciu&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"></a>
 </form>
-:::
+
+
+:::  
+
+
+
 
 :::: 
 
