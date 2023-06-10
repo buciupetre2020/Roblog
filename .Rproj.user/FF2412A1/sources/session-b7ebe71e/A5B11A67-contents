@@ -1,0 +1,169 @@
+---
+title: "Geografia excesului de mortalitate"
+description: |
+  În ce regiuni a lovit pandemia cel mai tare ?
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-07-2023
+---
+
+## Analiză exploratorie
+
+Să explorăm datele de la Eurostat, tabelul foarte mare cu date despre numărul de decese săptămânal la nivel de regiune NUTS 3 şi pe categorii de vârstă numit `demo_r_mwk3_10`. Vom calcula excesul de mortalitate în maniera uzuală, adică prin formula următoare:
+
+$$
+Exces_{w_i}^{y_j} = \frac{Decese_{w_i}^{y_j} - \frac{1}{4} \sum_{j=2015}^{j=2019} Decese_{w_i}^{y_j}}{\frac{1}{4} \sum_{j=2015}^{j=2019} Decese_{w_i}^{y_j}}
+$$
+
+Unde $Exces_{w_i, y_j}$ este excesul de mortalitate din săptămâna i, anul j.
+
+```{r}
+
+library(tidyverse)
+library(eurostat)
+library(hrbrthemes)
+library(ggthemes)
+library(sf)
+
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 12,
+                                     axis_text_size = 10,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+
+#x <- get_eurostat(id="demo_r_mwk3_10") 
+x <- read_csv(here::here("data", "post-5", "exces.csv"))
+
+convert <-function(x){
+  if(nchar(x)==1){
+    paste0("0", x)
+  } else {
+    x
+  }
+}
+
+convert <- Vectorize(convert, SIMPLIFY = TRUE)
+
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: "desfasurata"
+
+exces_2020 <- x %>% filter(year>2014) %>% filter(week<54, year!=2023) %>%
+  mutate(index = if_else(year%in%c(2015:2019), 0, year)) %>% 
+  group_by(age, geo, index, week) %>% 
+  summarise(normal = mean(values, na.rm=TRUE)) %>% 
+  ungroup() %>% spread(index, normal) %>% drop_na() %>%
+  mutate(across(`2020`:`2022`, ~100*(.-`0`)/`0`))
+
+exces <- exces_2020 %>% 
+  filter(week<55) %>% 
+  gather(`2020`:`2022`, key='ani', value='exces') %>% 
+  mutate(time = paste0(ani, "-W",convert(week), "-3") %>% 
+                ISOweek::ISOweek2date(.))
+
+
+exces %>% 
+  filter(age=='TOTAL', grepl("^[A-Z]{2}$",geo)) %>% 
+  ggplot(aes(x=time, y=exces, group=geo)) + geom_line(aes(colour=geo),
+                                                      size=1) +
+  gghighlight::gghighlight(geo%in%c("RO","BG","HU","PL","CZ"),
+                           use_direct_label = FALSE,
+                           unhighlighted_params = list(size=0.5),
+                           calculate_per_facet = TRUE) +
+  scale_color_tableau() +
+  labs(title="Excesul de mortalitate în Europa", x=NULL, y="Exces (%)",
+       caption='Sursa: Eurostat, demo_r_mwk_3_10', 
+       subtitle="Raportat la media 2015-2019", colour='Ţară') +
+  scale_y_continuous(labels=scales::percent_format(scale=1)) +
+  geom_hline(yintercept=0, linetype=2)
+```
+
+Am stat destul de rău, fiind destul de sus la mortalitate în perioadele-cheie ale pandemiei. Să vedem mortalităţile pe categorii de vârste.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 12
+#| fig-dpi: 200
+
+
+exces_age <- x %>% 
+  filter(year>2014) %>% filter(week<54, year!=2023) %>%
+  filter(grepl("^[A-Z]{2}$", geo)) %>% 
+  mutate(time = paste0(year, "-W", convert(week), "-3") %>% ISOweek::ISOweek2date(.)) %>%
+  mutate(month=lubridate::month(time)) %>%
+  mutate(index = if_else(year%in%c(2015:2019), 0, year)) %>% 
+  group_by(age, index, month) %>% 
+  summarise(normal = mean(values, na.rm=TRUE)) %>% 
+  ungroup() %>% spread(index, normal) %>% drop_na() %>%
+  mutate(across(`2020`:`2022`, ~100*(.-`0`)/`0`)) %>%
+  gather(`2020`:`2022`, key='year', value='exces') %>%
+  mutate(time = paste0(year, "-", convert(month), "-01") %>% as.Date(.))
+
+
+exces_age %>% filter(!grepl("TOTAL|UNK|GE80", age)) %>% 
+    ggplot(aes(x=time, y=exces, fill=age)) + geom_col(aes(fill=age)) +
+    scale_y_continuous(labels=scales::percent_format(scale=1)) +
+    scale_fill_tableau() + facet_wrap(~age, ncol=2, scales='free') +
+    labs(title="Excesul de mortalitate pe vârste şi luni", 
+         caption='Sursa: Eurostat, r_demo_mwk_3_10', x=NULL, y="%")
+  
+
+
+```
+
+Interesant, cei tineri au avut mortalităţi mai mici în general, abia la intervalul 50-59 ani începe să se balanseze situaţia. Categoria 60-69 de ani are deja mortalitate constant pozitivă în perioadele-cheie ale pandemiei.
+
+Să vizualizăm o hartă europeană cu excesul mediu de mortalitate după anul 2020 până în prezent.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| fig-dpi: 200
+
+exces_geo <- x %>% 
+    filter(year>2014) %>% filter(week<54, year!=2023) %>%
+    mutate(index = if_else(year%in%c(2015:2019), 0, 1)) %>% 
+    filter(age=="TOTAL") %>%
+    group_by(age, geo, index) %>% 
+    summarise(normal = mean(values, na.rm=TRUE)) %>% 
+    ungroup() %>% spread(index, normal) %>% drop_na() %>% select(-age) %>%
+    mutate(exces = 100*(`1`-`0`)/`0`)
+
+harta <- eurostat::eurostat_geodata_60_2016 %>% as_tibble() %>%
+         mutate(index = if_else(grepl("^DE", geo) & LEVL_CODE>1, 0, 1)) %>% 
+         filter(index!=0) %>%
+         group_by(CNTR_CODE) %>% slice_max(order_by=LEVL_CODE, n=1) %>% ungroup() 
+
+exces_geo %>% inner_join(harta) %>% 
+  mutate(exces=cut_number(exces, n=10)) %>% st_as_sf() %>%
+  ggplot() + geom_sf(aes(fill=exces), colour=NA) +
+  geom_sf(data = {eurostat::eurostat_geodata_60_2016 %>% filter(LEVL_CODE==0) %>%
+                 st_as_sf() %>% st_cast(., "MULTILINESTRING") %>% 
+                 as_tibble() %>% st_as_sf()} , 
+          colour='black') +
+  scale_fill_tableau(palette = "Classic Orange-Blue", 
+                     type="ordered-diverging", direction = -1) +
+  scale_x_continuous(limits = c(-11, 30)) +
+  scale_y_continuous(limits = c(35, 70))
+  
+```
+
+Interesant la această hartă este diviziunea Germaniei de Est de cea de Vest. Istoria contează aparent şi când e vorba de mortalitatea de COVID.

@@ -1,0 +1,23 @@
+"0","read_csv(""https://raw.githubusercontent.com/pierrebachas/Globalization_Factor_Taxation/main/globalETR_bfjz.csv"") %>% 
+  select(country_name, year, region, ETR_L, ETR_K) %>% 
+  filter(country_name%in%c(""Romania"", ""Hungary"", ""Bulgaria"", ""Poland"", ""France"", ""Denmark"")) %>% 
+  gather(ETR_L:ETR_K, key=""tax_rate"", value='valoare') %>% 
+  mutate(country_name=gsub(""Poland"", ""Polonia"", country_name) %>% 
+                      gsub(""Hungary"", ""Ungaria"", .) %>% 
+                      gsub(""Denmark"", ""Danemarca"", .) %>%
+                      gsub(""France"", ""Franţa"", .)) %>%
+  mutate(tax_rate = gsub(""ETR_K"", ""Capital"", tax_rate) %>% 
+                    gsub(""ETR_L"", ""Muncă"", .)) %>% 
+  ggplot(aes(x=year, y=valoare, group=tax_rate)) + 
+  geom_line(aes(colour=tax_rate), size=1) + 
+  facet_wrap(~country_name, ncol=2, scales='free') +
+  scale_y_continuous(labels=scales::percent_format(scale=100)) +
+  labs(title = ""Rata de taxare efectivă capital-muncă"", 
+       subtitle=""Sursa: Banca Mondială"",
+       x=""Anul"", y=NULL, colour=""Indicator"") +
+  theme(legend.position = ""top"") +
+  ggthemes::scale_color_tableau()
+"
+"2","Error in read_csv(""https://raw.githubusercontent.com/pierrebachas/Globalization_Factor_Taxation/main/globalETR_bfjz.csv"") %>%  : 
+  could not find function ""%>%""
+"

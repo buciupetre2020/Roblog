@@ -1,0 +1,6 @@
+"0","x <- x %>% "
+"0","  filter(Judete!=""TOTAL"", Localitati!=""TOTAL"") %>% "
+"0","  mutate(natcode = parse_number(Localitati)) %>%"
+"0","  mutate(mediu = str_extract(Localitati, ""ORAS|MUNICIPIUL"") %>% "
+"0","                 replace_na(""COMUNA"")) %>% "
+"0","  mutate(natcode=as.character(natcode))"

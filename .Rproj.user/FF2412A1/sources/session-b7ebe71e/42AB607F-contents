@@ -1,0 +1,50 @@
+/* css styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+
+p {color: black;
+  line-height: 1.5em;
+  font-family: 'Roboto', serif;
+  
+}
+
+
+h2, h1, h3 {font-weight: bold;
+            font-family: 'Roboto', serif;
+}
+
+h2 {
+  background-color: black;
+  color: white;
+}
+
+div.quarto-title-banner {
+   font-family: 'Roboto', serif;
+   background: rgb(251,137,110);
+   background: linear-gradient(45deg, rgba(251,137,110,1) 0%, rgba(238,161,0,1) 51%); 
+}
+
+
+div.publishedDate {
+  color: #e74211;
+  font-weight: bold;
+  font-family: "Roboto"}
+
+.dataTables_wrapper {
+  box-shadow: 2px 2px 5px #000;
+  padding: 5px;
+  border: 1px solid black;
+  margin-bottom: 30px;
+  font-family: "Roboto"
+}
+
+.display thead th {
+  background-color: #000;
+  color: #FFF;
+}
+
+nav {
+  font-family: "Roboto", serif;
+}
+

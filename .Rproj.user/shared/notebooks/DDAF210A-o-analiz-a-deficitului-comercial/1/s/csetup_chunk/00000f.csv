@@ -1,0 +1,172 @@
+"0","knitr::opts_chunk$set(echo=FALSE, warning=FALSE, error=FALSE, message=FALSE)"
+"0","library(tidyverse)"
+"2","── [1mAttaching core tidyverse packages[22m ─────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.2     [32m✔[39m [34mreadr    [39m 2.1.4
+[32m✔[39m [34mforcats  [39m 1.0.0     [32m✔[39m [34mstringr  [39m 1.5.0
+[32m✔[39m [34mggplot2  [39m 3.4.2     [32m✔[39m [34mtibble   [39m 3.2.1
+[32m✔[39m [34mlubridate[39m 1.9.2     [32m✔[39m [34mtidyr    [39m 1.3.0
+[32m✔[39m [34mpurrr    [39m 1.0.1     "
+"2","── [1mConflicts[22m ───────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the ]8;;http://conflicted.r-lib.org/conflicted package]8;; to force all conflicts to become errors"
+"0","library(TEMPO)"
+"2","Loading required package: curl
+"
+"2","Using libcurl 7.68.0 with OpenSSL/1.1.1f
+"
+"2","
+Attaching package: ‘curl’
+
+"
+"2","The following object is masked from ‘package:readr’:
+
+    parse_date
+
+"
+"2","Loading required package: jsonlite
+"
+"2","
+Attaching package: ‘jsonlite’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    flatten
+
+"
+"0","library(eurostat)"
+"0","library(ggraph)"
+"0","library(tidygraph)"
+"2","
+Attaching package: ‘tidygraph’
+
+"
+"2","The following object is masked _by_ ‘.GlobalEnv’:
+
+    convert
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    filter
+
+"
+"0","library(eurostat)"
+"0","library(ggthemes)"
+"0",""
+"0","theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, "
+"0","                                     strip_text_family = ""Frutiger Bold"","
+"0","                                     strip_text_face = ""italic"","
+"0","                                     axis_title_size = 10,"
+"0","                                     axis_text_size = 8,"
+"0","                                     base_family = ""Frutiger"","
+"0","                                     plot_title_family = ""Frutiger Bold"","
+"0","                                     subtitle_family = ""Frutiger"","
+"0","                                     caption_family = ""Frutiger"", "
+"0","                                     caption_size = 8,"
+"0","                                     plot_title_size = 14,"
+"0","                                     subtitle_size = 10) +"
+"0","  theme(legend.text = element_text(size=8), "
+"0","        legend.title = element_text(size=10),"
+"0","        legend.key.size = unit(0.5, ""cm"")))  #setam tema graficelor "
+"0",""
+"0",""
+"0","#Descărcăm fișierele"
+"0","tempo_bulk(codes=""EXP101F"", directory = here::here(""data/post-6""))"
+"2","The following matrices will be downloaded: 
+"
+"1","[1]"
+"1"," ""EXP101F"""
+"1","
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/matrices?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/EXP101F?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Warning: attempt to set 'sep' ignored"
+"1","[[1]]
+"
+"1","NULL
+"
+"1","
+"
+"2","Warning: The working directory was changed to /home/petre/R/proiecte/Roblog_Quarto/data/post-6 inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","tempo_bulk(codes=""EXP102F"", directory=here::here(""data/post-6""))"
+"2","The following matrices will be downloaded: 
+"
+"1","[1]"
+"1"," ""EXP102F"""
+"1","
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/matrices?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/EXP102F?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Warning: attempt to set 'sep' ignored"
+"1","[[1]]
+"
+"1","NULL
+"
+"1","
+"
+"0","tempo_bulk(codes=""EXP101B"", directory = here::here(""data/post-6""))"
+"2","The following matrices will be downloaded: 
+"
+"1","[1]"
+"1"," ""EXP101B"""
+"1","
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/matrices?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/EXP101B?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Warning: attempt to set 'sep' ignored"
+"1","[[1]]
+"
+"1","NULL
+"
+"1","
+"
+"0","tempo_bulk(codes=""EXP102E"", directory=here::here(""data/post-6""))"
+"2","The following matrices will be downloaded: 
+"
+"1","[1]"
+"1"," ""EXP102E"""
+"1","
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/matrices?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Parsing response: http://statistici.insse.ro:8077/tempo-ins/matrix/EXP102E?lang=ro
+
+"
+"2","Response processed.
+"
+"2","Warning: attempt to set 'sep' ignored"
+"1","[[1]]
+"
+"1","NULL
+"
+"1","
+"
