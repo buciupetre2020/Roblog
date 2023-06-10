@@ -195,6 +195,7 @@ read_csv("https://raw.githubusercontent.com/pierrebachas/Globalization_Factor_Ta
   theme(legend.position = "top") +
   ggthemes::scale_color_tableau()
 
+
 ```
 
 Observăm că Franţa şi Danemarca taxează mai mult capitalul decât munca. Şi nu o duc rău deloc.
