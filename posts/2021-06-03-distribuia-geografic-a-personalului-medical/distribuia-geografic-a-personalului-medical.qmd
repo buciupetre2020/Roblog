@@ -81,10 +81,11 @@ x %>%
   spread(Ani, Valoare) %>% select(-Judete,-Localitati) %>% arrange(desc(Proprietate)) %>%
   gt::gt(rowname_col = "Categorii", groupname_col = "Proprietate") %>%
   gtExtras::gt_theme_538() %>%
+  gt::opt_table_font(font="Roboto") %>%
   gt::cols_width(matches("[0-9]+") ~ "100px") %>%
   gt::tab_stubhead(label = "Categorii") %>%
   gt::fmt_number(columns=2:6, sep_mark = ",", decimals = 0) %>%
-  gt::tab_style(style = cell_text("#ad0329", weight = "bold"), 
+  gt::tab_style(style = cell_text("black", weight = "bold"), 
                 locations = cells_row_groups()) %>%
   gt::tab_style(style=cell_fill(color="#daae91"), 
                 locations=cells_row_groups()) %>%
@@ -92,7 +93,10 @@ x %>%
                 locations=cells_column_labels()) %>%
   gt::tab_options(column_labels.background.color = "#EEA100") %>%
   gt::tab_header(subtitle = "Sursa: INS, SAN104B", 
-                 title="Personal sanitar după forme de proprietate")
+                 title="Personal sanitar după forme de proprietate") %>%
+  gt::tab_style(cell_text(color='black', weight = "bold"), 
+                cells_title(groups = "title")) %>%
+  gt::tab_style(cell_text(weight='bold'), cells_column_labels())
 ```
 
 Să vizualizăm aceleași trenduri doar pentru medici însă pe medii de rezidență. Observăm că trendul constant pentru personalul medical angajat în proprietatea publică este de fapt unul divergent la nivel rural-urbal: pe când în municipii numărul lor a crescut ușor, în rural și urbanul mic el a scăzut, dând astfel un număr relativ constant la nivel național. În privința celor angajați în privat, trendul este de creștere pentru toate mediile, mai accentuat, desigur, pentru urbanul mare. Lecția acestui grafic: ne izbește procentul mic de medici și personal sanitar în general în mediul rural, proporția fiind și de 5-10 ori mai mică în rural față de urbanul mare.

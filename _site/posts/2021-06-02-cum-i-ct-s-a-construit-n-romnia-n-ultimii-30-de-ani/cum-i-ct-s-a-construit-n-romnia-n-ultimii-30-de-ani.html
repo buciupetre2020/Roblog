@@ -330,30 +330,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-5"><a href="#cb5-5"></a>    <span class="fu">mutate</span>(<span class="at">suprafata =</span> valoare<span class="sc">/</span>pop2020) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ani<span class="sc">==</span><span class="dv">2021</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-6"><a href="#cb5-6"></a>    <span class="fu">select</span>(<span class="sc">-</span>ani, <span class="sc">-</span>pop2020) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(suprafata)) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-7"><a href="#cb5-7"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span> gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">%&gt;%</span> gtExtras<span class="sc">::</span><span class="fu">gt_theme_538</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb5-8"><a href="#cb5-8"></a>    <span class="fu">fmt_number</span>(<span class="at">columns=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals=</span><span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Localităţile cu cea mai mare suprafaţă construită în regim public per locuitor"</span>, <span class="at">subtitle=</span><span class="st">"Sursa: INS, LOC103B, 2021"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-10"><a href="#cb5-10"></a>    gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"#EEA100"</span>), <span class="fu">cells_column_labels</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-8"><a href="#cb5-8"></a>    gt<span class="sc">::</span><span class="fu">opt_table_font</span>(<span class="at">font=</span><span class="st">"Roboto"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="fu">fmt_number</span>(<span class="at">columns=</span><span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">decimals=</span><span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Localităţile cu cea mai mare suprafaţă construită în regim public per locuitor"</span>, <span class="at">subtitle=</span><span class="st">"Sursa: INS, LOC103B, 2021"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="#cb5-11"></a>    gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"#EEA100"</span>), <span class="fu">cells_column_labels</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">'bold'</span>), <span class="fu">cells_title</span>(<span class="at">groups=</span><span class="st">'title'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 
-<div id="jqqmohrijp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="ejklhqjbvc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-#jqqmohrijp table {
-  font-family: Chivo, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+#ejklhqjbvc table {
+  font-family: Roboto, Chivo, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jqqmohrijp thead, #jqqmohrijp tbody, #jqqmohrijp tfoot, #jqqmohrijp tr, #jqqmohrijp td, #jqqmohrijp th {
+#ejklhqjbvc thead, #ejklhqjbvc tbody, #ejklhqjbvc tfoot, #ejklhqjbvc tr, #ejklhqjbvc td, #ejklhqjbvc th {
   border-style: none;
 }
 
-#jqqmohrijp p {
+#ejklhqjbvc p {
   margin: 0;
   padding: 0;
 }
 
-#jqqmohrijp .gt_table {
+#ejklhqjbvc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -379,12 +381,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-left-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_caption {
+#ejklhqjbvc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jqqmohrijp .gt_title {
+#ejklhqjbvc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -396,7 +398,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-width: 0;
 }
 
-#jqqmohrijp .gt_subtitle {
+#ejklhqjbvc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -408,7 +410,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-width: 0;
 }
 
-#jqqmohrijp .gt_heading {
+#ejklhqjbvc .gt_heading {
   background-color: #FFFFFF;
   text-align: left;
   border-bottom-color: #FFFFFF;
@@ -420,13 +422,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_bottom_border {
+#ejklhqjbvc .gt_bottom_border {
   border-bottom-style: none;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_col_headings {
+#ejklhqjbvc .gt_col_headings {
   border-top-style: none;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -441,7 +443,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_col_heading {
+#ejklhqjbvc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -461,7 +463,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#jqqmohrijp .gt_column_spanner_outer {
+#ejklhqjbvc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -473,15 +475,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 4px;
 }
 
-#jqqmohrijp .gt_column_spanner_outer:first-child {
+#ejklhqjbvc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jqqmohrijp .gt_column_spanner_outer:last-child {
+#ejklhqjbvc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jqqmohrijp .gt_column_spanner {
+#ejklhqjbvc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #000000;
@@ -493,11 +495,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   width: 100%;
 }
 
-#jqqmohrijp .gt_spanner_row {
+#ejklhqjbvc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jqqmohrijp .gt_group_heading {
+#ejklhqjbvc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -523,7 +525,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   text-align: left;
 }
 
-#jqqmohrijp .gt_empty_group_heading {
+#ejklhqjbvc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -538,15 +540,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: middle;
 }
 
-#jqqmohrijp .gt_from_md > :first-child {
+#ejklhqjbvc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jqqmohrijp .gt_from_md > :last-child {
+#ejklhqjbvc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jqqmohrijp .gt_row {
+#ejklhqjbvc .gt_row {
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 5px;
@@ -565,7 +567,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   overflow-x: hidden;
 }
 
-#jqqmohrijp .gt_stub {
+#ejklhqjbvc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 80%;
@@ -578,7 +580,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#jqqmohrijp .gt_stub_row_group {
+#ejklhqjbvc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -592,15 +594,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   vertical-align: top;
 }
 
-#jqqmohrijp .gt_row_group_first td {
+#ejklhqjbvc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jqqmohrijp .gt_row_group_first th {
+#ejklhqjbvc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jqqmohrijp .gt_summary_row {
+#ejklhqjbvc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -610,16 +612,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#jqqmohrijp .gt_first_summary_row {
+#ejklhqjbvc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_first_summary_row.thick {
+#ejklhqjbvc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jqqmohrijp .gt_last_summary_row {
+#ejklhqjbvc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,7 +631,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_grand_summary_row {
+#ejklhqjbvc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -639,7 +641,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#jqqmohrijp .gt_first_grand_summary_row {
+#ejklhqjbvc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -649,7 +651,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-top-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_last_grand_summary_row_top {
+#ejklhqjbvc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -659,11 +661,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_striped {
+#ejklhqjbvc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#jqqmohrijp .gt_table_body {
+#ejklhqjbvc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -672,7 +674,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-bottom-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_footnotes {
+#ejklhqjbvc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -686,7 +688,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_footnote {
+#ejklhqjbvc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -695,7 +697,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#jqqmohrijp .gt_sourcenotes {
+#ejklhqjbvc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -709,7 +711,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   border-right-color: #D3D3D3;
 }
 
-#jqqmohrijp .gt_sourcenote {
+#ejklhqjbvc .gt_sourcenote {
   font-size: 12px;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -717,63 +719,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   padding-right: 5px;
 }
 
-#jqqmohrijp .gt_left {
+#ejklhqjbvc .gt_left {
   text-align: left;
 }
 
-#jqqmohrijp .gt_center {
+#ejklhqjbvc .gt_center {
   text-align: center;
 }
 
-#jqqmohrijp .gt_right {
+#ejklhqjbvc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jqqmohrijp .gt_font_normal {
+#ejklhqjbvc .gt_font_normal {
   font-weight: normal;
 }
 
-#jqqmohrijp .gt_font_bold {
+#ejklhqjbvc .gt_font_bold {
   font-weight: bold;
 }
 
-#jqqmohrijp .gt_font_italic {
+#ejklhqjbvc .gt_font_italic {
   font-style: italic;
 }
 
-#jqqmohrijp .gt_super {
+#ejklhqjbvc .gt_super {
   font-size: 65%;
 }
 
-#jqqmohrijp .gt_footnote_marks {
+#ejklhqjbvc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jqqmohrijp .gt_asterisk {
+#ejklhqjbvc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jqqmohrijp .gt_indent_1 {
+#ejklhqjbvc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jqqmohrijp .gt_indent_2 {
+#ejklhqjbvc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jqqmohrijp .gt_indent_3 {
+#ejklhqjbvc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jqqmohrijp .gt_indent_4 {
+#ejklhqjbvc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jqqmohrijp .gt_indent_5 {
+#ejklhqjbvc .gt_indent_5 {
   text-indent: 25px;
 }
 
@@ -784,7 +786,7 @@ tbody tr:last-child {
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
   <thead>
     <tr class="gt_heading">
-      <td colspan="5" class="gt_heading gt_title gt_font_normal" style="">Localităţile cu cea mai mare suprafaţă construită în regim public per locuitor</td>
+      <td colspan="5" class="gt_heading gt_title gt_font_normal" style="font-weight: bold;">Localităţile cu cea mai mare suprafaţă construită în regim public per locuitor</td>
     </tr>
     <tr class="gt_heading">
       <td colspan="5" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">Sursa: INS, LOC103B, 2021</td>
@@ -911,7 +913,7 @@ tbody tr:last-child {
 <summary>Arată codul</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"BRASOV"</span>, loc), <span class="fu">grepl</span>(<span class="st">"public"</span>, forme)) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>ani, <span class="at">y=</span>valoare)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">size=</span><span class="fl">1.5</span>, <span class="at">colour=</span><span class="st">"#EEA100"</span>) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Suprafața locuibilă în regim public - orașul Brașov"</span>, </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Suprafața în regim public - orașul Brașov"</span>, </span>
 <span id="cb6-4"><a href="#cb6-4"></a>       <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="fu">expr</span>(m<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
 <span id="cb6-5"><a href="#cb6-5"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span>scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">big.mark =</span> <span class="st">","</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>

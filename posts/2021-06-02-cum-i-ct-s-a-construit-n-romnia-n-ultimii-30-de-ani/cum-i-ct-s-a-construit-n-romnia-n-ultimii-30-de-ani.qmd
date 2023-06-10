@@ -118,9 +118,11 @@ x %>% filter(grepl("public", forme)) %>%
     mutate(suprafata = valoare/pop2020) %>% filter(ani==2021) %>% 
     select(-ani, -pop2020) %>% arrange(desc(suprafata)) %>% 
     slice(1:20) %>% gt::gt() %>% gtExtras::gt_theme_538() %>% 
+    gt::opt_table_font(font="Roboto") %>%
     fmt_number(columns=4:5, decimals=2) %>%
     tab_header(title = "Localităţile cu cea mai mare suprafaţă construită în regim public per locuitor", subtitle="Sursa: INS, LOC103B, 2021") %>% 
-    gt::tab_style(cell_fill(color="#EEA100"), cells_column_labels())
+    gt::tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>%
+    gt::tab_style(cell_text(weight = 'bold'), cells_title(groups='title'))
 ```
 
 Destule comune de care nu a auzit nimeni. Dar şi orăşele precum Predealul. Brașovul stă cel mai bine la capitolul suprafață locuită publică totală, nu per cap de locuitor. Însă chiar și în cazul lui declinul este semnificativ: în 1994 avea 912.000 metri pătrați locuiți în regim public față de 250.000 în 2019. Totuși, în ultimii ani a început să crească, întrucât valoarea era și mai scăzută în jurul anului 2010.
@@ -132,7 +134,7 @@ Destule comune de care nu a auzit nimeni. Dar şi orăşele precum Predealul. Br
 
 x %>% filter(grepl("BRASOV", loc), grepl("public", forme)) %>% 
   ggplot(aes(x=ani, y=valoare)) + geom_line(size=1.5, colour="#EEA100") +
-  labs(title = "Suprafața locuibilă în regim public - orașul Brașov", 
+  labs(title = "Suprafața în regim public - orașul Brașov", 
        x=NULL, y=expr(m^2)) +
   scale_y_continuous(labels=scales::number_format(big.mark = ","))
 
