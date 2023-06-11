@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.361">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,7 +17,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -57,7 +57,8 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script>
@@ -90,6 +91,7 @@ ul.task-list li input[type="checkbox"] {
   })
   </script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
@@ -106,22 +108,24 @@ ul.task-list li input[type="checkbox"] {
     <span class="navbar-title">Analize socio-economice cu R</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html">
+    <a class="nav-link" href="./about.html" rel="" target="">
  <span class="menu-text">Despre blog</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -149,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(6)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(7)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -204,9 +208,37 @@ Primiți notificări pe mail:
     </div>
 </div>
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686414914966" data-listing-reading-time-sort="22.195">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1686430800000" data-listing-file-modified-sort="1686485409018" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
 <div class="thumbnail">
-<p><a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html"> <img src="./posts/2021-06-06-o-analiz-a-deficitului-comercial/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html"> <img src="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/preview.png" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html">
+<h3 class="no-anchor listing-title">
+La ce categorii de cheltuieli se remarcă România ?
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<p>O aplicaţie a analizei multivariate</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html">
+<div class="listing-date">
+Jun 11, 2023
+</div>
+<div class="listing-author">
+Petre Buciu
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686414914966" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="23">
+<div class="thumbnail">
+<p><a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html"> <img src="./posts/2021-06-06-o-analiz-a-deficitului-comercial/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html">
@@ -232,9 +264,9 @@ Petre Buciu
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686422036722" data-listing-reading-time-sort="7.98">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686422036722" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
 <div class="thumbnail">
-<p><a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html"> <img src="./posts/2021-06-06-geografia-excesului-de-mortalitate/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html"> <img src="./posts/2021-06-06-geografia-excesului-de-mortalitate/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html">
@@ -260,9 +292,9 @@ Petre Buciu
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1685221200000" data-listing-file-modified-sort="1686421302518" data-listing-reading-time-sort="9.64">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1685221200000" data-listing-file-modified-sort="1686421302518" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
 <div class="thumbnail">
-<p><a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html"> <img src="./posts/2023-05-28-inegalitea-romniei-n-context-european/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html"> <img src="./posts/2023-05-28-inegalitea-romniei-n-context-european/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html">
@@ -288,9 +320,9 @@ Petre Buciu
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686421267082" data-listing-reading-time-sort="4.57">
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686421267082" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
 <div class="thumbnail">
-<p><a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html"> <img src="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html"> <img src="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html">
@@ -316,9 +348,9 @@ Petre Buciu
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686421335430" data-listing-reading-time-sort="8.685">
+<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686469897884" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
 <div class="thumbnail">
-<p><a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html"> <img src="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html"> <img src="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html">
@@ -344,9 +376,9 @@ Petre Buciu
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1622581200000" data-listing-file-modified-sort="1686421321334" data-listing-reading-time-sort="6.41">
+<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1622581200000" data-listing-file-modified-sort="1686421321334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7">
 <div class="thumbnail">
-<p><a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html"> <img src="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/preview.png" class="thumnail-image"> </a></p>
+<p><a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html"> <img src="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/preview.png" class="thumbnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html">
@@ -430,9 +462,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -497,6 +543,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

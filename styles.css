@@ -14,10 +14,6 @@ h2, h1, h3 {font-weight: bold;
             font-family: 'Roboto', serif;
 }
 
-h2 {
-  background-color: black;
-  color: white;
-}
 
 div.quarto-title-banner {
    font-family: 'Roboto', serif;
