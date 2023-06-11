@@ -1,0 +1,172 @@
+---
+title: "Cum au trecut firmele prin pandemie ?"
+description: |
+  O analiză sumară a bilanţurilor financiare depuse de firme în anii 2019-2021
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-11-2023
+image: preview.png
+number-sections: true
+categories:
+  - "microeconomice"
+---
+
+## Rata taxării efective
+
+Am descărcat bilanţurile financiare ale firmelor de pe [data.gov.ro](https://data.gov.ro/dataset?q=situatii+financiare) pentru anii 2019, 2020 şi 2021 (2022 încă nu e disponibil) pentru a analiza cum au trecut firmele prin pandemia de COVID. Când vor apărea datele pentru 2022, vom putea analiza şi cauzele inflaţiei din România din perioada prezentă. Pentru început ne mulţumim să vedem cum au trecut firmele prin pandemia de COVID în vremurile restricţiilor. Ce firme au fost scutite de la plata impozitelor pe profit ? Ce sectoare au avut profitabilitate ridicată ? Şi aşa mai departe.
+
+```{r}
+
+library(tidyverse)
+library(hrbrthemes)
+library(ggthemes)
+library(gt)
+library(gtExtras)
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 12,
+                                     axis_text_size = 10,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+
+x <- bind_rows(read_csv(here::here("data/post-8", 
+                                   "bl_bs_sl+ir+uu_2019.csv")) %>% 
+               mutate(year = 2019),
+               read_csv(here::here("data/post-8", 
+                                   "bl_bs_sl+ir+uu_2020.csv")) %>%
+               mutate(year=2020),
+               read_csv(here::here("data/post-8", 
+                                   "bl_bs_sl+ir+uu_2021.csv")) %>%
+               mutate(year=2021)) %>%
+    mutate(across(active_imobilizate_total:numar_mediu_de_salariati,
+                 ~replace_na(., 0))) %>%
+    filter(numar_mediu_de_salariati < 30000) %>%
+    mutate(categorie = if_else(grepl("uu", categorie), 
+                             "Simplificat", "CIT"))
+```
+
+Să vedem rata taxării efective (procent din profit plătit ca impozit) după categorii de firme: companii mari (corporaţii, IMM-uri şi microîntreprinderi). Nu ştim de la statul român care-i care, vom calcula noi pe baza acestor caracteristici de pe [Wikipedia](https://ro.wikipedia.org/wiki/%C3%8Entreprinderi_mici_%C8%99i_mijlocii). Totuşi nu avem date despre cine deţine ce, aşa că ultimul criteriu, al treilea, nu va fi inclus. Bănuiesc că nu sunt multe firme în situaţia aceasta astfel încât să ne vicieze analiza. Dar e nevoie de nişte preprocesare înainte întrucât aceste date sunt foarte proaste: lipsesc valori, unele firme cu profit 0 au peste 100.000 de salariaţi, o firmă are 40 % din capitalul ţării şi multe asemenea lucruri.
+
+```{r}
+x <- x %>% mutate(tip = case_when((between(numar_mediu_de_salariati, 0, 9) & between(cifra_de_afaceri_neta, -30000000, 10000000)) ~ "Microîntreprinderi",
+                                  (between(numar_mediu_de_salariati, 10, 49) & between(cifra_de_afaceri_neta, 10000001, 50000000)) ~ "Întreprinderi mici",  (between(numar_mediu_de_salariati, 50, 249) & between(cifra_de_afaceri_neta, 50000001, 250000000)) ~ "Întreprinderi medii", 
+                                  (between(numar_mediu_de_salariati, 250, 100000) & between(cifra_de_afaceri_neta, 250000001, 100000000000)) ~ "Corporaţii")) %>% mutate(tip = replace_na(tip, "Neclasificate"))
+
+```
+
+Vom calcula rata taxării efective per tip de firmă şi tip de bilanţ depus (simplificat - 1 % din cifra de afaceri netă sau CIT - impozit pe profit 16 %). Acest lucru se face după următoarea formulă foarte simplă:
+
+$$
+R = 100*\frac{Profit_{brut}-Profit_{net}}{Profit_{brut}}
+$$
+
+```{r}
+#| tbl-cap: Rata taxării efective după tipul de firmă
+#| label: tbl-rate
+
+x %>% filter(cui!=42443305) %>% group_by(year, tip) %>% 
+  summarise(rate = 100*(sum(profit_brut)-sum(profit_net))/sum(profit_brut)) %>% ungroup() %>% spread(year, rate) %>% gt::gt() %>% 
+  gtExtras::gt_theme_538() %>% 
+  tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>% 
+  gt::opt_table_font(font="Roboto") %>% 
+  tab_header(title=NULL, subtitle="Sursa: data.gov.ro") %>% 
+  tab_style(cell_text(weight = 'bold'), cells_title(groups='title')) %>% 
+  gt::fmt_percent(columns=2:4, scale_values = F)
+```
+
+Interesant. Deşi sunt de zece ori mai multe decât restul companiilor împreună, microîntreprinderile plătesc doar 5 % din impozit sub bilanţul simplificat, pe cifra de afaceri. E un regim foarte avantajos pentru ele, într-adevăr. La pragul foarte mare de 1 milion de EURO cifra de afaceri (din 2023 de "doar" 500.000 EURO), este clar că multe firme mari se ascund sub această umbrelă ca să scutească nişte bani la stat.
+
+Ce mai observăm din @tbl-rate este că în 2021 au plătit cam toate categoriile şi mai puţin decât în 2020. Firmele neclasificate par a avea număr de salariaţi de ordinul zecilor, dar cifră de afaceri de microîntreprindere practic şi profituri de câteva sute de mii de RON. Sunt ceva mai ineficiente. De asemenea sunt câteva firme care apar la bilanţ simplificat în date, dar nu sunt microîntreprinderi sunt clasificarea de mărime, nici după rata de taxare efectivă suportată. Alt viciu al datelor.
+
+```{r}
+converteste <- Vectorize(function(x){
+  if(nchar(x)==3){
+    paste0("0", x)
+  } else { x }
+}, SIMPLIFY = TRUE)
+
+x <- x %>% mutate(caen= converteste(caen) %>% substr(., 1, 2))
+```
+
+Să vedem în următorul tabel rata taxării efective după sectoare CAEN, pentru anul 2020.
+
+```{r}
+#| tbl-cap: Rata taxării efectivă după CAEN
+#| label: tbl-caen
+
+x %>% filter(cui!=42443305) %>% filter(year==2020) %>%
+  inner_join(read_delim(here::here("data", "caen.csv"), delim='\",\"')) %>% 
+  select(-caen) %>% relocate(sector) %>% group_by(sector, tip) %>% 
+  summarise(rate = 100*(sum(profit_brut)-sum(profit_net))/sum(profit_brut)) %>% ungroup() %>% mutate(tip = gsub("[Îî]ntreprinderi", "", tip)) %>% 
+  spread(tip, rate) %>% #mutate_at(2:6, ~replace_na(., 0)) %>% 
+  relocate(sector, `Corporaţii`, ` medii`, 
+           ` mici`, Micro, Neclasificate) %>%
+  filter(!grepl("Învăţ|publică", sector)) %>%
+  gt::gt() %>% gtExtras::gt_theme_538() %>% 
+  tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>% 
+  gt::opt_table_font(font="Roboto") %>% 
+  gtExtras::gt_color_rows(columns=2:6, palette="ggsci::orange_material") %>% 
+  gt::fmt_percent(2:6, scale_values = F)
+
+
+```
+
+Ne fac cu ochiul procentele mici plătite de firmele mici de asigurări şi intermedieri financiare, energie (însă nu corporaţiile) şi corporaţiile din construcţii care plătesc la jumătate, dar mai ales corporaţiile din HoReCa care plătesc un procent ruşinos în toţi aceşti ani. Dar sunt numai două la număr. Ca şi numărul de întreprinderi medii.
+
+## Profitabilitatea
+
+Şi acum profitabilitatea calculată ca procent din cifra de afaceri netă. Acelaşi format de tabel, tot pentru 2020:
+
+```{r}
+#| tbl-cap: Profitabilitatea după tip de firmă, 2020
+#| label: tbl-profit-tip
+
+x %>% filter(cui!=42443305) %>% filter(year==2020) %>%
+    inner_join(read_delim(here::here("data", "caen.csv"), delim='\",\"')) %>%
+    select(-caen) %>% relocate(sector) %>% group_by(sector, tip) %>% 
+    summarise(rate = 100*(sum(profit_net))/sum(cifra_de_afaceri_neta)) %>% ungroup() %>% mutate(tip = gsub("[Îî]ntreprinderi", "", tip)) %>% 
+    spread(tip, rate) %>% #mutate_at(2:6, ~replace_na(., 0)) %>% 
+    relocate(sector, `Corporaţii`, ` medii`, 
+             ` mici`, Micro, Neclasificate) %>%
+    filter(!grepl("Învăţ|publică", sector)) %>%
+    gt::gt() %>% gtExtras::gt_theme_538() %>% 
+    tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>% 
+    gt::opt_table_font(font="Roboto") %>% 
+    gtExtras::gt_color_rows(columns=2:6, palette="ggsci::orange_material") %>% 
+    gt::fmt_percent(2:6, scale_values = F)
+```
+
+În mod suspect cele care plăteau cel mai puţin apar acum cu cea mai mare profitabilitate. Nu e un paradox, cel puţin la microîntreprinderi: dacă cifra de afaceri e mică, iar profitul mare, profitabilitatea e mare iar impozitul plătit mic, deci rata efectivă e tot mică. Să vedem rata de profitabilitate agregată pe ani.
+
+```{r}
+#| tbl-cap: Profitabilitatea agregată
+#| label: tbl-profit
+
+x %>% filter(cui!=42443305) %>%
+    inner_join(read_delim(here::here("data", "caen.csv"), delim='\",\"')) %>%
+    select(-caen) %>% relocate(sector) %>% group_by(year, sector) %>% 
+    summarise(rate = 100*(sum(profit_net))/sum(cifra_de_afaceri_neta)) %>%       ungroup() %>% 
+    spread(year, rate) %>% #mutate_at(2:6, ~replace_na(., 0)) 
+    filter(!grepl("Învăţ|publică", sector)) %>%
+    gt::gt() %>% gtExtras::gt_theme_538() %>% 
+    tab_style(cell_fill(color="#EEA100"), cells_column_labels()) %>% 
+    gt::opt_table_font(font="Roboto") %>% 
+    gtExtras::gt_color_rows(columns=2:4, palette="ggsci::orange_material") %>% 
+    gt::fmt_percent(2:4, scale_values = F)
+
+```
+
+@tbl-profit vorbeşte de la sine. Profituri mai mari în 2019, cu singura excepţie a intermedierilor financiare & asigurărilor.
