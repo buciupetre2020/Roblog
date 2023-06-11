@@ -87,9 +87,9 @@ x %>% filter(cui!=42443305) %>% group_by(year, tip) %>%
   gt::fmt_percent(columns=2:4, scale_values = F)
 ```
 
-Interesant. Deşi sunt de zece ori mai multe decât restul companiilor împreună, microîntreprinderile plătesc doar 5 % din impozit sub bilanţul simplificat, pe cifra de afaceri. E un regim foarte avantajos pentru ele, într-adevăr. La pragul foarte mare de 1 milion de EURO cifra de afaceri (din 2023 de "doar" 500.000 EURO), este clar că multe firme mari se ascund sub această umbrelă ca să scutească nişte bani la stat.
+Interesant. Deşi sunt de zece ori mai multe decât restul companiilor împreună, microîntreprinderile plătesc doar 5 % din profit sub formă de impozit sub bilanţul simplificat, pe cifra de afaceri. E un regim foarte avantajos pentru ele, într-adevăr. La pragul foarte mare de 1 milion de EURO cifra de afaceri (din 2023 de "doar" 500.000 EURO), este clar că multe firme mari se ascund sub această umbrelă ca să scutească nişte bani la stat.
 
-Ce mai observăm din @tbl-rate este că în 2021 au plătit cam toate categoriile şi mai puţin decât în 2020. Firmele neclasificate par a avea număr de salariaţi de ordinul zecilor, dar cifră de afaceri de microîntreprindere practic şi profituri de câteva sute de mii de RON. Sunt ceva mai ineficiente. De asemenea sunt câteva firme care apar la bilanţ simplificat în date, dar nu sunt microîntreprinderi sunt clasificarea de mărime, nici după rata de taxare efectivă suportată. Alt viciu al datelor.
+Ce mai observăm din @tbl-rate este că în 2021 au plătit cam toate categoriile şi mai puţin decât în 2020. Firmele neclasificate par a avea număr de salariaţi de ordinul zecilor, dar cifră de afaceri de microîntreprindere practic şi profituri de câteva sute de mii de RON. Sunt ceva mai ineficiente. De asemenea, sunt câteva firme care apar la bilanţ simplificat în date, dar nu sunt microîntreprinderi după clasificarea de mărime, nici după rata de taxare efectivă suportată. Alt viciu al datelor.
 
 ```{r}
 converteste <- Vectorize(function(x){
