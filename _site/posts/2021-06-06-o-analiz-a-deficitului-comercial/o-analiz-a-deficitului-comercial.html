@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.361">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,9 +20,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -49,43 +50,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -121,7 +92,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -157,22 +129,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <span class="navbar-title">Analize socio-economice cu R</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">
+    <a class="nav-link" href="../../about.html" rel="" target="">
  <span class="menu-text">Despre blog</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -196,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Petre Buciu </p>
+               <p><a href="true">Petre Buciu</a> </p>
             </div>
     </div>
       
@@ -236,7 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>În acest post vom ilustra imaginea de ansamblu a deficitului comercial cu bunuri al României. Vom vedea ce exportăm, ce importăm, cu ce țări avem deficit, ce fel de firme se implică în acest proces, etc. Pentru început vom explora datele de la INS, foile EXP101F și EXP102F (exporturi FOB și importuri CIF) după grupele de mărfuri conform Nomenclatorului Combinat (NC). Acest lucru ne permite un grad superior de granularitate a analizei, întrucât datele sunt colectate la nivelul a peste 1000 de categorii de mărfuri. Să începem cu explorarea indicatorilor generali. Pentru început, trendurile exporturilor și importurilor totale, în valori absolute și procente din PIB.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(TEMPO)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(eurostat)</span>
@@ -271,7 +245,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>exp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-6/EXP101F.csv"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2"></a>       <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"grupe"</span>, <span class="st">"ani"</span>, <span class="st">"valuta"</span>, <span class="st">"valoare"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-3"><a href="#cb2-3"></a>       <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"EURO"</span>, valuta)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>valuta) <span class="sc">%&gt;%</span></span>
@@ -295,7 +269,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>tabel <span class="sc">%&gt;%</span> </span>
 <span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">filter</span>(grupe<span class="sc">==</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">select</span>(<span class="sc">-</span>grupe, <span class="sc">-</span>PIB) <span class="sc">%&gt;%</span> </span>
@@ -320,7 +294,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>tabel <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">filter</span>(grupe<span class="sc">==</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(import<span class="sc">:</span>export), <span class="sc">~</span><span class="dv">100</span><span class="sc">*</span>.<span class="sc">/</span>PIB) <span class="sc">%&gt;%</span> </span>
@@ -346,7 +320,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Din prima figură remarcăm o creștere susținută a ambilor indicatori, întreruptă temporar doar de Marea Criză din 2008-2009 și de criza coronavirus. Din a doua figură reiese că atât importurile cât și exporturile sunt undeva în jurul pragului de 35-40 % din PIB. Importurile au crescut însă ușor mai repede, mai ales în perioadele de creștere economică, cu cerere mare, astfel că deficitul comercial s-a adâncit începând cu anul 2015 după o perioadă de aparentă echilibrare.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>tabel <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">filter</span>(grupe<span class="sc">==</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(import<span class="sc">:</span>export), <span class="sc">~</span><span class="dv">100</span><span class="sc">*</span>.<span class="sc">/</span>PIB) <span class="sc">%&gt;%</span> </span>
@@ -370,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Să vedem niște topuri din anul 2022 pentru mărfuri, atât export cât și import. Vom ilustra rezultatele sub forma tabelului interactiv de mai jos.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>tabel <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">filter</span>(grupe<span class="sc">!=</span><span class="st">"Total"</span>, ani<span class="sc">==</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(export)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>ani, <span class="sc">-</span>PIB) <span class="sc">%&gt;%</span> </span>
@@ -392,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Pentru a descoperi creșterile disproporționate între grupe calculăm contribuțiile la deficitul comercial total pentru fiecare categorie și pentru fiecare an, alegem doi ani (unul e 2020, celălalt, de exemplu, 2010) și ordonăm grupele după cea mai mare diferență între contribuțiile din acești doi ani. În acest fel aflăm grupele care și-au crescut cel mai mult ponderea în deficit - fie pentru că se exportau și nu se mai exportă sau că erau importate și sunt importate și mai mult. Cea mai dramatică schimbare a avut loc pentru uleiurile din petrol, unde aveam o contribuție negativă de -6.9 % în 2010 și de doar -0.8 % în 2020. Din exportator net important a ajuns aproape echilibrat. La celălalt capăt avem tot uleuri de petrol (brute,de această dată) care și-au scăzut contribuția la deficit de la 26 % la doar 11 %. În acest fel această variație a ameliorat deficitul comercial total. Probabil că una este materie brută pentru cealaltă, care joacă rol de materie finită. Vom ilustra aceste rezultate tot sub forma unui tabel interactiv (cea mai bună formă pentru acest tip de date cu mult prea multe categorii și cu nume prea lungi pentru graficele convenționale).</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>tabel <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2"></a>    <span class="fu">filter</span>(grupe<span class="sc">!=</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-3"><a href="#cb7-3"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(export)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>PIB) <span class="sc">%&gt;%</span> </span>
@@ -420,7 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>În acest capitol analizăm contextul internațional în care se realizează acest deficit comercial, mai precis țările cu care înregistrăm deficite și/sau excedente comerciale. În acest scop vom folosi datele de la INS - foile EXP101B și EXP102E (exporturi și importuri) care detaliază țările de origine pentru importurile și exporturile României. Vom vizualiza la final și rețeaua comerțului internațional în Europa, cu care avem în jur de trei sferturi din relațiile comerciale pentru a înțelege rolul și poziția României în această piață extinsă. Să începem prin a vizualiza cei mai importanți parteneri de export, respectiv import pentru România și balanța comercială după parteneri pentru anul 2020.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">#tempo_bulk(codes=c("EXP102G"), directory=here::here("data/post-6"))</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a>exp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-6/EXP101B.csv"</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>       <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"tari"</span>, <span class="st">"ani"</span>, <span class="st">"valuta"</span>, <span class="st">"valoare"</span>)) <span class="sc">%&gt;%</span> </span>
@@ -446,7 +420,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>tabel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">export =</span> export<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">filter</span>(ani<span class="sc">==</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(export)) <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">tari=</span><span class="fu">fct_reorder</span>(tari, export)) <span class="sc">%&gt;%</span> </span>
@@ -468,7 +442,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>tabel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">import =</span> import<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">filter</span>(ani<span class="sc">==</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(import)) <span class="sc">%&gt;%</span> </span>
 <span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">tari=</span><span class="fu">fct_reorder</span>(tari, import)) <span class="sc">%&gt;%</span> </span>
@@ -488,7 +462,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>tabel <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">deficit=</span>delta) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">deficit=</span>deficit<span class="sc">/</span><span class="dv">1000</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>    <span class="fu">filter</span>(ani<span class="sc">==</span><span class="dv">2022</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(<span class="fu">abs</span>(deficit))) <span class="sc">%&gt;%</span> </span>
 <span id="cb11-3"><a href="#cb11-3"></a>    <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">tari=</span><span class="fu">fct_reorder</span>(tari, deficit)) <span class="sc">%&gt;%</span> </span>
@@ -511,7 +485,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Țara cu care avem cel mai mare deficit comercial este, desigur, China. Și avem cel mai mare excedent comercial cu Regatul Unit. Avem deficite comerciale foarte mari și cu vecinii noștri, Ungaria și Polonia. Să vizualizăm rețeaua exporturilor europene pentru anul 2021, creată pe baza foii <code>ext_tec03</code> din cadrul Eurostat, din care reiese că poziția României nu e una cu totul marginală. Suntem bine ancorați la hubul principal format din Germania, Franța și Italia. Culorile semnifică importanța nodurilor în rețea (centralitatea), de la albastru (important, central) spre roșu (marginal, periferic). Desigur, centralitatea unui nod în rețea nu este un concept cu totul bine definit, astfel că există diferite măsuri ale centralității, cu diferite rezultate în urma aplicării lor. Dar România rămâne consistent în categoria intermediară (nu galben-portocalie) pentru câteva măsuri importante. Cu cât suma este mai mică, cu atât săgețile sunt mai transparente. Selectăm doar cinci cele mai mari conexiuni pentru fiecare țară întrucât rețeaua și-ar pierde sensul - totul ar fi conectat cu totul.</p>
 <div class="cell preview-image" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>tec <span class="ot">&lt;-</span> <span class="fu">get_eurostat</span>(<span class="at">id=</span><span class="st">"ext_tec03"</span>) <span class="sc">%&gt;%</span>  </span>
 <span id="cb12-2"><a href="#cb12-2"></a>       <span class="fu">label_eurostat</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a>       <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"Thousand"</span>, unit)) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>unit)</span>
@@ -562,7 +536,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Să inspectăm și rețeaua deficitelor comerciale între țări.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co">#deficite cu partenerii</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a>deficite_network <span class="ot">&lt;-</span> tec <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3"></a>            <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"Total - all NACE"</span>, nace_r2), </span>
@@ -617,7 +591,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>În cele din urmă nicio analiză de acest fel nu poate fi completă fără o privire asupra firmelor implicate în comerțul internațional. Cât sunt ele de mari, ce capital au ? În acest sens avem datele de la INS, foile <code>EXP101O</code> și <code>EXP102O</code> pentru a investiga mărimea firmelor și <code>EXP101R</code> și <code>EXP102R</code> pentru tipul capitalului: românesc sau străin. În acest fel putem afla mai multe despre firmele care alcătuiesc prin activitatea lor economică acest deficit comercial. Să începem cu analiza după clasele de mărime ale firmelor exportatoare/importatoare.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">#TEMPO::tempo_bulk(codes=c("EXP101O", "EXP102O", "EXP101R", "EXP102R"),</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a><span class="co">#                  directory=here::here("data/post-6"))</span></span>
 <span id="cb14-3"><a href="#cb14-3"></a>fmimp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-6/EXP102O.csv"</span>))</span>
@@ -646,7 +620,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Observăm că deși majoritatea firmelor importatoare sunt cele mici (care sunt majoritare și în economia românească în general), la nivel de sumă majoritatea importurilor sunt făcute de firmele foarte puține numeric, dar cu peste 250 de salariați și, în mai mică măsură, cu 10-249 de salariați.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>fmexp <span class="sc">%&gt;%</span> </span>
 <span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"clase"</span>, <span class="st">"ani"</span>, <span class="st">"unitate"</span>, <span class="st">"valoare"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">filter</span>(clase<span class="sc">!=</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ani =</span> <span class="fu">parse_number</span>(ani)) <span class="sc">%&gt;%</span> </span>
@@ -671,7 +645,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>În privința firmelor exportatoare situația este similară, cu excepția faptului că firmele cu 10-249 salariați exportă în număr mai mare decât cele cu 0-4 salariați. Firmele mici sunt importatori la noi - peste 50.000 de firme importă, dar sub 10.000 exportă. În privința sumelor, fenomenul de concentrare este și mai accentuat, firmele cu peste 250 de salariați exportă mult mai mult decât celelalte. Să vedem și celalaltă caracteristică despre care avem date, naționalitatea capitalului.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co">#tempo_bulk(codes=c("EXP102R", "EXP101R"), directory=here::here("data/post-6"))</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a>fcimp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-6/EXP102R.csv"</span>))</span>
 <span id="cb16-3"><a href="#cb16-3"></a>fcexp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data/post-6/EXP101R.csv"</span>))</span>
@@ -700,7 +674,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Observăm că capitalul integral străin importă covârșitor în sumă, deși aceste firme sunt în număr foarte mic relativ la cele cu capital românesc.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>fcexp <span class="sc">%&gt;%</span> </span>
 <span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">set_names</span>(<span class="fu">c</span>(<span class="st">"capital"</span>, <span class="st">"ani"</span>, <span class="st">"unitate"</span>, <span class="st">"valoare"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">filter</span>(capital<span class="sc">!=</span><span class="st">"Total"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">ani =</span> <span class="fu">parse_number</span>(ani)) <span class="sc">%&gt;%</span> </span>
@@ -781,9 +755,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -848,6 +836,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

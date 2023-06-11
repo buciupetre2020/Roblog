@@ -71,9 +71,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -181,7 +181,7 @@ Primiți notificări pe mail:
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="listing-actions-group">
    <div class="input-group input-group-sm quarto-listing-sort">
      <span class="input-group-text"><i class="bi bi-sort-down"></i></span>
@@ -207,202 +207,181 @@ Primiți notificări pe mail:
       <input type="text" class="search form-control" placeholder="Filter">
     </div>
 </div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1686430800000" data-listing-file-modified-sort="1686485409018" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
-<div class="thumbnail">
-<p><a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html"> <img src="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html">
-<h3 class="no-anchor listing-title">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1686430800000" data-listing-file-modified-sort="1686486013385" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 La ce categorii de cheltuieli se remarcă România ?
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>O aplicaţie a analizei multivariate</p>
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Petre Buciu
 </div>
-<div class="metadata">
-<a href="./posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html">
 <div class="listing-date">
 Jun 11, 2023
 </div>
-<div class="listing-author">
-Petre Buciu
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686414914966" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="23">
-<div class="thumbnail">
-<p><a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html"> <img src="./posts/2021-06-06-o-analiz-a-deficitului-comercial/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="1" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686414914966" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="23">
+<a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2021-06-06-o-analiz-a-deficitului-comercial/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Care este structura deficitului comercial al României ?
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>O analiză a deficitului comercial</p>
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-06-06-o-analiz-a-deficitului-comercial/o-analiz-a-deficitului-comercial.html">
-<div class="listing-date">
-Jun 7, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Petre Buciu
 </div>
+<div class="listing-date">
+Jun 7, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686422036722" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
-<div class="thumbnail">
-<p><a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html"> <img src="./posts/2021-06-06-geografia-excesului-de-mortalitate/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="2" data-listing-date-sort="1686085200000" data-listing-file-modified-sort="1686422036722" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2021-06-06-geografia-excesului-de-mortalitate/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Geografia excesului de mortalitate
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>În ce regiuni a lovit pandemia cel mai tare ?</p>
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-06-06-geografia-excesului-de-mortalitate/geografia-excesului-de-mortalitate.html">
-<div class="listing-date">
-Jun 7, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Petre Buciu
 </div>
+<div class="listing-date">
+Jun 7, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1685221200000" data-listing-file-modified-sort="1686421302518" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
-<div class="thumbnail">
-<p><a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html"> <img src="./posts/2023-05-28-inegalitea-romniei-n-context-european/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="3" data-listing-date-sort="1685221200000" data-listing-file-modified-sort="1686421302518" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10">
+<a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2023-05-28-inegalitea-romniei-n-context-european/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Inegalitatea României în context european
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>Pentru prima dată în ţara noastră</p>
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Petre Buciu
 </div>
-<div class="metadata">
-<a href="./posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html">
 <div class="listing-date">
 May 28, 2023
 </div>
-<div class="listing-author">
-Petre Buciu
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686421267082" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
-<div class="thumbnail">
-<p><a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html"> <img src="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="4" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686421267082" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Dinamica datoriei publice în Europa
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>În toate țările a crescut datoria publică, iar România în rând cu media.</p>
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-06-03-dinamica-datoriei-publice-n-europa/dinamica-datoriei-publice-n-europa.html">
-<div class="listing-date">
-Jun 3, 2021
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Petre Buciu
 </div>
+<div class="listing-date">
+Jun 3, 2021
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686469897884" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
-<div class="thumbnail">
-<p><a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html"> <img src="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="5" data-listing-date-sort="1622667600000" data-listing-file-modified-sort="1686469897884" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Distribuția geografică a personalului medical
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>Cum stăm cu Sănătatea în rural</p>
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/2021-06-03-distribuia-geografic-a-personalului-medical/distribuia-geografic-a-personalului-medical.html">
-<div class="listing-date">
-Jun 3, 2021
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Petre Buciu
 </div>
+<div class="listing-date">
+Jun 3, 2021
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1622581200000" data-listing-file-modified-sort="1686421321334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7">
-<div class="thumbnail">
-<p><a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html"> <img src="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/preview.png" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="6" data-listing-date-sort="1622581200000" data-listing-file-modified-sort="1686421321334" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7">
+<a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/preview.png" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Cum și cât s-a construit în România în ultimii 30 de ani ?
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
+</h5>
+<div class="card-text listing-description">
 <p>O analiză pe datele de la INS</p>
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Petre Buciu
 </div>
-<div class="metadata">
-<a href="./posts/2021-06-02-cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani/cum-i-ct-s-a-construit-n-romnia-n-ultimii-30-de-ani.html">
 <div class="listing-date">
 Jun 2, 2021
 </div>
-<div class="listing-author">
-Petre Buciu
+</div>
+</div>
 </div>
 </a>
-</div>
 </div>
 </div>
 <div class="listing-no-matching d-none">

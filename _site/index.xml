@@ -1027,7 +1027,7 @@ font-style: inherit;">"top"</span>)</span></code></pre></div>
 <p>În acest post vom ilustra imaginea de ansamblu a deficitului comercial cu bunuri al României. Vom vedea ce exportăm, ce importăm, cu ce țări avem deficit, ce fel de firme se implică în acest proces, etc. Pentru început vom explora datele de la INS, foile EXP101F și EXP102F (exporturi FOB și importuri CIF) după grupele de mărfuri conform Nomenclatorului Combinat (NC). Acest lucru ne permite un grad superior de granularitate a analizei, întrucât datele sunt colectate la nivelul a peste 1000 de categorii de mărfuri. Să începem cu explorarea indicatorilor generali. Pentru început, trendurile exporturilor și importurilor totale, în valori absolute și procente din PIB.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
@@ -1170,7 +1170,7 @@ font-style: inherit;">#tempo_bulk(codes="EXP102E", directory=here::here("data/po
 </div>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">exp <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
@@ -1382,7 +1382,7 @@ font-style: inherit;">inner_join</span>(pib)</span></code></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -1513,7 +1513,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -1653,7 +1653,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Din prima figură remarcăm o creștere susținută a ambilor indicatori, întreruptă temporar doar de Marea Criză din 2008-2009 și de criza coronavirus. Din a doua figură reiese că atât importurile cât și exporturile sunt undeva în jurul pragului de 35-40 % din PIB. Importurile au crescut însă ușor mai repede, mai ales în perioadele de creștere economică, cu cerere mare, astfel că deficitul comercial s-a adâncit începând cu anul 2015 după o perioadă de aparentă echilibrare.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -1769,7 +1769,7 @@ font-style: inherit;">1</span>)</span></code></pre></div>
 <p>Să vedem niște topuri din anul 2022 pentru mărfuri, atât export cât și import. Vom ilustra rezultatele sub forma tabelului interactiv de mai jos.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -1901,7 +1901,7 @@ font-style: inherit;">'80%'</span>)</span></code></pre></div>
 <p>Pentru a descoperi creșterile disproporționate între grupe calculăm contribuțiile la deficitul comercial total pentru fiecare categorie și pentru fiecare an, alegem doi ani (unul e 2020, celălalt, de exemplu, 2010) și ordonăm grupele după cea mai mare diferență între contribuțiile din acești doi ani. În acest fel aflăm grupele care și-au crescut cel mai mult ponderea în deficit - fie pentru că se exportau și nu se mai exportă sau că erau importate și sunt importate și mai mult. Cea mai dramatică schimbare a avut loc pentru uleiurile din petrol, unde aveam o contribuție negativă de -6.9 % în 2010 și de doar -0.8 % în 2020. Din exportator net important a ajuns aproape echilibrat. La celălalt capăt avem tot uleuri de petrol (brute,de această dată) care și-au scăzut contribuția la deficit de la 26 % la doar 11 %. În acest fel această variație a ameliorat deficitul comercial total. Probabil că una este materie brută pentru cealaltă, care joacă rol de materie finită. Vom ilustra aceste rezultate tot sub forma unui tabel interactiv (cea mai bună formă pentru acest tip de date cu mult prea multe categorii și cu nume prea lungi pentru graficele convenționale).</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -2105,7 +2105,7 @@ font-style: inherit;">'80%'</span>)</span></code></pre></div>
 <p>În acest capitol analizăm contextul internațional în care se realizează acest deficit comercial, mai precis țările cu care înregistrăm deficite și/sau excedente comerciale. În acest scop vom folosi datele de la INS - foile EXP101B și EXP102E (exporturi și importuri) care detaliază țările de origine pentru importurile și exporturile României. Vom vizualiza la final și rețeaua comerțului internațional în Europa, cu care avem în jur de trei sferturi din relațiile comerciale pentru a înțelege rolul și poziția României în această piață extinsă. Să începem prin a vizualiza cei mai importanți parteneri de export, respectiv import pentru România și balanța comercială după parteneri pentru anul 2020.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#tempo_bulk(codes=c("EXP102G"), directory=here::here("data/post-6"))</span></span>
@@ -2319,7 +2319,7 @@ font-style: inherit;">-</span>import) </span></code></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -2435,7 +2435,7 @@ font-style: inherit;">"Sursa: INS EXP101B/102E/102G"</span>)</span></code></pre>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -2549,7 +2549,7 @@ font-style: inherit;">"Sursa: INS EXP101B/102E/102G"</span>)</span></code></pre>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1">tabel <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -2688,7 +2688,7 @@ font-style: inherit;">scale_fill_tableau</span>()</span></code></pre></div>
 <p>Țara cu care avem cel mai mare deficit comercial este, desigur, China. Și avem cel mai mare excedent comercial cu Regatul Unit. Avem deficite comerciale foarte mari și cu vecinii noștri, Ungaria și Polonia. Să vizualizăm rețeaua exporturilor europene pentru anul 2021, creată pe baza foii <code>ext_tec03</code> din cadrul Eurostat, din care reiese că poziția României nu e una cu totul marginală. Suntem bine ancorați la hubul principal format din Germania, Franța și Italia. Culorile semnifică importanța nodurilor în rețea (centralitatea), de la albastru (important, central) spre roșu (marginal, periferic). Desigur, centralitatea unui nod în rețea nu este un concept cu totul bine definit, astfel că există diferite măsuri ale centralității, cu diferite rezultate în urma aplicării lor. Dar România rămâne consistent în categoria intermediară (nu galben-portocalie) pentru câteva măsuri importante. Cu cât suma este mai mică, cu atât săgețile sunt mai transparente. Selectăm doar cinci cele mai mari conexiuni pentru fiecare țară întrucât rețeaua și-ar pierde sensul - totul ar fi conectat cu totul.</p>
 <div class="cell preview-image" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1">tec <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
@@ -3011,7 +3011,7 @@ font-style: inherit;">24</span>))</span>
 <p>Să inspectăm și rețeaua deficitelor comerciale între țări.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#deficite cu partenerii</span></span>
@@ -3316,7 +3316,7 @@ font-style: inherit;">24</span>))</span>
 <p>În cele din urmă nicio analiză de acest fel nu poate fi completă fără o privire asupra firmelor implicate în comerțul internațional. Cât sunt ele de mari, ce capital au ? În acest sens avem datele de la INS, foile <code>EXP101O</code> și <code>EXP102O</code> pentru a investiga mărimea firmelor și <code>EXP101R</code> și <code>EXP102R</code> pentru tipul capitalului: românesc sau străin. În acest fel putem afla mai multe despre firmele care alcătuiesc prin activitatea lor economică acest deficit comercial. Să începem cu analiza după clasele de mărime ale firmelor exportatoare/importatoare.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#TEMPO::tempo_bulk(codes=c("EXP101O", "EXP102O", "EXP101R", "EXP102R"),</span></span>
@@ -3489,7 +3489,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Observăm că deși majoritatea firmelor importatoare sunt cele mici (care sunt majoritare și în economia românească în general), la nivel de sumă majoritatea importurilor sunt făcute de firmele foarte puține numeric, dar cu peste 250 de salariați și, în mai mică măsură, cu 10-249 de salariați.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1">fmexp <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -3634,7 +3634,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>În privința firmelor exportatoare situația este similară, cu excepția faptului că firmele cu 10-249 salariați exportă în număr mai mare decât cele cu 0-4 salariați. Firmele mici sunt importatori la noi - peste 50.000 de firme importă, dar sub 10.000 exportă. În privința sumelor, fenomenul de concentrare este și mai accentuat, firmele cu peste 250 de salariați exportă mult mai mult decât celelalte. Să vedem și celalaltă caracteristică despre care avem date, naționalitatea capitalului.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#tempo_bulk(codes=c("EXP102R", "EXP101R"), directory=here::here("data/post-6"))</span></span>
@@ -3805,7 +3805,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Observăm că capitalul integral străin importă covârșitor în sumă, deși aceste firme sunt în număr foarte mic relativ la cele cu capital românesc.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1">fcexp <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -3973,7 +3973,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Unde <img src="https://latex.codecogs.com/png.latex?Exces_%7Bw_i,%20y_j%7D"> este excesul de mortalitate din săptămâna i, anul j.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
@@ -4153,7 +4153,7 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">exces_2020 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
@@ -4492,7 +4492,7 @@ font-style: inherit;">2</span>)</span></code></pre></div>
 <p>Am stat destul de rău, fiind destul de sus la mortalitate în perioadele-cheie ale pandemiei. Să vedem mortalităţile pe categorii de vârste.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">exces_age <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
@@ -4802,7 +4802,7 @@ font-style: inherit;">"%"</span>)</span></code></pre></div>
 <p>Să vizualizăm o hartă europeană cu excesul mediu de mortalitate după anul 2020 până în prezent.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">exces_geo <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
@@ -5132,7 +5132,7 @@ font-style: inherit;">70</span>))</span></code></pre></div>
 <p>Interesant la această hartă este diviziunea Germaniei de Est de cea de Vest. Istoria contează aparent şi când e vorba de mortalitatea de COVID.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">mortalitati <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
@@ -6162,7 +6162,7 @@ tbody tr:last-child {
 <p>Un nou set de date oferit de World Inequality Database ne permite să urmărim în timp şi spaţiu procentele de venit naţional care revine diferitelor percentile atât pre-taxare cât şi post-taxare. Datele au fost create conform metodologiei DINA (Distributional National Accounts).</p>
 <div class="cell">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
@@ -6451,7 +6451,7 @@ font-style: inherit;">1989</span>)</span></code></pre></div>
 <p>Procentul din venitul naţional înaintea taxelor care revine diferitelor categorii de distribuţie este afişat în graficul următor:</p>
 <div class="cell" data-fig.dpi="250">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">df <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -6610,7 +6610,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Şi post-taxe:</p>
 <div class="cell" data-fig.dpi="250">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">df <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -6778,7 +6778,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Vom calcula raportul dintre procentele de venit naţional care revin celor top 10 % şi ultimilor 50 % atât pentru venitul pre-taxe cât şi pentru venitul post-taxe. Cele două rapoarte vor fi pe axele x, respectiv y în graficul următor. Urmărim aceşti doi indicatori pentru media perioadei 2012-2021 (ultimii zece ani).</p>
 <div class="cell" data-fig.dpi="250">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">ratios <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> df <span class="sc" style="color: #5E5E5E;
@@ -6978,7 +6978,7 @@ font-style: inherit;">"#EEA100"</span>) </span></code></pre></div>
 <p>Observăm că România are cel mai mare raport atât pre cât şi post taxare. Acest lucru sugerează că sistemul fiscal nu redistribuie suficient către cei din decilele inferioare ale distribuţiei. Acest lucru se întâmplă în ţara cu cea mai mare inegalitate din Europa dacă excludem Serbia (nu apare în imagine). Merită să calculăm şi procentele cu care sistemul fiscal reduce inegalitatea pre-taxe pentru fiecare ţară, media pe ultimii zece ani.</p>
 <div class="cell" data-fig.dpi="250">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">df <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -7202,7 +7202,7 @@ font-style: inherit;">1</span>)) </span></code></pre></div>
 <p>Mai este ceva interesant de văzut, dar folosim un alt (nou) set de date, de data aceasta de la <a href="https://blogs.worldbank.org/developmenttalk/new-dataset-measure-effective-taxation-capital-and-labor-globally-1960s">Banca Mondială</a>: taxarea efectivă a capitalului versus muncii. Practic cât la sută din venitul din cele două surse este plătit sub formă de taxe.</p>
 <div class="cell" data-fig.dpi="250">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
@@ -7437,7 +7437,7 @@ font-style: inherit;">scale_color_tableau</span>()</span></code></pre></div>
 <p>Datoria publică este un subiect controversat și creșterea recentă a datoriei publice a României este un fapt pus într-o anumită lumină de unii comentatori politici. Mai exact se caută prezentarea acestui fenomen ca și cum ar fi cauzat factori strict locali: voința partidului de la guvernare, “străinii”, UE, freza prim-ministrului, etc. Realitatea este că datoria publică a crescut peste tot în Europa, în mod universal, nicio țară nu a trecut prin anul 2020 fără să adauge la ponderea datoriei în PIB.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
@@ -7555,7 +7555,7 @@ font-style: inherit;">"cm"</span>)))</span></code></pre></div>
 </div>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
@@ -7731,7 +7731,7 @@ font-style: inherit;">scale_colour_tableau</span>()</span></code></pre></div>
 <p>Să punem rezultatele și sub forma unui tabel. Delta măsoară diferența dintre procentele lunii octombrie (ultimul punct pentru care avem datele) 2021 față de aceeași lună a anului 2020. Avem astfel acoperită mare parte din perioada pandemiei și a măsurilor fiscale care au fost luate cu ocazia ei.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -8435,7 +8435,7 @@ tbody tr:last-child {
 <p>România ocupă locul al cincilea în acest tabel, din treizeci de țări disponibile. Se poate spune că creșterea ei, de doar 1.7 puncte procentuale, iese în evidență în peisaj european.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -10773,7 +10773,7 @@ font-style: inherit;">'Sursa: INS, SAN104B'</span>)</span></code></pre></div>
 
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
@@ -10951,7 +10951,7 @@ font-style: inherit;">parse_number</span>(ani))</span></code></pre></div>
 <p>Datele de la <a href="http://statistici.insse.ro:8077/tempo-online/#/pages/tables/insse-table">INS</a> prezintă informații cu privire la suprafata locuibilă existentă în țară după localitate, forme de proprietate (public sau privat) și pentru fiecare an. Putem folosi aceste date pentru a înțelege tiparul construcțiilor la noi în țară în ultimii 30 de ani. Să vedem cât s-a construit în total.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> </span>
@@ -11052,7 +11052,7 @@ font-style: inherit;">scale_fill_tableau</span>()</span></code></pre></div>
 <p>Observăm un trend descrescător pentru locuințele construite în regim public, de la 6.35 % din total în anul 1994 la 0.88 % în anul 2019, o scădere a ponderii de aproximativ 7 ori. Salturile din 2001 și 2011 sunt suspecte și trebuie puse pe seama recensămintelor din anii respectivi. Drept urmare, trendul nu este întocmai cel real.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">x <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
@@ -11220,7 +11220,7 @@ font-style: inherit;">scale_colour_tableau</span>()</span></code></pre></div>
 <p>Cel mai mult s-a construit în comune, însă acest lucru doar datorită numărului lor ridicat în comparație cu orașele și municipiile. Să vedem același grafic raportat la numărul de locuitori.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">harta <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> sf<span class="sc" style="color: #5E5E5E;
@@ -11385,7 +11385,7 @@ font-style: inherit;">scale_colour_tableau</span>()</span></code></pre></div>
 <p>Comunele rămân mediul în care s-a construit cel mai mult raportat la numărul de locuitori. Observăm aceleași salturi suspecte. Care sunt localitățile cu cea mai mare suprafață locuibilă existentă în regim public în 2019 ? Putem explora acest lucru în tabelul de mai jos.</p>
 <div class="cell" data-layout-align="center">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -12123,7 +12123,7 @@ tbody tr:last-child {
 <p>Destule comune de care nu a auzit nimeni. Dar şi orăşele precum Predealul. Brașovul stă cel mai bine la capitolul suprafață locuită publică totală, nu per cap de locuitor. Însă chiar și în cazul lui declinul este semnificativ: în 1994 avea 912.000 metri pătrați locuiți în regim public față de 250.000 în 2019. Totuși, în ultimii ani a început să crească, întrucât valoarea era și mai scăzută în jurul anului 2010.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1">x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
@@ -12209,7 +12209,7 @@ font-style: inherit;">","</span>))</span></code></pre></div>
 <p>În concluzie, locuințele publice în România au fost construite din ce în ce mai puțin în ultimii treizeci de ani. Dar înainte de a încheia, să vedem o hartă tematică cu suprafața totală per locuitor pentru anul 2019 clasificate după decile.</p>
 <div class="cell" data-layout-align="center" data-fig.dpi="200">
 <details>
-<summary>Arată codul</summary>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1">harta[<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">grepl</span>(<span class="st" style="color: #20794D;
