@@ -11,6 +11,9 @@ knitr:
 date: 06-11-2023
 image: preview.png
 number-sections: true
+categories:
+  - "analiza multivariată"
+  - "macroeconomice"
 ---
 
 ## O introducere în PCA

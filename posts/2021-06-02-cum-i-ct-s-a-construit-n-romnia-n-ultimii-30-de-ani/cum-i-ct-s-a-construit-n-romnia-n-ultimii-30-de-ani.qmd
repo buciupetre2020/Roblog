@@ -8,6 +8,8 @@ knitr:
 author: Petre Buciu
 date: 06-02-2021
 image: preview.png
+categories:
+  - "sociale"
 ---
 
 ```{r}

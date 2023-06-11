@@ -10,6 +10,8 @@ knitr:
     fig.align: center
 date: 06-03-2021
 image: preview.png
+categories:
+  - "sociale"
 ---
 
 Câți medici avem în țară ? Unde există deficitul ? Vom folosi datele de la INS, mai precis foaia [SAN104B](http://statistici.insse.ro:8077/tempo-online/#/pages/tables/insse-table), pentru a răspunde la aceste întrebări.

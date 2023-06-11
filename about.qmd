@@ -2,7 +2,7 @@
 title: "Despre blog"
 image: profile.jpg
 about:
-  template: jolla
+  template: solana
   links:
     - icon: linkedin
       text: LinkedIn

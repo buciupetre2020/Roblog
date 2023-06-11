@@ -9,6 +9,8 @@ knitr:
   opts_chunk:
     fig.align: center
 image: preview.png
+categories: 
+  - "macroeconomice"
 ---
 
 Datoria publică este un subiect controversat și creșterea recentă a datoriei publice a României este un fapt pus într-o anumită lumină de unii comentatori politici. Mai exact se caută prezentarea acestui fenomen ca și cum ar fi cauzat factori strict locali: voința partidului de la guvernare, "străinii", UE, freza prim-ministrului, etc. Realitatea este că datoria publică a crescut peste tot în Europa, în mod universal, nicio țară nu a trecut prin anul 2020 fără să adauge la ponderea datoriei în PIB.
