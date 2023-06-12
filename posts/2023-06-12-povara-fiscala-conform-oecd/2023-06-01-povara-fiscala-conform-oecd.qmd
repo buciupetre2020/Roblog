@@ -1,0 +1,94 @@
+---
+title: "Povara fiscală conform OECD"
+description: |
+  Ce povară fiscală suportă diferitele categorii de venituri în ţările OECD (şi nu numai)
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-12-2023
+image: preview.png
+number-sections: true
+categories:
+  - "macroeconomice"
+  - "fiscalitate"
+---
+
+## Inechitatea sistemului fiscal din România
+
+E un lucru bine cunoscut că România are un sistem fiscal regresiv datorită cotei sale unice pe venituri şi contribuţiilor sociale foarte mari, contribuţii pe cei care cei cu venituri superioare (cum sunt cei cu PFA/PFI, meseriile liberale, microîntreprinderi) le pot evita într-o oarecare măsură. Astfel povara fiscală atârnă pe cei mai puţin norocoşi. OECD are un [calculator online de taxe](https://www.oecd.org/els/soc/tax-benefit-web-calculator/) care oferă şi datele sub formă de Excel şi astfel ne permite să facem nişte calcule vis-a-vis de povara fiscală din fiecare ţară. Am ales să ne concentrăm pe anul 2022, aşadar vom avea o analiză cross-secţională.
+
+```{r}
+
+library(tidyverse)
+library(hrbrthemes)
+library(ggthemes)
+library(gt)
+library(gtExtras)
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 12,
+                                     axis_text_size = 10,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+
+x <- read_csv(here::here("data/post-9", "povara_fiscala.csv")) %>%
+     select(-ub, -hb, -fb, -year)
+```
+
+Datele sunt pentru adultul singur fără copii. Să vedem povara fiscală pentru salariatul ce câştigă 60 % din salariul mediu (aproape de minimum, unde există), salariul mediu şi de trei ori salariul mediu (în general top 10 %).
+
+::: column-page
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+#| fig-dpi: 200
+#| label: fig-povara
+#| fig-cap: Povara fiscală după clasa socială
+
+x %>% filter(earnings==100 | earnings==60 | earnings == 300) %>% 
+  mutate(it=-it, sc=-sc) %>% 
+  mutate(earnings=paste(earnings, "%")) %>%
+  mutate(earnings=factor(earnings, 
+                         levels=c("60 %", 
+                                  "100 %", 
+                                  "300 %"))) %>%
+  mutate_at(vars(net:sc), ~./`Average Wage`) %>%
+  mutate(color = if_else(grepl("Romania", Country), 
+                         "#ba0000", "#444444"),
+  name = glue::glue("<i style='color:{color}'>{Country}</i>")) %>%
+  mutate(name = tidytext::reorder_within(name, earnings, 
+                                          by={abs(it+sc)})) %>%
+  gather(gross:sc, key="Indicator", value='valoare') %>%
+  mutate(Indicator = factor(Indicator, 
+                          levels=c("iw", "gross","sa","it", "sc"))) %>%
+  ggplot(aes(x=name, y=valoare, fill=Indicator)) + 
+  geom_col(aes(fill=Indicator)) + scale_fill_tableau() + 
+  geom_point(aes(x=name, y=net), shape=4, show.legend = FALSE) +
+  tidytext::scale_x_reordered() + 
+  geom_hline(yintercept = 0, linetype=2) + 
+  facet_wrap(~earnings, ncol=3, scales='free') + 
+  coord_flip() +
+  labs(title="Povara fiscală după categorii de venit",
+       subtitle="Taxe şi venituri ca procent din salariul mediu", 
+       x=NULL, y=NULL, caption="Sursa: OECD Tax Benefits Calculator") +
+  theme(legend.position = "top",
+        axis.text.y = ggtext::element_markdown())
+  
+```
+:::
+
+Legenda, din lipsă de spaţiu, o traducem aici: `gross` - venitul brut, `it` - impozitul pe venit, `sc` - contribuţiile sociale, `iw` - beneficii în muncă, `sa` - asistenţă socială şi venit minim garantat. Steluţa reprezintă venitul net - cât mai rămâne după taxe.
+
+Ce observăm din acest grafic ? Că România are cea mai mare povara fiscală pe angajatul precar şi pe angajatul mediu, dar angajatul bogat este undeva prin treimea a doua a clasamentului, bine-merci. Vedem aşadar în practică efectele cotei unice: distribuţia poverii fiscale pe cei care nu au, lucru care necesită şi rate mai mari. Să nu ne mirăm că munca este taxată în România.

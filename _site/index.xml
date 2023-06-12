@@ -10,7 +10,492 @@
 <atom:link href="https://petrebuciu.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.361</generator>
-<lastBuildDate>Sat, 10 Jun 2023 21:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 11 Jun 2023 21:00:00 GMT</lastBuildDate>
+<item>
+  <title>Povara fiscală conform OECD</title>
+  <dc:creator>Petre Buciu</dc:creator>
+  <link>https://petrebuciu.netlify.app/posts/2023-06-12-povara-fiscala-conform-oecd/2023-06-01-povara-fiscala-conform-oecd.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="inechitatea-sistemului-fiscal-din-românia" class="level2 page-columns page-full" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="inechitatea-sistemului-fiscal-din-românia"><span class="header-section-number">1</span> Inechitatea sistemului fiscal din România</h2>
+<p>E un lucru bine cunoscut că România are un sistem fiscal regresiv datorită cotei sale unice pe venituri şi contribuţiilor sociale foarte mari, contribuţii pe cei care cei cu venituri superioare (cum sunt cei cu PFA/PFI, meseriile liberale, microîntreprinderi) le pot evita într-o oarecare măsură. Astfel povara fiscală atârnă pe cei mai puţin norocoşi. OECD are un <a href="https://www.oecd.org/els/soc/tax-benefit-web-calculator/">calculator online de taxe</a> care oferă şi datele sub formă de Excel şi astfel ne permite să facem nişte calcule vis-a-vis de povara fiscală din fiecare ţară. Am ales să ne concentrăm pe anul 2022, aşadar vom avea o analiză cross-secţională.</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(hrbrthemes)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggthemes)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gt)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gtExtras)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_set</span>(hrbrthemes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_ipsum_tw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>, </span>
+<span id="cb1-7">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-8">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"italic"</span>,</span>
+<span id="cb1-9">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>,</span>
+<span id="cb1-10">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb1-11">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-12">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-13">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-14">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>, </span>
+<span id="cb1-15">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb1-16">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,</span>
+<span id="cb1-17">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), </span>
+<span id="cb1-19">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>),</span>
+<span id="cb1-20">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.key.size =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cm"</span>)))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#setam tema graficelor </span></span>
+<span id="cb1-21"></span>
+<span id="cb1-22">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(here<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">here</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/post-9"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"povara_fiscala.csv"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-23">     <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>ub, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>hb, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>fb, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>year)</span></code></pre></div>
+</details>
+</div>
+<p>Datele sunt pentru adultul singur fără copii. Să vedem povara fiscală pentru salariatul ce câştigă 60 % din salariul mediu (aproape de minimum, unde există), salariul mediu şi de trei ori salariul mediu (în general top 10 %).</p>
+<div class="column-page">
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(earnings<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> earnings<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">60</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> earnings <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">300</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">it=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>it, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sc=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>sc) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">earnings=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(earnings, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">earnings=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(earnings, </span>
+<span id="cb2-5">                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"60 %"</span>, </span>
+<span id="cb2-6">                                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"100 %"</span>, </span>
+<span id="cb2-7">                                  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"300 %"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate_at</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">vars</span>(net<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>sc), <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>.<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Average Wage</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">if_else</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grepl</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Romania"</span>, Country), </span>
+<span id="cb2-10">                         <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#ba0000"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#444444"</span>),</span>
+<span id="cb2-11">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">name =</span> glue<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&lt;i style='color:{color}'&gt;{Country}&lt;/i&gt;"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">name =</span> tidytext<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">reorder_within</span>(name, earnings, </span>
+<span id="cb2-13">                                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by=</span>{<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">abs</span>(it<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>sc)})) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-14">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gather</span>(gross<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>sc, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">key=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Indicator"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'valoare'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Indicator =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(Indicator, </span>
+<span id="cb2-16">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"iw"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gross"</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sa"</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"it"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sc"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>name, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>valoare, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>Indicator)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>Indicator)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>name, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>net), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">show.legend =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-20">  tidytext<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_reordered</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_hline</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">yintercept =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linetype=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-22">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>earnings, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scales=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'free'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-23">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_flip</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-24">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Povara fiscală după categorii de venit"</span>,</span>
+<span id="cb2-25">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Taxe şi venituri ca procent din salariul mediu"</span>, </span>
+<span id="cb2-26">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sursa: OECD Tax Benefits Calculator"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"top"</span>,</span>
+<span id="cb2-28">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.y =</span> ggtext<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_markdown</span>())</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-povara" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-12-povara-fiscala-conform-oecd/2023-06-01-povara-fiscala-conform-oecd_files/figure-html/fig-povara-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Povara fiscală după clasa socială</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Legenda, din lipsă de spaţiu, o traducem aici: <code>gross</code> - venitul brut, <code>it</code> - impozitul pe venit, <code>sc</code> - contribuţiile sociale, <code>iw</code> - beneficii în muncă, <code>sa</code> - asistenţă socială şi venit minim garantat. Steluţa reprezintă venitul net - cât mai rămâne după taxe.</p>
+<p>Ce observăm din acest grafic ? Că România are cea mai mare povara fiscală pe angajatul precar şi pe angajatul mediu, dar angajatul bogat este undeva prin treimea a doua a clasamentului, bine-merci. Vedem aşadar în practică efectele cotei unice: distribuţia poverii fiscale pe cei care nu au, lucru care necesită şi rate mai mari. Să nu ne mirăm că munca este taxată în România.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>macroeconomice</category>
+  <category>fiscalitate</category>
+  <guid>https://petrebuciu.netlify.app/posts/2023-06-12-povara-fiscala-conform-oecd/2023-06-01-povara-fiscala-conform-oecd.html</guid>
+  <pubDate>Sun, 11 Jun 2023 21:00:00 GMT</pubDate>
+  <media:content url="https://petrebuciu.netlify.app/posts/2023-06-12-povara-fiscala-conform-oecd/preview.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>La ce categorii de cheltuieli se remarcă România ?</title>
   <dc:creator>Petre Buciu</dc:creator>
