@@ -18,7 +18,7 @@ categories:
 
 ## Inechitatea sistemului fiscal din România
 
-E un lucru bine cunoscut că România are un sistem fiscal regresiv datorită cotei sale unice pe venituri şi contribuţiilor sociale foarte mari, contribuţii pe cei care cei cu venituri superioare (cum sunt cei cu PFA/PFI, meseriile liberale, microîntreprinderi) le pot evita într-o oarecare măsură. Astfel povara fiscală atârnă pe cei mai puţin norocoşi. OECD are un [calculator online de taxe](https://www.oecd.org/els/soc/tax-benefit-web-calculator/) care oferă şi datele sub formă de Excel şi astfel ne permite să facem nişte calcule vis-a-vis de povara fiscală din fiecare ţară. Am ales să ne concentrăm pe anul 2022, aşadar vom avea o analiză cross-secţională.
+E un lucru bine cunoscut că România are un sistem fiscal regresiv datorită cotei sale unice pe venituri şi contribuţiilor sociale foarte mari, contribuţii pe care cei cu venituri superioare (cum sunt cei cu PFA/PFI, meseriile liberale, microîntreprinderi) le pot evita într-o oarecare măsură. Astfel povara fiscală atârnă pe cei mai puţin norocoşi. OECD are un [calculator online de taxe](https://www.oecd.org/els/soc/tax-benefit-web-calculator/) care oferă şi datele sub formă de Excel şi astfel ne permite să facem nişte calcule vis-a-vis de povara fiscală din fiecare ţară. Am ales să ne concentrăm pe anul 2022, aşadar vom avea o analiză cross-secţională.
 
 ```{r}
 
