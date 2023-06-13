@@ -1,0 +1,222 @@
+---
+title: "O analiză a veniturilor bugetare în Europa"
+description: |
+  Care este structura veniturilor la buget
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-13-2023
+image: preview.png
+number-sections: true
+categories:
+  - "macroeconomice"
+  - "fiscalitate"
+---
+
+## Analiza exploratorie
+
+Eurostat are date şi despre veniturile bugetare, nu doar despre cheltuieli, pe care le-am analizat sumar într-un post [anterior](https://petrebuciu.netlify.app/posts/2023-06-11-la-ce-categorii-de-cheltuieli-se-remarca-romania/la-ce-categorii-de-cheltuieli-se-remarca-romania.html). Vom folosi în acest scop fişierul lor numit `gov_10_taxag`, cu informaţii despre veniturile din taxe, contribuţii, tot ce înseamnă venit fiscal.
+
+```{r}
+
+library(tidyverse)
+library(hrbrthemes)
+library(ggthemes)
+library(gt)
+library(gtExtras)
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 12,
+                                     axis_text_size = 10,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+
+df <- read_csv(here::here("data/post-10", "gov_10a_taxag_prelucrat.csv")) 
+```
+
+Să vedem clasamentul per tipuri majore de taxe: pe consum, contribuţiile şi taxarea pe venit (care include impozitul pe venit personal şi impozitul pe profit). Avem trei categorii majore. Vom seta anul de referinţă 2021, ultimul pentru care avem date la toate ţările.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| fig-dpi: 200
+#| label: fig-ansamblu
+#| fig-cap: Tipuri principale de taxe
+
+df %>% 
+  filter(grepl("Taxes on production and imports|Net social|Taxes on income$",
+               na_item), time=="2021-01-01") %>% 
+  mutate(na_item = gsub("Taxes on produc.+", "Consum", na_item) %>% 
+                   gsub("Net social contr.+", "Contribuţii", .) %>%
+                   gsub("Taxes on income", "Venit", .)) %>% 
+  mutate(geo = tidytext::reorder_within(geo, within = na_item, values)) %>%
+  ggplot(aes(x=geo, y=values)) + 
+  geom_col(aes(fill=grepl("Romania", geo)), show.legend = FALSE) + 
+  tidytext::scale_x_reordered() +
+  coord_flip() + 
+  scale_y_continuous(labels=scales::percent_format(scale=1)) +
+  scale_fill_tableau(direction = -1) +
+  facet_wrap(~na_item, ncol=3, scales='free') +
+  labs(x=NULL, y=NULL, title="Cele trei tipuri majore de taxare", 
+       subtitle="Anul 2021, % PIB",
+       caption="Sursa: Eurostat, gov_10a_taxag") + 
+  theme(legend.position = "top")
+```
+
+Ca procent din PIB suntem codaşi la toate aceste categorii, mai puţin contribuţii, lucru explicabil prin procentul mic de venituri fiscale colectate din PIB în ţara noastră, unde suntem de asemenea ultimii în afară de Irlanda. Nu mai ilustrez pentru că situaţia este ultra-cunoscută. Atenţie, ce vedem mai sunt sunt venituri din aceste taxe, nu taxarea efectivă pe care o resimte cetăţeanul. Cum e posibil să fim top la povară fiscală conform OECD (cum arătam într-un articol anterior) şi totuşi aşa de jos în clasamente la venituri ? O explicaţie ar fi baza scăzută de impozitare - avem foarte puţini salariaţi la mulţi pensionari, avem probleme de colectare la TVA, avem cotă unică de 10 % pe venituri, ceea ce ne face ultimii în Europa la procentul colectat din PIB la această categorie de venituri.
+
+Dar cele trei tipuri sunt doar agregatele cele mai mari, Eurostat are date despre circa 93 de categorii de venituri, subcategorii ale categoriilor deja menţionate, dar nu vom intra în detalii de acest fel. În schimb, ne interesează desfăşurata în timp a acestor trei agregate principale.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
+#| fig-dpi: 200
+#| label: fig-timp
+#| fig-cap: Principalele agregate desfăşurate în timp
+
+df %>% 
+    filter(grepl("Taxes on production and imports|Net social|Taxes on income$", na_item)) %>% 
+    mutate(na_item = gsub("Taxes on produc.+", "Consum", na_item) %>% 
+               gsub("Net social contr.+", "Contribuţii", .) %>%
+               gsub("Taxes on income", "Venit", .)) %>% 
+  filter(grepl("Romania|Bulgaria|Polonia|Ungaria", geo)) %>% 
+  ggplot(aes(x=time, y=values, group=na_item)) + 
+  geom_line(aes(colour=na_item), size=1) + 
+  facet_wrap(~geo, ncol=2, scales='free') +
+  scale_y_continuous(labels=scales::percent_format(scale=1)) +
+  scale_color_tableau() +
+  labs(title="Principalele agregate fiscale în timp", x=NULL, y=NULL,
+       caption="Sursa: Eurostat, gov_10a_taxag", colour="Taxă") +
+  theme(legend.position = "top")
+
+```
+
+Acum vom face un lucru diferit şi vom studia veniturile din taxe după factorii de producţie implicaţi: capital, muncă, dar şi consum şi proprietate. Am ales aceste categorii pentru că ele sunt calculate special de Comisia Europeană şi Eurostat [aici](https://taxation-customs.ec.europa.eu/taxation-1/economic-analysis-taxation/data-taxation-trends_en). Metodologia este şi ea tot în linkul respectiv. Vom vizualiza grafice în două axe şi doi ani distincţi: 2011 şi 2021. Pe orizontală avem procentul din total, pe verticală procentul din PIB. Săgeţile indică direcţia temporală, culoarea dacă vorbim de o creştere sau scădere.
+
+```{r}
+x <- read_csv(here::here("data/post-10", "taxation_trends_eurostat.csv")) %>%
+     select(-contributii) %>% mutate(time=as.character(time))
+
+
+grafice <- function(x, var, numar=10){
+  
+  segmente <- x %>% filter(time%in%c("2011", "2021")) %>% 
+              select(geo, what, time, !!ensym(var)) %>% 
+              spread(what, !!ensym(var)) %>% 
+              pivot_wider(names_from = time, values_from = c(PIB, Total)) %>%
+              filter(!grepl("Luxemb|Irlanda|Malta|Cipru", geo)) %>%
+              mutate(centru_x = 0.5*(Total_2011+Total_2021), 
+                     centru_y=0.5*(PIB_2011+PIB_2021)) %>%
+              mutate(delta = sqrt((PIB_2021-PIB_2011)^2 + (Total_2021-Total_2011)^2)) %>%
+              mutate(directie = if_else(PIB_2021 < PIB_2011 & Total_2021 < Total_2011, "Scădere", "Creştere")) %>%
+              arrange(desc(delta)) 
+  
+  tari <- segmente %>% 
+    arrange(desc(delta)) %>%
+    mutate(index = if_else(row_number()<numar | geo=="Romania", 1, 0)) %>%
+    filter(index==1) %>% select(-index) %>% pull(geo)
+  
+  segmente %>%
+    ggplot(aes(x=Total_2011, y=PIB_2011)) + 
+    geom_point(colour='red3') + 
+    geom_point(colour='red3', aes(x=Total_2021, y=PIB_2021)) +
+    geomtextpath::geom_textsegment(aes(x=Total_2011, xend=Total_2021, 
+                                       y=PIB_2011, yend=PIB_2021, label=geo, size=delta,
+                                       colour=directie),
+                                   vjust=-0.3, arrow = arrow(length=unit(0.3, "cm")),
+                                   show.legend = FALSE) + 
+    scale_x_continuous(labels=scales::percent_format(scale=1)) +
+    scale_y_continuous(labels=scales::percent_format(scale=1)) +
+    scale_size_continuous(range=c(2, 4)) +
+    scale_color_tableau() +
+    gghighlight::gghighlight(geo%in%tari) +
+    theme(legend.position = 'top')
+}
+
+
+```
+
+::: panel-tabset
+## Capital
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: fig-capital
+#| fig-cap: Taxarea capitalului
+
+grafice(x=x, var=capital, numar=10) +
+  labs(title = "Taxarea capitalului", 
+       subtitle="2011 vs 2021",
+       x="% din TOTAL", y="% din PIB",
+       caption="Sursa: Comisia Europeană")
+
+```
+
+## Muncă
+
+```{r}
+
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: fig-munca
+#| fig-cap: Taxarea muncii
+
+grafice(x=x, var=munca, numar=10) +
+  labs(title = "Taxarea muncii", 
+       subtitle="2011 vs 2021", 
+       x="% din TOTAL", y="% din PIB",
+       caption="Sursa: Comisia Europeană")
+
+```
+
+## Consum
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: fig-consum
+#| fig-cap: Taxarea consumului
+
+grafice(x=x, var=consum, numar=10) +
+  labs(title = "Taxarea consumului", 
+       subtitle = "2011 vs 2021",
+       x="% din TOTAL", y="% din PIB",
+       caption="Sursa: Comisia Europeană")
+
+```
+
+## Proprietate
+
+```{r}
+
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: fig-proprietate
+#| fig-cap: Taxarea proprietăţii
+
+grafice(x=x, var=proprietate, numar=10) +
+  labs(title = "Taxarea proprietăţilor", 
+       subtitle="2011 vs 2021",
+       x="% din TOTAL", y="% din PIB",
+       caption="Sursa: Comisia Europeană")
+```
+:::
+
+Observăm că România a scăzut la venitul din capital, proprietate şi consum, dar a crescut la muncă. De asemnenea unele ţări au progresat enorm la taxarea capitalului, precum Danemarca şi Olanda.
