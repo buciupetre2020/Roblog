@@ -1,0 +1,239 @@
+---
+title: "Tiparele poluării cu dioxid de carbon în capitală"
+description: |
+  Ce factori explică variaţiile zilnice ale dioxidului de carbon ? 
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-16-2023
+image: preview.png
+number-sections: true
+categories:
+  - "ecologie"
+---
+
+```{r}
+library(tidyverse)
+library(hrbrthemes)
+library(ggthemes)
+library(sf)
+library(forecast)
+library(tsibble)
+library(imputeTS)
+
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 14,
+                                     axis_text_size = 12,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+
+
+edit_station <- function(x){
+  lat = x$geo[[1]][[1]]
+  lon = x$geo[[2]][[1]]
+  address = x$n[[1]]
+  id = x$idx[[1]]
+  u = x$utime[[1]]
+  name = x$name[[1]]
+  aqi = x$aqi[[1]]
+  
+  return(data.frame("id"=id,"name"=name, "lat"=lat,
+                    "lon"=lon, "aqi"=aqi, "time"=u))
+}
+
+extrage_info <- function(file){
+  
+statii <- jsonlite::read_json(here::here(file[2])) %>% 
+          map_dfr(., edit_station) %>% 
+          mutate(id=gsub("A","",id)) %>% as_tibble() %>% select(-aqi)
+  
+info <- jsonlite::fromJSON(here::here(file[1]))
+info <- tibble(ceva=info) %>% bind_cols(statii) %>% 
+        select(-time) %>% mutate(indicator=map(ceva, names)) %>% 
+        unnest(c(indicator, ceva)) %>% mutate(index = map_dbl(ceva, length)) %>% 
+        filter(index!=0) %>% unnest(ceva) %>% select(-index) %>% 
+        unnest(count:time) %>% relocate(name, indicator, lat, lon) %>%
+        mutate(time = lubridate::parse_date_time(time, orders="ymdHMS") + lubridate::dhours(3))
+return(info)
+}
+
+#fisiere <- here::here("data/post-11/airquality", "data", 
+ #                     list.files(here::here("data/post-11/airquality", 
+ #                                           "data"), pattern = ".json"))
+
+#fisiere <- matrix(data=fisiere, ncol=2, byrow=FALSE)
+#statii <- map_dfr(1:nrow(fisiere), ~extrage_info(file = fisiere[.x, ])) %>%
+ #         distinct()
+
+#statii <- statii %>% 
+ #         group_by(name, indicator, time, lat, lon, id) %>% 
+  #        mutate(across(count:stddev, mean)) %>% ungroup() %>% 
+   #       distinct()
+statii <- read_csv(here::here("data/post-11", "statii.csv"))
+```
+
+## Analize exploratorii
+
+În acest articol vom investiga tiparele temporale ale poluării cu $CO_2$ în Bucureşti. Folosim date de la [aqicn.org](https://aqicn.org/city/bucharest/) pe care le accesăm prin interfaţa lor programatică. Datele au fost descărcate în fiecare zi de pe toată aria Bucureştiului şi salvate într-un repositoriu de pe Github folosind mecanismul lor automat numit `Github Actions`. Avem aşadar doar 14 staţii în tot Bucureştiul care măsoară concentraţia de $CO_2$ la fiecare oră pe perioada studiului nostru de circa două luni jumătate (29 martie 2023 - 16 iunie 2023). Dar nu am descărcat numai datele referitoare la acest poluant ci şi alţii, precum şi temperatura la nivel de staţie, umiditatea, compuşi volatili organici (VOC), etc. Să vedem o matrice a corelaţiilor cu toţi aceşti indicatori pe această perioadă.
+
+```{r}
+#| fig-width: 6
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: Corelaţiile dintre poluanţi şi condiţiile atmosferice
+#| fig-cap: fig-corelatii
+
+statii %>% group_by(time, indicator) %>% 
+  summarise(medie=mean(mean))%>% spread(indicator, medie) %>% 
+  drop_na() %>% ungroup() %>% select(-1) %>% cor() %>% 
+  corrplot::corrplot(method='square', order="hclust")
+```
+
+Vedem corelaţii foarte puternice, pozitive, între $CO_2$ şi umiditate (`met.h`), $O_3$ şi negative între $CO_2$ şi temperatură (`met.t`). Particulele (pm-urile) se corelează aproape perfect între ele. Să vedem câteva trenduri agregate la nivel de Bucureşti.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 16
+#| fig-dpi: 200
+#| label: Trenduri poluanţi principali
+#| fig-cap: fig-trenduri
+
+statii %>% filter(indicator%in%c("co2", "o3", "voc", "pm25")) %>% 
+  group_by(time, indicator) %>% 
+  summarise(medie = mean(mean, na.rm=TRUE, trim=0.1)) %>% 
+  ungroup() %>% ggplot(aes(x=time, y=medie)) + 
+  geom_line(aes(colour=indicator), size=1) + 
+  facet_wrap(~indicator, ncol=1, scales='free') + 
+  scale_color_tableau() + 
+  labs(title = "Trenduri medii pentru poluanţii principali", 
+       x=NULL, y=NULL)
+
+```
+
+Observăm nivele destul de mari de $CO_2$ , valorile ajungând chiar şi la 600 ppm. Valoarea medie pe glob în 2022 este de 417 ppm şi a reprezentat un nou record. În Bucureşti media pe această perioadă este de 482 ppm. Aşadar, există amplitudini mari care par să aibă sezonalitate zilnică. Noaptea nivelul este mai ridicat, ziua mai scăzut. Să vizualizăm în aceeaşi scală valorile la $CO_2$, temperatură şi umiditate. Vom standardiza datele ca să le putem vizualiza trendurile suprapuse în aceeaşi unitate de măsură (deviaţii standard). Vom vizualiza doar luna aprilie ca să ne facem o idee din grafic de corelaţiile seriilor de timp distincte.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 7
+#| fig-dpi: 200
+#| label: Trenduri suprapuse pentru CO2 şi condiţiile atmosferice
+#| fig-cap: fig-suprapuse
+
+statii %>% filter(indicator%in%c("co2", "met.h", "met.t")) %>% 
+  group_by(time, indicator) %>% 
+  summarise(medie = mean(mean, na.rm=TRUE, trim=0.1)) %>% 
+  ungroup() %>% spread(indicator, medie) %>% drop_na() %>% 
+  mutate(across(co2:met.t, ~scale(.)[,1])) %>% 
+  gather(co2:met.t, key='indicator', value='medie') %>% 
+  filter(as.Date(time)<"2023-05-01") %>% 
+  ggplot(aes(x=time, y=medie)) + 
+  geom_line(aes(colour=indicator), size=0.8) + 
+  scale_color_tableau() + 
+  labs(title = "Trenduri suprapuse pentru dioxidul de carbon şi condiţiile atmosferice", 
+       subtitle="Date standardizate", x=NULL, y=NULL) 
+```
+
+Observăm cum temperatura e invers corelată cu $CO_2$. Mai interesant, observăm cum episoadele de umiditate crescută şi constantă se asociază cu aceleaşi perioade în trendul de $CO_2$. Acestea sunt ploile. Ploile rup întrerup practic sezonalitatea dioxidului de carbon, menţinându-l ridicat.
+
+## Analiza statistică
+
+Acum vom încerca să prezicem nivelul orar de $CO_2$ cu două modele bazate pe serii de timp: este vorba de ARIMA. Unul cu şi altul fără condiţiile atmosferice incluse. Ambele vor avea doi termeni periodici: un sinus şi un cosinus cu frecvenţa de 24 de ore - ca să surprindem sezonalitatea zilnică a valorilor. Practic modelele noastre sunt mai mult SARIMA şi SARIMAX (ARIMA cu sezonalitate şi regresori exogeni - adică condiţiile atmosferice, temperatura şi umiditatea). Vom vedea câtă precizie obţinem cu şi fără condiţiile atmosferice încercând să prezicem ultimele două săptămâni de date, oră cu oră. E cam mare perioada, dar datele au suficientă regularitate şi s-ar putea să iasă o precizie ridicată. În @fig-predictii0 avem predicţiile fără condiţii atmosferice.
+
+```{r}
+#| fig-width: 9
+#| fig-height: 6
+#| fig-dpi: 200
+#| fig-cap: Predicţii fără condiţii atmosferice
+#| label: fig-predictii0
+
+co2 <- statii %>% filter(grepl("co2|met.h|met.t|met.p|pm25|o3|voc", 
+                               indicator)) %>% 
+       group_by(indicator, time) %>% 
+       summarise(medie = mean(mean, na.rm=TRUE,trim=0.1)) %>% 
+       spread(indicator, medie) %>% drop_na() %>% 
+       as_tsibble() %>% group_by_key(hour=lubridate::hour(time)) %>%
+       fill_gaps() %>% 
+       mutate(ora=lubridate::hour(time) %>% as.factor(),
+              zi = lubridate::wday(time)%in%c(1, 7)) 
+
+
+co2$co2 <- na_kalman(co2$co2)
+co2$met.h <- na_kalman(co2$met.h)
+co2$met.p <- na_kalman(co2$met.p)
+co2$met.t <- na_kalman(co2$met.t)
+co2$o3 <- na_kalman(co2$o3)
+co2$pm25 <- na_kalman(co2$pm25)
+co2$voc <- na_kalman(co2$voc)
+
+
+make_fourier <- function(k, df){
+x <- matrix(data=numeric(length(k)*2*nrow(df)), 
+            ncol=nrow(df), nrow=2*length(k))
+
+  for(i in 1:length(k)){
+      x[(2*i-1):(2*i), ] <- rbind(sin(2*pi*(1:nrow(df))/k[i]), 
+                                  cos(2*pi*(1:nrow(df))/k[i]))
+  }
+x
+}
+
+y <- co2 %>% select(-time) %>% 
+  select(co2, met.h, met.t, voc, ora) %>% 
+  mutate_all(~as.numeric(.)) %>% as.matrix()
+
+index <- 1:1500
+train <- y[index,]
+test <- y[-index,]
+
+d <- t(matrix(train[,2:3], ncol=2))
+d <- rbind(d, make_fourier(k=c(24), df=train))
+rownames(d) <- c("met.h", "met.t", "sin24", "cos24")
+
+d_new <- t(matrix(test[,2:3], ncol=2))
+d_new <- rbind(d_new, make_fourier(k=c(24), df=test))
+rownames(d_new) <- rownames(d)
+
+arima_model <- forecast::auto.arima(y=train[,1],xreg=t(d)) 
+arima_model_0 <- forecast::auto.arima(y=train[,1], xreg=t(d[-c(1:2), ]))
+
+forecast::forecast(arima_model_0, xreg=t(d_new[-c(1:2),])) %>% 
+  autoplot() +
+  geom_line(data=enframe(test[,1]) %>% 
+            mutate(name=name+1500), aes(x=name, y=value)) +
+  labs(title="Predicţii dintr-un model SARIMA (2,1,1)", x=NULL, y=NULL)
+
+
+```
+
+În @fig-predictii1 avem predicţiile cu condiţiile atmosferice incluse. Evident, şi modelul are alţi coeficienţi pentru acei parametri comuni. Dacă primul model abia se descurcă, al doilea chiar prezice cu exactitate valorile orare ale nivelului de $CO_2$ cu două săptămâni în viitor !
+
+```{r}
+#| fig-width: 9
+#| fig-height: 6
+#| fig-dpi: 200
+#| label: fig-predictii1
+#| fig-cap: Predicţii cu condiţii atmosferice
+
+forecast::forecast(arima_model, xreg=t(d_new)) %>% 
+  autoplot() + 
+  geom_line(data=enframe(test[,1]) %>% mutate(name=name+1500), 
+            aes(x=name, y=value)) +
+  labs(title="Predicţii dintr-un model SARIMAX (2,1,1)", 
+       subtitle="Cu condiţiile atmosferice incluse", x=NULL, y=NULL)
+
+```
+
+Avem o reducere în erorile de predicţie de circa `r paste(round(100*(1 - (sum(resid(arima_model)^2)/sum(resid(arima_model_0)^2))), 2), "%")`. Dar acest factor nu reprezintă şi procentul de variabilitate explicată de condiţiile atmosferice, pentru că în primul model sezonalitatea are o influenţă mai mare, influenţă care ajustează cumva în mod ascuns şi pentru condiţiile atmosferice (şi ele sezoniere). În al doilea model efectul sinusoidelor este redus pentru că condiţiile atmosferice apar explicit şi reduc din efectul lor. Deci factorul acesta este unul care se referă la măsuri predictive, nu cauzale. Corelaţia între cele 300 şi ceva de puncte prezise de model şi realitate este de circa 0.92. Foarte mare. Oricum, putem concluziona că o parte semnificativă a variaţiilor zilnice ale nivelului de $CO_2$ din Bucureşti este cauzat de condiţiile atmosferice mai degrabă decât de trafic. Traficul sigur că explică media în general ridicată din acest oraş, dar nu neapărat oscilaţiile în jurul acestei medii.

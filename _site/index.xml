@@ -10,7 +10,1399 @@
 <atom:link href="https://petrebuciu.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.361</generator>
-<lastBuildDate>Mon, 12 Jun 2023 21:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 15 Jun 2023 21:00:00 GMT</lastBuildDate>
+<item>
+  <title>Tiparele poluării cu dioxid de carbon în capitală</title>
+  <dc:creator>Petre Buciu</dc:creator>
+  <link>https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(hrbrthemes)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggthemes)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(sf)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(forecast)</span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tsibble)</span>
+<span id="cb1-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(imputeTS)</span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_set</span>(hrbrthemes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_ipsum_tw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>, </span>
+<span id="cb1-10">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-11">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"italic"</span>,</span>
+<span id="cb1-12">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>,</span>
+<span id="cb1-13">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>,</span>
+<span id="cb1-14">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-15">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-16">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-17">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>, </span>
+<span id="cb1-18">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb1-19">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,</span>
+<span id="cb1-20">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), </span>
+<span id="cb1-22">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>),</span>
+<span id="cb1-23">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.key.size =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cm"</span>)))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#setam tema graficelor </span></span>
+<span id="cb1-24"></span>
+<span id="cb1-25"></span>
+<span id="cb1-26">edit_station <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(x){</span>
+<span id="cb1-27">  lat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>geo[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]][[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-28">  lon <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>geo[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>]][[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-29">  address <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>n[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-30">  id <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>idx[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-31">  u <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>utime[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-32">  name <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>name[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-33">  aqi <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> x<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>aqi[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb1-34">  </span>
+<span id="cb1-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"id"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>id,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"name"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>name, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lat"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>lat,</span>
+<span id="cb1-36">                    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lon"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>lon, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"aqi"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>aqi, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"time"</span><span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span>u))</span>
+<span id="cb1-37">}</span>
+<span id="cb1-38"></span>
+<span id="cb1-39">extrage_info <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(file){</span>
+<span id="cb1-40">  </span>
+<span id="cb1-41">statii <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> jsonlite<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_json</span>(here<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">here</span>(file[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>])) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-42">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map_dfr</span>(., edit_station) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-43">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gsub</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"A"</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>,id)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>aqi)</span>
+<span id="cb1-44">  </span>
+<span id="cb1-45">info <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> jsonlite<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fromJSON</span>(here<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">here</span>(file[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]))</span>
+<span id="cb1-46">info <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ceva=</span>info) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bind_cols</span>(statii) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-47">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">indicator=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(ceva, names)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-48">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(indicator, ceva)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">index =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map_dbl</span>(ceva, length)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-49">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(index<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(ceva) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>index) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-50">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unnest</span>(count<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">relocate</span>(name, indicator, lat, lon) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-51">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">time =</span> lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parse_date_time</span>(time, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">orders=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ymdHMS"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dhours</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>))</span>
+<span id="cb1-52"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(info)</span>
+<span id="cb1-53">}</span>
+<span id="cb1-54"></span>
+<span id="cb1-55"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#fisiere &lt;- here::here("data/post-11/airquality", "data", </span></span>
+<span id="cb1-56"> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#                     list.files(here::here("data/post-11/airquality", </span></span>
+<span id="cb1-57"> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#                                           "data"), pattern = ".json"))</span></span>
+<span id="cb1-58"></span>
+<span id="cb1-59"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#fisiere &lt;- matrix(data=fisiere, ncol=2, byrow=FALSE)</span></span>
+<span id="cb1-60"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#statii &lt;- map_dfr(1:nrow(fisiere), ~extrage_info(file = fisiere[.x, ])) %&gt;%</span></span>
+<span id="cb1-61"> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#         distinct()</span></span>
+<span id="cb1-62"></span>
+<span id="cb1-63"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#statii &lt;- statii %&gt;% </span></span>
+<span id="cb1-64"> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#         group_by(name, indicator, time, lat, lon, id) %&gt;% </span></span>
+<span id="cb1-65">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#        mutate(across(count:stddev, mean)) %&gt;% ungroup() %&gt;% </span></span>
+<span id="cb1-66">   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#       distinct()</span></span>
+<span id="cb1-67">statii <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(here<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">here</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/post-11"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"statii.csv"</span>))</span></code></pre></div>
+</details>
+</div>
+<section id="analize-exploratorii" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="analize-exploratorii"><span class="header-section-number">1</span> Analize exploratorii</h2>
+<p>În acest articol vom investiga tiparele temporale ale poluării cu <img src="https://latex.codecogs.com/png.latex?CO_2"> în Bucureşti. Folosim date de la <a href="https://aqicn.org/city/bucharest/">aqicn.org</a> pe care le accesăm prin interfaţa lor programatică. Datele au fost descărcate în fiecare zi de pe toată aria Bucureştiului şi salvate într-un repositoriu de pe Github folosind mecanismul lor automat numit <code>Github Actions</code>. Avem aşadar doar 14 staţii în tot Bucureştiul care măsoară concentraţia de <img src="https://latex.codecogs.com/png.latex?CO_2"> la fiecare oră pe perioada studiului nostru de circa două luni jumătate (29 martie 2023 - 16 iunie 2023). Dar nu am descărcat numai datele referitoare la acest poluant ci şi alţii, precum şi temperatura la nivel de staţie, umiditatea, compuşi volatili organici (VOC), etc. Să vedem o matrice a corelaţiilor cu toţi aceşti indicatori pe această perioadă.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">statii <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(time, indicator) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">medie=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(mean))<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">spread</span>(indicator, medie) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cor</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-4">  corrplot<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">corrplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'square'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">order=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"hclust"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main_files/figure-html/Corelaţiile dintre poluanţi şi condiţiile atmosferice-1.png" class="img-fluid figure-img" width="576"></p>
+<figcaption class="figure-caption">fig-corelatii</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vedem corelaţii foarte puternice, pozitive, între <img src="https://latex.codecogs.com/png.latex?CO_2"> şi umiditate (<code>met.h</code>), <img src="https://latex.codecogs.com/png.latex?O_3"> şi negative între <img src="https://latex.codecogs.com/png.latex?CO_2"> şi temperatură (<code>met.t</code>). Particulele (pm-urile) se corelează aproape perfect între ele. Să vedem câteva trenduri agregate la nivel de Bucureşti.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">statii <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(indicator<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"co2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"o3"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"voc"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pm25"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(time, indicator) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">medie =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(mean, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">trim=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>time, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>medie)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb3-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour=</span>indicator), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb3-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>indicator, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scales=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'free'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb3-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb3-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Trenduri medii pentru poluanţii principali"</span>, </span>
+<span id="cb3-9">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main_files/figure-html/Trenduri poluanţi principali-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">fig-trenduri</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm nivele destul de mari de <img src="https://latex.codecogs.com/png.latex?CO_2"> , valorile ajungând chiar şi la 600 ppm. Valoarea medie pe glob în 2022 este de 417 ppm şi a reprezentat un nou record. În Bucureşti media pe această perioadă este de 482 ppm. Aşadar, există amplitudini mari care par să aibă sezonalitate zilnică. Noaptea nivelul este mai ridicat, ziua mai scăzut. Să vizualizăm în aceeaşi scală valorile la <img src="https://latex.codecogs.com/png.latex?CO_2">, temperatură şi umiditate. Vom standardiza datele ca să le putem vizualiza trendurile suprapuse în aceeaşi unitate de măsură (deviaţii standard). Vom vizualiza doar luna aprilie ca să ne facem o idee din grafic de corelaţiile seriilor de timp distincte.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">statii <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(indicator<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"co2"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"met.h"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"met.t"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(time, indicator) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">medie =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(mean, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">trim=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">spread</span>(indicator, medie) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>met.t, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale</span>(.)[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>])) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gather</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>met.t, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">key=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'indicator'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'medie'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(time)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2023-05-01"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>time, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>medie)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb4-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour=</span>indicator), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb4-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb4-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Trenduri suprapuse pentru dioxidul de carbon şi condiţiile atmosferice"</span>, </span>
+<span id="cb4-12">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Date standardizate"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>) </span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main_files/figure-html/Trenduri suprapuse pentru CO2 şi condiţiile atmosferice-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">fig-suprapuse</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm cum temperatura e invers corelată cu <img src="https://latex.codecogs.com/png.latex?CO_2">. Mai interesant, observăm cum episoadele de umiditate crescută şi constantă se asociază cu aceleaşi perioade în trendul de <img src="https://latex.codecogs.com/png.latex?CO_2">. Acestea sunt ploile. Ploile rup întrerup practic sezonalitatea dioxidului de carbon, menţinându-l ridicat.</p>
+</section>
+<section id="analiza-statistică" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="analiza-statistică"><span class="header-section-number">2</span> Analiza statistică</h2>
+<p>Acum vom încerca să prezicem nivelul orar de <img src="https://latex.codecogs.com/png.latex?CO_2"> cu două modele bazate pe serii de timp: este vorba de ARIMA. Unul cu şi altul fără condiţiile atmosferice incluse. Ambele vor avea doi termeni periodici: un sinus şi un cosinus cu frecvenţa de 24 de ore - ca să surprindem sezonalitatea zilnică a valorilor. Practic modelele noastre sunt mai mult SARIMA şi SARIMAX (ARIMA cu sezonalitate şi regresori exogeni - adică condiţiile atmosferice, temperatura şi umiditatea). Vom vedea câtă precizie obţinem cu şi fără condiţiile atmosferice încercând să prezicem ultimele două săptămâni de date, oră cu oră. E cam mare perioada, dar datele au suficientă regularitate şi s-ar putea să iasă o precizie ridicată. În Figure&nbsp;1 avem predicţiile fără condiţii atmosferice.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">co2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> statii <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">grepl</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"co2|met.h|met.t|met.p|pm25|o3|voc"</span>, </span>
+<span id="cb5-2">                               indicator)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-3">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(indicator, time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-4">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">medie =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(mean, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">trim=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-5">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">spread</span>(indicator, medie) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-6">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tsibble</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by_key</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hour=</span>lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hour</span>(time)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb5-7">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fill_gaps</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-8">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ora=</span>lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">hour</span>(time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(),</span>
+<span id="cb5-9">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">zi =</span> lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wday</span>(time)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>)) </span>
+<span id="cb5-10"></span>
+<span id="cb5-11"></span>
+<span id="cb5-12">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>co2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>co2)</span>
+<span id="cb5-13">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.h <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.h)</span>
+<span id="cb5-14">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.p <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.p)</span>
+<span id="cb5-15">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.t <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>met.t)</span>
+<span id="cb5-16">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>o3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>o3)</span>
+<span id="cb5-17">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pm25 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>pm25)</span>
+<span id="cb5-18">co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>voc <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">na_kalman</span>(co2<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>voc)</span>
+<span id="cb5-19"></span>
+<span id="cb5-20"></span>
+<span id="cb5-21">make_fourier <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(k, df){</span>
+<span id="cb5-22">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">numeric</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(k)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(df)), </span>
+<span id="cb5-23">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(df), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(k))</span>
+<span id="cb5-24"></span>
+<span id="cb5-25">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span>(i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(k)){</span>
+<span id="cb5-26">      x[(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>i<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">-1</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>i), ] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbind</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sin</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>pi<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(df))<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>k[i]), </span>
+<span id="cb5-27">                                  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cos</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>pi<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(df))<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>k[i]))</span>
+<span id="cb5-28">  }</span>
+<span id="cb5-29">x</span>
+<span id="cb5-30">}</span>
+<span id="cb5-31"></span>
+<span id="cb5-32">y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> co2 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>time) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-33">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(co2, met.h, met.t, voc, ora) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate_all</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(.)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.matrix</span>()</span>
+<span id="cb5-35"></span>
+<span id="cb5-36">index <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1500</span></span>
+<span id="cb5-37">train <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> y[index,]</span>
+<span id="cb5-38">test <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> y[<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>index,]</span>
+<span id="cb5-39"></span>
+<span id="cb5-40">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(train[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>], <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>))</span>
+<span id="cb5-41">d <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbind</span>(d, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">make_fourier</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">k=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">24</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">df=</span>train))</span>
+<span id="cb5-42"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rownames</span>(d) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"met.h"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"met.t"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"sin24"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cos24"</span>)</span>
+<span id="cb5-43"></span>
+<span id="cb5-44">d_new <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(test[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>], <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>))</span>
+<span id="cb5-45">d_new <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rbind</span>(d_new, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">make_fourier</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">k=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">24</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">df=</span>test))</span>
+<span id="cb5-46"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rownames</span>(d_new) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rownames</span>(d)</span>
+<span id="cb5-47"></span>
+<span id="cb5-48">arima_model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> forecast<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">auto.arima</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>train[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>],<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xreg=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(d)) </span>
+<span id="cb5-49">arima_model_0 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> forecast<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">auto.arima</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>train[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>], <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xreg=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(d[<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>), ]))</span>
+<span id="cb5-50"></span>
+<span id="cb5-51">forecast<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">forecast</span>(arima_model_0, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xreg=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(d_new[<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>),])) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-52">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">autoplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-53">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">enframe</span>(test[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-54">            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">name=</span>name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1500</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>name, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>value)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-55">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Predicţii dintr-un model SARIMA (2,1,1)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-predictii0" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main_files/figure-html/fig-predictii0-1.png" class="img-fluid figure-img" width="864"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Predicţii fără condiţii atmosferice</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>În Figure&nbsp;2 avem predicţiile cu condiţiile atmosferice incluse. Evident, şi modelul are alţi coeficienţi pentru acei parametri comuni. Dacă primul model abia se descurcă, al doilea chiar prezice cu exactitate valorile orare ale nivelului de <img src="https://latex.codecogs.com/png.latex?CO_2"> cu două săptămâni în viitor !</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1">forecast<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">forecast</span>(arima_model, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xreg=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">t</span>(d_new)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">autoplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb6-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">enframe</span>(test[,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">name=</span>name<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1500</span>), </span>
+<span id="cb6-4">            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>name, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>value)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Predicţii dintr-un model SARIMAX (2,1,1)"</span>, </span>
+<span id="cb6-6">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cu condiţiile atmosferice incluse"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-predictii1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main_files/figure-html/fig-predictii1-1.png" class="img-fluid figure-img" width="864"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Predicţii cu condiţii atmosferice</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Avem o reducere în erorile de predicţie de circa 48.46 %. Dar acest factor nu reprezintă şi procentul de variabilitate explicată de condiţiile atmosferice, pentru că în primul model sezonalitatea are o influenţă mai mare, influenţă care ajustează cumva în mod ascuns şi pentru condiţiile atmosferice (şi ele sezoniere). În al doilea model efectul sinusoidelor este redus pentru că condiţiile atmosferice apar explicit şi reduc din efectul lor. Deci factorul acesta este unul care se referă la măsuri predictive, nu cauzale. Corelaţia între cele 300 şi ceva de puncte prezise de model şi realitate este de circa 0.92. Foarte mare. Oricum, putem concluziona că o parte semnificativă a variaţiilor zilnice ale nivelului de <img src="https://latex.codecogs.com/png.latex?CO_2"> din Bucureşti este cauzat de condiţiile atmosferice mai degrabă decât de trafic. Traficul sigur că explică media în general ridicată din acest oraş, dar nu neapărat oscilaţiile în jurul acestei medii.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>ecologie</category>
+  <guid>https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/main.html</guid>
+  <pubDate>Thu, 15 Jun 2023 21:00:00 GMT</pubDate>
+  <media:content url="https://petrebuciu.netlify.app/posts/2023-06-16-tiparele-poluarii-cu-co2-in-capitala/preview.png" medium="image" type="image/png"/>
+</item>
 <item>
   <title>O analiză a veniturilor bugetare în Europa</title>
   <dc:creator>Petre Buciu</dc:creator>
@@ -1146,7 +2538,7 @@ font-style: inherit;">"Sursa: Comisia Europeană"</span>)</span></code></pre></d
   <category>fiscalitate</category>
   <guid>https://petrebuciu.netlify.app/posts/2023-06-13-veniturile-din-taxarea-factorilor-de-productie/2023-06-13-veniturile-din-taxarea-factorilor-de-productie.html</guid>
   <pubDate>Mon, 12 Jun 2023 21:00:00 GMT</pubDate>
-  <media:content url="https://petrebuciu.netlify.app/posts/2023-06-13-veniturile-din-taxarea-factorilor-de-productie/preview.png" medium="image" type="image/png"/>
+  <media:content url="https://petrebuciu.netlify.app/posts/2023-06-13-veniturile-din-taxarea-factorilor-de-productie/preview.png" medium="image" type="image/png" height="101" width="144"/>
 </item>
 <item>
   <title>Povara fiscală conform OECD</title>
