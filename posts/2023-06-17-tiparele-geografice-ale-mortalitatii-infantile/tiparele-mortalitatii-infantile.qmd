@@ -30,6 +30,8 @@ categories:
 library(tidyverse)
 library(hrbrthemes)
 library(ggthemes)
+library(gt)
+library(gtExtras)
 library(lme4)
 library(sf)
 library(eurostat)
@@ -47,7 +49,7 @@ theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14,
                                      subtitle_size = 12) +
   theme(legend.text = element_text(size=10), 
         legend.title = element_text(size=12),
-        legend.key.size = unit(0.5, "cm")))  #setam tema graficelor 
+        legend.key.size = unit(0.6, "cm")))  #setam tema graficelor 
 
 df <- get_eurostat(id="demo_r_minfind") %>% 
       label_eurostat(fix_duplicated = TRUE, code = "geo")
@@ -89,7 +91,7 @@ df %>% filter(grepl("^[A-Z]{2}$", geo_code)) %>%
   labs(title="Trendurile mortalităţii infantile", 
        caption = "Sursa: Eurostat, demo_r_minfind", x=NULL, 
        y=NULL, colour="Ţară") +
-  scale_y_percent(scale=1)
+  scale_y_continuous(labels = function(x) paste(x, "‰"))
 
 ```
 
@@ -116,9 +118,45 @@ df %>% filter(grepl("^[A-Z]{2}$", geo_code)) %>%
     mutate(fit = 10^(predict(model))) %>% 
     ggplot(aes(x=time, y=fit, group=geo)) + 
     geom_line(aes(colour=geo), size=0.8) + 
+    geom_point(aes(x=time, y=values, colour=geo)) +
     gghighlight::gghighlight(grepl("Romania|Bulgaria|Czechia|Poland", geo),
                              use_direct_label = F) + 
     scale_color_tableau() + labs(colour="Ţară",x=NULL, y=NULL,
+                                 title="Traiectorii prezise de model",
                                  caption="Sursa: calcule proprii") +
-    scale_y_percent(scale=1)
+    scale_y_continuous(labels = function(x) paste(x, "‰"))
 ```
+
+România pleacă de la mortalitate de 3 % şi ajunge la aproximativ 0.52 %. De şase ori reducere în 30 de ani, echivalent cu o înjumătăţire în 12 ani sau reducere cu 5.3 % per an. Mai jos coeficienţii de reducere per an a mortalitătii infantile pentru fiecare ţară împreună cu timpii de înjumătăţire:
+
+```{r}
+model %>% ranef() %>% as_tibble(rownames="geo") %>% 
+  select(grp, term,condval) %>% spread(term, condval) %>% 
+  janitor::clean_names() %>% 
+  mutate(intercept_0 = 10^fixef(model)[1], 
+         intercept=10^intercept, time_0 = fixef(model)[2], 
+         time_t=time+time_0) %>% 
+  mutate(intercept_t = (intercept)*intercept_0) %>% 
+  select(grp, time_t) %>% mutate(reducere = 100-100*10^time_t) %>% 
+  mutate(timp = log10(0.5)/time_t) %>% select(-time_t) %>% 
+  rename(geo=grp) %>% 
+  inner_join(read_csv(here::here("data", "dictionar_tari.csv"))) %>% 
+  select(-geo) %>% rename(geo=tari) %>% relocate(geo) %>% 
+  arrange((timp)) %>% gt::gt() %>% gt_theme_538() %>% 
+  gtExtras::gt_highlight_rows(rows=grepl("Romania", geo)) %>% 
+  opt_table_font(font="Roboto") %>%
+  tab_style(style=cell_fill(color="#EEA100"), 
+            locations = cells_column_labels()) %>% 
+  fmt_percent(columns=2, scale_values = FALSE) %>% 
+  fmt_number(columns=3, decimals = 1) %>% 
+  gt::cols_label(timp ~ ("Înjumătăţire"), geo ~ "Ţară") %>% 
+  tab_footnote(footnote = "Numărul de ani în care s-a înjumătăţit mortalitatea", locations=cells_column_labels(columns=3)) %>% 
+  tab_header(title="Performanţele ţărilor europene în reducerea mortalităţii infantile", subtitle="Sursa: calcule proprii") %>% 
+  tab_style(cell_text(weight = "bold"), 
+            cells_title(groups='title')) %>% 
+  opt_row_striping() %>%
+  cols_width(everything() ~ '150px')
+
+```
+
+Vedem că sunt şi alte ţări care au reuşit o reducere şi mai drastică, chiar dacă nu au pornit aşa de rău ca România.
