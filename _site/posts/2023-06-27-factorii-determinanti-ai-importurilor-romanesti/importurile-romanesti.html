@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Petre Buciu">
+<meta name="dcterms.date" content="2023-06-27">
+<meta name="description" content="O analiză de tip input-output a importurilor din România">
+
+<title>Analize socio-economice cu R - Factorii determinaţi ai importurilor româneşti</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Analize socio-economice cu R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">Despre blog</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/buciupetre2020/Roblog" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Factorii determinaţi ai importurilor româneşti</h1>
+                  <div>
+        <div class="description">
+          <p>O analiză de tip input-output a importurilor din România</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">input-output</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p><a href="true">Petre Buciu</a> </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 27, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#puţină-teorie" id="toc-puţină-teorie" class="nav-link active" data-scroll-target="#puţină-teorie"><span class="header-section-number">1</span> Puţină teorie</a></li>
+  <li><a href="#analize-exploratorii" id="toc-analize-exploratorii" class="nav-link" data-scroll-target="#analize-exploratorii"><span class="header-section-number">2</span> Analize exploratorii</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>În acest articol folosi tabele de tip <code>input-output</code> pentru a determina cauza importurilor româneşti. Aceste tabele sunt puse la dispoziţie de institutele naţionale de statistică ale statelor, dar există şi tabele care înregistrează tranzacţiile între sectoare din diferite ţări, mult mai detaliate şi interesante decât cele naţionale. Aşa sunt cele puse la dispoziţia publicului de către OECD sau WIOD. Pe coloane sunt trecute industriile care cumpără, pe linii sunt industriile de la care se cumpără (care vând). Transformăm aceste tabele de tranzacţii monetare în coeficienţi, matrici şi aflăm lucruri neaşteptate despre economie. Voi avea un post sau mai multe dedicate doar teoriei modelelor input-output, dar pentru moment voi expune câteva din fundamente aici. Din păcate sunt greu de înţeles fără un background elementar în algebră liniară.</p>
+<section id="puţină-teorie" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="puţină-teorie"><span class="header-section-number">1</span> Puţină teorie</h2>
+<p>Vom calcula matricea producţiei sau tehnologiei, <span class="math inline">\(\textbf{A}\)</span>, folosind următoarea formulă matriceală:</p>
+<p><span class="math display">\[
+\textbf{A} = \textbf{Z}\textbf{x}^{-1}
+\]</span></p>
+<p>Unde <span class="math inline">\(\textbf{Z}\)</span> este matricea tranzacţiilor de care am vorbit mai sus, iar <span class="math inline">\(\textbf{x}\)</span> este matricea diagonală care are în intrările sale (diagonale, evident) inversul producţiei totale pe fiecare sector. Practic împărţim coloanele producţia totală ca să avem nişte coeficienţi (subunitari). Aceasta este matricea de bază inter-industrii, de producţie sau tehnologică (există diferite denumiri).</p>
+<p>Acum vom calcula ceva derivat din această matrice, anume matricea inversă Leontief, <span class="math inline">\((\textbf{I}-\textbf{A})^{-1}\)</span> care este fundamentală în aceste analize. Premultiplicând această matrice cu <span class="math inline">\(\textbf{f}\)</span> , o altă matrice sau vector, după caz, cu cererea finală, obţinem cât trebuie să producă fiecare sector în totalitate ca să satisfacă această cerere finală dar şi consumul intermediar al industriilor. Matricea inversă Leontief poate fi scrisă ca serie infinită de matrici, aratând astfel că există mai multe runde (infinite teoretic) de producţie. Practic orice cantitate de cerere finală pune în funcţiune mai multe runde de producţie succesive.</p>
+<p><span class="math display">\[
+(\textbf{I}-\textbf{A})^{-1} = \textbf{I} + \textbf{A} + \textbf{A}^2 + …
+\]</span></p>
+<p>Putem calcula conţinutul de importuri din exporturi, de exemplu (un simplu exemplu de cerere finală) cu următoarea formulă.</p>
+<p><span class="math display">\[
+r = \frac{\textbf{s}^T\textbf{M}(\textbf{I}-\textbf{A})^{-1}\textbf{e}}{\textbf{s}^T\textbf{e}}
+\]</span></p>
+<p>Unde <span class="math inline">\(\textbf{s}^T\)</span> este vectorul sumă, <span class="math inline">\(\textbf{M}\)</span> matricea coeficienţilor de import <span class="math inline">\(\textbf{e}\)</span> matricea de exporturi sau vectorul exporturi dacă le adunăm la nivel de ţară. Putem să nu folosim vectorul sumă şi să avem importuri dezagregate pe surse de cerere finală sau exporturi. De exemplu putem răspunde unor întrebări de genul: cu cât cresc importurile de petrol din Rusia în România pentru a satisface un dolar de producţie auto exportată în Germania. La acest nivel se poate merge, dar va fi foarte greu să-ţi prezinţi rezultatele neavând decât matrici de valori. Mai sunt posibile şi multe alte calcule în acest cadru teoretic dar în acest articol vom analiza importurile după cauzele lor corespunzătoare din cererea finală ca să vedem cât e fiecare categorie responsabilă de aceste importuri.</p>
+</section>
+<section id="analize-exploratorii" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="analize-exploratorii"><span class="header-section-number">2</span> Analize exploratorii</h2>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(ggthemes)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(gtExtras)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">theme_set</span>(hrbrthemes<span class="sc">::</span><span class="fu">theme_ipsum_tw</span>(<span class="at">strip_text_size =</span> <span class="dv">14</span>, </span>
+<span id="cb1-6"><a href="#cb1-6"></a>                                     <span class="at">strip_text_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>                                     <span class="at">strip_text_face =</span> <span class="st">"italic"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>                                     <span class="at">axis_title_size =</span> <span class="dv">14</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>                                     <span class="at">axis_text_size =</span> <span class="dv">12</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>                                     <span class="at">base_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11"></a>                                     <span class="at">plot_title_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12"></a>                                     <span class="at">subtitle_family =</span> <span class="st">"Roboto"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13"></a>                                     <span class="at">caption_family =</span> <span class="st">"Roboto"</span>, </span>
+<span id="cb1-14"><a href="#cb1-14"></a>                                     <span class="at">caption_size =</span> <span class="dv">10</span>,</span>
+<span id="cb1-15"><a href="#cb1-15"></a>                                     <span class="at">plot_title_size =</span> <span class="dv">16</span>,</span>
+<span id="cb1-16"><a href="#cb1-16"></a>                                     <span class="at">subtitle_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">10</span>), </span>
+<span id="cb1-18"><a href="#cb1-18"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>),</span>
+<span id="cb1-19"><a href="#cb1-19"></a>        <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="fl">0.6</span>, <span class="st">"cm"</span>)))  <span class="co">#setam tema graficelor </span></span>
+<span id="cb1-20"><a href="#cb1-20"></a></span>
+<span id="cb1-21"><a href="#cb1-21"></a>importuri <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"post-12"</span>, <span class="st">"eastern.csv"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>             <span class="fu">mutate</span>(<span class="at">country=</span>countrycode<span class="sc">::</span><span class="fu">countrycode</span>(country, </span>
+<span id="cb1-23"><a href="#cb1-23"></a>                                                     <span class="at">origin=</span><span class="st">'iso3c'</span>, </span>
+<span id="cb1-24"><a href="#cb1-24"></a>                                                     <span class="at">destination=</span><span class="st">'country.name'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Vom folosi tabelele de la OECD care acoperă perioada 1995-2018 şi vom descompune variaţiile anuale în importuri după cauzele care le generează. Am calculat matrici cu aceste importuri de dimensiuni 45 x 4 (45 de sectoare de import şi 4 categorii de cerere finală - Consum privat, Stat, Investiţii, Exporturi) pentru fiecare din cele 66 de ţări şi 24 de ani. Dar ne vom axa pe România în principal şi pe ţările est-europene. Să descompunem importurile pentru România.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>importuri <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country<span class="sc">==</span><span class="st">"Romania"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">group_by</span>(year, component) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">summarise</span>(<span class="at">valoare=</span><span class="fu">sum</span>(valoare)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>valoare, <span class="at">fill=</span>component)) <span class="sc">+</span> </span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">scale_fill_tableau</span>() <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Importurile după sursa de cerere finală"</span>, <span class="at">subtitle=</span><span class="st">"România"</span>, </span>
+<span id="cb2-7"><a href="#cb2-7"></a>       <span class="at">caption=</span><span class="st">"Sursa: calcule pe OECD ICIO, 2021"</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span>scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">big.mark =</span> <span class="st">","</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="importurile-romanesti_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm că majoritatea importurilor sunt determinate de consumul gospodăriilor private, o parte de investiţii şi o parte de exporturi. Statul, prea puţin. Trebuie să facem o menţiune aici şi să spunem că acestea nu sunt importuri cerute în mod direct de fiecare din categoriile respective, ci aceste categorii, prin consumul lor - ele pot cumpăra pur domestic, determină producţie pe lanţuri de valoare care vor necesita şi importuri. Acest lucru calculăm aici. Toate, cu excepţia exporturile, au şi consum din import în mod direct, fără să mai treacă prin lanţurile autohtone ca materie de procesat, iar în cazul gospodăriilor procentul este cam jumătate - jumătate din importurile totale generate sunt directe. Restul indirecte - adică trec prin lanţuri de procesare autohtone înainte de a fi vândute. Să vedem acum, sub formă de tabel, importurile pe sectoare după cererea finală. Am ales top 10 sectoare cu cele mai mari variaţii de la o perioadă la alta (cu Marea Criză ca punct de reper).</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>importuri <span class="sc">%&gt;%</span> <span class="fu">filter</span>(country<span class="sc">==</span><span class="st">"Romania"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">filter</span>(year<span class="sc">!=</span><span class="dv">2008</span>) <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">mutate</span>(<span class="at">total=</span><span class="fu">sum</span>(valoare)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">group_by</span>(sectoare, component,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>           <span class="at">year=</span><span class="fu">if_else</span>(year<span class="sc">&lt;</span><span class="dv">2008</span>, <span class="st">'1995-2007'</span>, <span class="st">'2009-2018'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">summarise</span>(<span class="at">valoare=</span><span class="dv">100</span><span class="sc">*</span><span class="fu">mean</span>(valoare)<span class="sc">/</span><span class="fu">mean</span>(total)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="fu">spread</span>(year, valoare) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="fu">mutate</span>(<span class="at">delta=</span><span class="st">`</span><span class="at">2009-2018</span><span class="st">`</span><span class="sc">-</span><span class="st">`</span><span class="at">1995-2007</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="fu">group_by</span>(component) <span class="sc">%&gt;%</span> <span class="fu">slice_max</span>(<span class="fu">abs</span>(delta), <span class="at">n=</span><span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(delta)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>  gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">%&gt;%</span> <span class="fu">gt_theme_538</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-12"><a href="#cb3-12"></a>    <span class="fu">opt_table_font</span>(<span class="at">font=</span><span class="st">"Roboto"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>    <span class="fu">tab_style</span>(<span class="at">style=</span><span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"#EEA100"</span>), </span>
+<span id="cb3-14"><a href="#cb3-14"></a>              <span class="at">locations =</span> <span class="fu">cells_column_labels</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="fu">fmt_percent</span>(<span class="at">columns=</span><span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">scale_values =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-16"><a href="#cb3-16"></a>    <span class="fu">tab_header</span>(<span class="at">title=</span><span class="st">"Procent importuri din total generate"</span>, </span>
+<span id="cb3-17"><a href="#cb3-17"></a>               <span class="at">subtitle=</span><span class="st">"După categorii de cerere finală"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-18"><a href="#cb3-18"></a>    <span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>), </span>
+<span id="cb3-19"><a href="#cb3-19"></a>              <span class="fu">cells_title</span>(<span class="at">groups=</span><span class="st">'title'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-20"><a href="#cb3-20"></a>    gt<span class="sc">::</span><span class="fu">opt_row_striping</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb3-21"><a href="#cb3-21"></a>    gt<span class="sc">::</span><span class="fu">tab_style</span>(<span class="fu">cell_fill</span>(<span class="at">color=</span><span class="st">"grey90"</span>), <span class="fu">cells_row_groups</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>    <span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">'bold'</span>), <span class="fu">cells_title</span>(<span class="at">groups=</span><span class="st">'title'</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>    <span class="fu">tab_style</span>(<span class="fu">cell_text</span>(<span class="at">weight=</span><span class="st">'bold'</span>), <span class="fu">cells_row_groups</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="arzxquzcev" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+#arzxquzcev table {
+  font-family: Roboto, Chivo, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#arzxquzcev thead, #arzxquzcev tbody, #arzxquzcev tfoot, #arzxquzcev tr, #arzxquzcev td, #arzxquzcev th {
+  border-style: none;
+}
+
+#arzxquzcev p {
+  margin: 0;
+  padding: 0;
+}
+
+#arzxquzcev .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 3px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#arzxquzcev .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#arzxquzcev .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#arzxquzcev .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#arzxquzcev .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#arzxquzcev .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#arzxquzcev .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#arzxquzcev .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#arzxquzcev .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#arzxquzcev .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#arzxquzcev .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  vertical-align: middle;
+}
+
+#arzxquzcev .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#arzxquzcev .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#arzxquzcev .gt_row {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#arzxquzcev .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 0px;
+  border-right-color: #FFFFFF;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#arzxquzcev .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#arzxquzcev .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_left {
+  text-align: left;
+}
+
+#arzxquzcev .gt_center {
+  text-align: center;
+}
+
+#arzxquzcev .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#arzxquzcev .gt_font_normal {
+  font-weight: normal;
+}
+
+#arzxquzcev .gt_font_bold {
+  font-weight: bold;
+}
+
+#arzxquzcev .gt_font_italic {
+  font-style: italic;
+}
+
+#arzxquzcev .gt_super {
+  font-size: 65%;
+}
+
+#arzxquzcev .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#arzxquzcev .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#arzxquzcev .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#arzxquzcev .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#arzxquzcev .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#arzxquzcev .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#arzxquzcev .gt_indent_5 {
+  text-indent: 25px;
+}
+
+tbody tr:last-child {
+  border-bottom: 2px solid #ffffff00;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_title gt_font_normal" style="font-weight: bold;">Procent importuri din total generate</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">După categorii de cerere finală</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="sectoare">sectoare</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="1995-2007">1995-2007</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="2009-2018">2009-2018</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="delta">delta</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Exporturi">Exporturi</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Exporturi  sectoare" class="gt_row gt_left">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.19%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.68%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">1.49%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Chemical and chemical products</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.89%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">2.02%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">1.13%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Rubber and plastics products</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.57%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.23%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.67%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">1.66%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">2.27%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.61%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Professional, scientific and technical activities</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.20%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">0.79%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.60%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Basic metals</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.94%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">1.50%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.56%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">IT and other information services</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.10%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">0.63%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.54%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Computer, electronic and optical equipment</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.58%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">1.11%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.52%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Electrical equipment</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.66%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.15%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.50%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">1.73%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">0.86%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">−0.87%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Gospodării">Gospodării</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Gospodării  sectoare" class="gt_row gt_left">Food products, beverages and tobacco</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">3.30%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">4.68%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">1.38%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Agriculture, hunting, forestry</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">1.21%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.36%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">1.15%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">IT and other information services</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">0.23%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">0.98%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.75%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">2.07%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.73%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">0.65%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Coke and refined petroleum products</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">1.26%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">1.80%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.55%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Professional, scientific and technical activities</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">0.66%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">1.15%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">0.49%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Manufacturing nec; repair and installation of machinery and equipment</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">0.67%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">1.12%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.45%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Land transport and transport via pipelines</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">2.69%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">1.65%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">−1.04%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Mining and quarrying, energy producing products</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">3.92%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">2.20%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">−1.72%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">5.45%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.77%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">−2.68%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Investiţii">Investiţii</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Investiţii  sectoare" class="gt_row gt_left">Machinery and equipment, nec</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">5.15%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">6.00%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">0.85%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">IT and other information services</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.72%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">1.02%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">0.29%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Other non-metallic mineral products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">0.55%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">0.80%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">0.25%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">2.71%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">2.50%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.22%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Fabricated metal products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">1.00%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">0.77%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.23%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Mining and quarrying, non-energy producing products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.47%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">0.22%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.24%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Electrical equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">1.32%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">1.05%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.28%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Other transport equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.80%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.59%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">3.52%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">2.77%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.75%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Computer, electronic and optical equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">3.62%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">2.17%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−1.45%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Stat">Stat</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Stat  sectoare" class="gt_row gt_left">Pharmaceuticals, medicinal chemical and botanical products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.58%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">1.07%</td>
+<td headers="Stat  delta" class="gt_row gt_right">0.49%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">IT and other information services</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.06%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">0.15%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Computer, electronic and optical equipment</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.37%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.24%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.13%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Air transport</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.04%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.17%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Paper products and printing</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.30%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.12%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.18%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Chemical and chemical products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.63%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.43%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.20%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.97%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.74%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.23%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Land transport and transport via pipelines</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.85%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.43%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.42%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Mining and quarrying, energy producing products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.65%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.20%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.46%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.83%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.24%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.59%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Aparent ne-am integrat mai bine în lanţurile de producţie auto (mai mult cu Germania) şi le-am părăsit pe cele de materii prime şi textile. La gospodării se vede o creştere a importurilor alimentare. Statul cauzează de două ori mai multe importuri de medicamente decât înainte de Criză.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>importuri <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">group_by</span>(year, component, country) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">summarise</span>(<span class="at">valoare=</span><span class="fu">sum</span>(valoare)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>valoare, <span class="at">fill=</span>component)) <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">scale_fill_tableau</span>() <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Importurile după sursa de cerere finală"</span>, </span>
+<span id="cb4-7"><a href="#cb4-7"></a>       <span class="at">caption=</span><span class="st">"Sursa: calcule pe OECD ICIO, 2021"</span>) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>country, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">'free'</span>) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span>scales<span class="sc">::</span><span class="fu">number_format</span>(<span class="at">big.mark =</span> <span class="st">","</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="importurile-romanesti_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Să vedem şi contribuţia relativă la creştere sumarizată în două perioade - înainte şi după criză.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>importuri <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year, component, country) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">summarise</span>(<span class="at">total=</span><span class="fu">sum</span>(valoare)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">spread</span>(component, total) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="fu">mutate</span>(<span class="at">total=</span>Exporturi<span class="sc">+</span>Investiţii<span class="sc">+</span>Gospodării<span class="sc">+</span>Stat) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(Exporturi<span class="sc">:</span>total, <span class="sc">~</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">diff</span>(.)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="fu">group_by</span>(country, <span class="at">year=</span><span class="fu">if_else</span>(year<span class="sc">&lt;</span><span class="dv">2008</span>, <span class="st">"1995-2007"</span>, <span class="st">"2008-2018"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(Exporturi<span class="sc">:</span>Stat, <span class="sc">~</span><span class="dv">100</span><span class="sc">*</span><span class="fu">mean</span>(.)<span class="sc">/</span><span class="fu">mean</span>(total))) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-10"><a href="#cb5-10"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="#cb5-11"></a>  <span class="fu">gather</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">key=</span><span class="st">'component'</span>, <span class="at">value=</span><span class="st">'valoare'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-12"><a href="#cb5-12"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>valoare, <span class="at">fill=</span>component)) <span class="sc">+</span> </span>
+<span id="cb5-13"><a href="#cb5-13"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span>country, <span class="at">ncol=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">'free'</span>) <span class="sc">+</span> </span>
+<span id="cb5-14"><a href="#cb5-14"></a>  <span class="fu">scale_fill_tableau</span>() <span class="sc">+</span> </span>
+<span id="cb5-15"><a href="#cb5-15"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Contribuţia relativă la creştere a importurilor"</span>, </span>
+<span id="cb5-16"><a href="#cb5-16"></a>       <span class="at">subtitle=</span><span class="st">"1995-2007 vs 2008-2018"</span>, <span class="at">x=</span><span class="cn">NULL</span>, <span class="at">y=</span><span class="cn">NULL</span>, </span>
+<span id="cb5-17"><a href="#cb5-17"></a>       <span class="at">caption=</span><span class="st">'Sursa: OECD ICIO, 2021'</span>) <span class="sc">+</span> </span>
+<span id="cb5-18"><a href="#cb5-18"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span>scales<span class="sc">::</span><span class="fu">percent_format</span>(<span class="at">scale=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="importurile-romanesti_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm că peste tot ponderea exporturilor în rata de creştere a importurilor a crescut. Lumea devine din ce în ce mai interconectată economic.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<div>
+
+<hr>
+
+<h5> Abonare </h5>
+<form method="post" action="https://blogtrottr.com">
+  <p>Vă place acest blog ? Primiți notificări aici:</p>
+  <input type="text" name="btr_email">
+  <input type="hidden" name="btr_url" value="https://petrebuciu.netlify.app/index.xml">
+  <input type="hidden" name="schedule_type" value="0">
+  <input type="submit" value="Subscribe">
+  <br></form>
+<br>
+
+<h5> Susţineţi financiar blogul cu o mică donaţie </h5>
+
+ <a href="https://www.buymeacoffee.com/petrebuciu"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee !&amp;emoji=&amp;slug=petrebuciu&amp;button_colour=EEA100&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff"></a>
+
+<br>
+<br>
+<h5> Share </h5>
+
+<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-hashtags="#rstats" data-show-count="false">Tweet</a><script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+<div>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<script src="https://utteranc.es/client.js" repo="buciupetre2020/blogComments" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+</div> <!-- /content -->
+
+
+
+</div></div></body></html>

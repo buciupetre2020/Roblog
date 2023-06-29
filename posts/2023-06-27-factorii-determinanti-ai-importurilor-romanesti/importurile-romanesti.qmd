@@ -1,0 +1,164 @@
+---
+title: "Factorii determinaţi ai importurilor româneşti"
+description: |
+  O analiză de tip input-output a importurilor din România
+author:
+  - name: Petre Buciu
+    url: {}
+knitr: 
+  opts_chunk:
+    fig.align: center
+date: 06-27-2023
+image: preview.png
+number-sections: true
+categories:
+  - "input-output"
+---
+
+În acest articol folosi tabele de tip `input-output` pentru a determina cauza importurilor româneşti. Aceste tabele sunt puse la dispoziţie de institutele naţionale de statistică ale statelor, dar există şi tabele care înregistrează tranzacţiile între sectoare din diferite ţări, mult mai detaliate şi interesante decât cele naţionale. Aşa sunt cele puse la dispoziţia publicului de către OECD sau WIOD. Pe coloane sunt trecute industriile care cumpără, pe linii sunt industriile de la care se cumpără (care vând). Transformăm aceste tabele de tranzacţii monetare în coeficienţi, matrici şi aflăm lucruri neaşteptate despre economie. Voi avea un post sau mai multe dedicate doar teoriei modelelor input-output, dar pentru moment voi expune câteva din fundamente aici. Din păcate sunt greu de înţeles fără un background elementar în algebră liniară.
+
+## Puţină teorie
+
+Vom calcula matricea producţiei sau tehnologiei, $\textbf{A}$, folosind următoarea formulă matriceală:
+
+$$
+\textbf{A} = \textbf{Z}\textbf{x}^{-1}
+$$
+
+Unde $\textbf{Z}$ este matricea tranzacţiilor de care am vorbit mai sus, iar $\textbf{x}$ este matricea diagonală care are în intrările sale (diagonale, evident) inversul producţiei totale pe fiecare sector. Practic împărţim coloanele producţia totală ca să avem nişte coeficienţi (subunitari). Aceasta este matricea de bază inter-industrii, de producţie sau tehnologică (există diferite denumiri).
+
+Acum vom calcula ceva derivat din această matrice, anume matricea inversă Leontief, $(\textbf{I}-\textbf{A})^{-1}$ care este fundamentală în aceste analize. Premultiplicând această matrice cu $\textbf{f}$ , o altă matrice sau vector, după caz, cu cererea finală, obţinem cât trebuie să producă fiecare sector în totalitate ca să satisfacă această cerere finală dar şi consumul intermediar al industriilor. Matricea inversă Leontief poate fi scrisă ca serie infinită de matrici, aratând astfel că există mai multe runde (infinite teoretic) de producţie. Practic orice cantitate de cerere finală pune în funcţiune mai multe runde de producţie succesive.
+
+$$
+(\textbf{I}-\textbf{A})^{-1} = \textbf{I} + \textbf{A} + \textbf{A}^2 + …
+$$
+
+Putem calcula conţinutul de importuri din exporturi, de exemplu (un simplu exemplu de cerere finală) cu următoarea formulă.
+
+$$
+r = \frac{\textbf{s}^T\textbf{M}(\textbf{I}-\textbf{A})^{-1}\textbf{e}}{\textbf{s}^T\textbf{e}}
+$$
+
+Unde $\textbf{s}^T$ este vectorul sumă, $\textbf{M}$ matricea coeficienţilor de import $\textbf{e}$ matricea de exporturi sau vectorul exporturi dacă le adunăm la nivel de ţară. Putem să nu folosim vectorul sumă şi să avem importuri dezagregate pe surse de cerere finală sau exporturi. De exemplu putem răspunde unor întrebări de genul: cu cât cresc importurile de petrol din Rusia în România pentru a satisface un dolar de producţie auto exportată în Germania. La acest nivel se poate merge, dar va fi foarte greu să-ţi prezinţi rezultatele neavând decât matrici de valori. Mai sunt posibile şi multe alte calcule în acest cadru teoretic dar în acest articol vom analiza importurile după cauzele lor corespunzătoare din cererea finală ca să vedem cât e fiecare categorie responsabilă de aceste importuri.
+
+## Analize exploratorii
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(gt)
+library(gtExtras)
+theme_set(hrbrthemes::theme_ipsum_tw(strip_text_size = 14, 
+                                     strip_text_family = "Roboto",
+                                     strip_text_face = "italic",
+                                     axis_title_size = 14,
+                                     axis_text_size = 12,
+                                     base_family = "Roboto",
+                                     plot_title_family = "Roboto",
+                                     subtitle_family = "Roboto",
+                                     caption_family = "Roboto", 
+                                     caption_size = 10,
+                                     plot_title_size = 16,
+                                     subtitle_size = 12) +
+  theme(legend.text = element_text(size=10), 
+        legend.title = element_text(size=12),
+        legend.key.size = unit(0.6, "cm")))  #setam tema graficelor 
+
+importuri <- read_csv(here::here("data", "post-12", "eastern.csv")) %>%
+             mutate(country=countrycode::countrycode(country, 
+                                                     origin='iso3c', 
+                                                     destination='country.name'))
+
+```
+
+Vom folosi tabelele de la OECD care acoperă perioada 1995-2018 şi vom descompune variaţiile anuale în importuri după cauzele care le generează. Am calculat matrici cu aceste importuri de dimensiuni 45 x 4 (45 de sectoare de import şi 4 categorii de cerere finală - Consum privat, Stat, Investiţii, Exporturi) pentru fiecare din cele 66 de ţări şi 24 de ani. Dar ne vom axa pe România în principal şi pe ţările est-europene. Să descompunem importurile pentru România.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+#| fig-dpi: 200
+
+importuri %>% filter(country=="Romania") %>% 
+  group_by(year, component) %>%
+  summarise(valoare=sum(valoare)) %>% ungroup() %>%
+  ggplot(aes(x=year, y=valoare, fill=component)) + 
+  geom_col() + scale_fill_tableau() +
+  labs(title="Importurile după sursa de cerere finală", subtitle="România", 
+       caption="Sursa: calcule pe OECD ICIO, 2021") +
+  scale_y_continuous(labels=scales::number_format(big.mark = ","))
+
+```
+
+Observăm că majoritatea importurilor sunt determinate de consumul gospodăriilor private, o parte de investiţii şi o parte de exporturi. Statul, prea puţin. Trebuie să facem o menţiune aici şi să spunem că acestea nu sunt importuri cerute în mod direct de fiecare din categoriile respective, ci aceste categorii, prin consumul lor - ele pot cumpăra pur domestic, determină producţie pe lanţuri de valoare care vor necesita şi importuri. Acest lucru calculăm aici. Toate, cu excepţia exporturile, au şi consum din import în mod direct, fără să mai treacă prin lanţurile autohtone ca materie de procesat, iar în cazul gospodăriilor procentul este cam jumătate - jumătate din importurile totale generate sunt directe. Restul indirecte - adică trec prin lanţuri de procesare autohtone înainte de a fi vândute. Să vedem acum, sub formă de tabel, importurile pe sectoare după cererea finală. Am ales top 10 sectoare cu cele mai mari variaţii de la o perioadă la alta (cu Marea Criză ca punct de reper).
+
+```{r}
+importuri %>% filter(country=="Romania") %>% 
+  filter(year!=2008) %>% group_by(year) %>% 
+  mutate(total=sum(valoare)) %>% ungroup() %>%
+  group_by(sectoare, component,
+           year=if_else(year<2008, '1995-2007', '2009-2018')) %>% 
+  summarise(valoare=100*mean(valoare)/mean(total)) %>% ungroup() %>% 
+  spread(year, valoare) %>% 
+  mutate(delta=`2009-2018`-`1995-2007`) %>% 
+  group_by(component) %>% slice_max(abs(delta), n=10) %>% 
+  arrange(desc(delta)) %>%
+  gt::gt() %>% gt_theme_538() %>% 
+    opt_table_font(font="Roboto") %>%
+    tab_style(style=cell_fill(color="#EEA100"), 
+              locations = cells_column_labels()) %>% 
+    fmt_percent(columns=3:5, scale_values = FALSE) %>% 
+    tab_header(title="Procent importuri din total generate", 
+               subtitle="După categorii de cerere finală") %>% 
+    tab_style(cell_text(weight = "bold"), 
+              cells_title(groups='title')) %>% 
+    gt::opt_row_striping() %>% 
+    gt::tab_style(cell_fill(color="grey90"), cells_row_groups()) %>%
+    tab_style(cell_text(weight = 'bold'), cells_title(groups='title')) %>%
+    tab_style(cell_text(weight='bold'), cells_row_groups())
+```
+
+Aparent ne-am integrat mai bine în lanţurile de producţie auto (mai mult cu Germania) şi le-am părăsit pe cele de materii prime şi textile. La gospodării se vede o creştere a importurilor alimentare. Statul cauzează de două ori mai multe importuri de medicamente decât înainte de Criză.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+#| fig-dpi: 200
+
+importuri %>% 
+  group_by(year, component, country) %>%
+  summarise(valoare=sum(valoare)) %>% ungroup() %>%
+  ggplot(aes(x=year, y=valoare, fill=component)) + 
+  geom_col() + scale_fill_tableau() +
+  labs(title="Importurile după sursa de cerere finală", 
+       caption="Sursa: calcule pe OECD ICIO, 2021") +
+  facet_wrap(~country, ncol=2, scales='free') +
+  scale_y_continuous(labels=scales::number_format(big.mark = ","))
+```
+
+Să vedem şi contribuţia relativă la creştere sumarizată în două perioade - înainte şi după criză.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+#| fig-dpi: 200
+importuri %>% group_by(year, component, country) %>% 
+  summarise(total=sum(valoare)) %>% ungroup() %>% 
+  spread(component, total) %>% 
+  mutate(total=Exporturi+Investiţii+Gospodării+Stat) %>% 
+  group_by(country) %>% 
+  mutate(across(Exporturi:total, ~c(0, diff(.)))) %>% 
+  ungroup() %>% 
+  group_by(country, year=if_else(year<2008, "1995-2007", "2008-2018")) %>%
+  summarise(across(Exporturi:Stat, ~100*mean(.)/mean(total))) %>% 
+  drop_na() %>% ungroup() %>% 
+  gather(3:6, key='component', value='valoare') %>% 
+  ggplot(aes(x=year, y=valoare, fill=component)) + 
+  geom_col() + facet_wrap(~country, ncol=2, scales='free') + 
+  scale_fill_tableau() + 
+  labs(title="Contribuţia relativă la creştere a importurilor", 
+       subtitle="1995-2007 vs 2008-2018", x=NULL, y=NULL, 
+       caption='Sursa: OECD ICIO, 2021') + 
+  scale_y_continuous(labels=scales::percent_format(scale=1))
+```
+
+Observăm că peste tot ponderea exporturilor în rata de creştere a importurilor a crescut. Lumea devine din ce în ce mai interconectată economic.

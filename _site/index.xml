@@ -10,7 +10,1516 @@
 <atom:link href="https://petrebuciu.netlify.app/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.361</generator>
-<lastBuildDate>Fri, 16 Jun 2023 21:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 26 Jun 2023 21:00:00 GMT</lastBuildDate>
+<item>
+  <title>Factorii determinaţi ai importurilor româneşti</title>
+  <dc:creator>Petre Buciu</dc:creator>
+  <link>https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<p>În acest articol folosi tabele de tip <code>input-output</code> pentru a determina cauza importurilor româneşti. Aceste tabele sunt puse la dispoziţie de institutele naţionale de statistică ale statelor, dar există şi tabele care înregistrează tranzacţiile între sectoare din diferite ţări, mult mai detaliate şi interesante decât cele naţionale. Aşa sunt cele puse la dispoziţia publicului de către OECD sau WIOD. Pe coloane sunt trecute industriile care cumpără, pe linii sunt industriile de la care se cumpără (care vând). Transformăm aceste tabele de tranzacţii monetare în coeficienţi, matrici şi aflăm lucruri neaşteptate despre economie. Voi avea un post sau mai multe dedicate doar teoriei modelelor input-output, dar pentru moment voi expune câteva din fundamente aici. Din păcate sunt greu de înţeles fără un background elementar în algebră liniară.</p>
+<section id="puţină-teorie" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="puţină-teorie"><span class="header-section-number">1</span> Puţină teorie</h2>
+<p>Vom calcula matricea producţiei sau tehnologiei, <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7BA%7D">, folosind următoarea formulă matriceală:</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A%5Ctextbf%7BA%7D%20=%20%5Ctextbf%7BZ%7D%5Ctextbf%7Bx%7D%5E%7B-1%7D%0A"></p>
+<p>Unde <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7BZ%7D"> este matricea tranzacţiilor de care am vorbit mai sus, iar <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7Bx%7D"> este matricea diagonală care are în intrările sale (diagonale, evident) inversul producţiei totale pe fiecare sector. Practic împărţim coloanele producţia totală ca să avem nişte coeficienţi (subunitari). Aceasta este matricea de bază inter-industrii, de producţie sau tehnologică (există diferite denumiri).</p>
+<p>Acum vom calcula ceva derivat din această matrice, anume matricea inversă Leontief, <img src="https://latex.codecogs.com/png.latex?(%5Ctextbf%7BI%7D-%5Ctextbf%7BA%7D)%5E%7B-1%7D"> care este fundamentală în aceste analize. Premultiplicând această matrice cu <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7Bf%7D"> , o altă matrice sau vector, după caz, cu cererea finală, obţinem cât trebuie să producă fiecare sector în totalitate ca să satisfacă această cerere finală dar şi consumul intermediar al industriilor. Matricea inversă Leontief poate fi scrisă ca serie infinită de matrici, aratând astfel că există mai multe runde (infinite teoretic) de producţie. Practic orice cantitate de cerere finală pune în funcţiune mai multe runde de producţie succesive.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0A(%5Ctextbf%7BI%7D-%5Ctextbf%7BA%7D)%5E%7B-1%7D%20=%20%5Ctextbf%7BI%7D%20+%20%5Ctextbf%7BA%7D%20+%20%5Ctextbf%7BA%7D%5E2%20+%20%E2%80%A6%0A"></p>
+<p>Putem calcula conţinutul de importuri din exporturi, de exemplu (un simplu exemplu de cerere finală) cu următoarea formulă.</p>
+<p><img src="https://latex.codecogs.com/png.latex?%0Ar%20=%20%5Cfrac%7B%5Ctextbf%7Bs%7D%5ET%5Ctextbf%7BM%7D(%5Ctextbf%7BI%7D-%5Ctextbf%7BA%7D)%5E%7B-1%7D%5Ctextbf%7Be%7D%7D%7B%5Ctextbf%7Bs%7D%5ET%5Ctextbf%7Be%7D%7D%0A"></p>
+<p>Unde <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7Bs%7D%5ET"> este vectorul sumă, <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7BM%7D"> matricea coeficienţilor de import <img src="https://latex.codecogs.com/png.latex?%5Ctextbf%7Be%7D"> matricea de exporturi sau vectorul exporturi dacă le adunăm la nivel de ţară. Putem să nu folosim vectorul sumă şi să avem importuri dezagregate pe surse de cerere finală sau exporturi. De exemplu putem răspunde unor întrebări de genul: cu cât cresc importurile de petrol din Rusia în România pentru a satisface un dolar de producţie auto exportată în Germania. La acest nivel se poate merge, dar va fi foarte greu să-ţi prezinţi rezultatele neavând decât matrici de valori. Mai sunt posibile şi multe alte calcule în acest cadru teoretic dar în acest articol vom analiza importurile după cauzele lor corespunzătoare din cererea finală ca să vedem cât e fiecare categorie responsabilă de aceste importuri.</p>
+</section>
+<section id="analize-exploratorii" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="analize-exploratorii"><span class="header-section-number">2</span> Analize exploratorii</h2>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggthemes)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gt)</span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(gtExtras)</span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_set</span>(hrbrthemes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_ipsum_tw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>, </span>
+<span id="cb1-6">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-7">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip_text_face =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"italic"</span>,</span>
+<span id="cb1-8">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>,</span>
+<span id="cb1-9">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_text_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>,</span>
+<span id="cb1-10">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-11">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-12">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>,</span>
+<span id="cb1-13">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>, </span>
+<span id="cb1-14">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb1-15">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot_title_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>,</span>
+<span id="cb1-16">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb1-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>), </span>
+<span id="cb1-18">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>),</span>
+<span id="cb1-19">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.key.size =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unit</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.6</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cm"</span>)))  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#setam tema graficelor </span></span>
+<span id="cb1-20"></span>
+<span id="cb1-21">importuri <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(here<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">here</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"post-12"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"eastern.csv"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-22">             <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">country=</span>countrycode<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">countrycode</span>(country, </span>
+<span id="cb1-23">                                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">origin=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'iso3c'</span>, </span>
+<span id="cb1-24">                                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destination=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'country.name'</span>))</span></code></pre></div>
+</details>
+</div>
+<p>Vom folosi tabelele de la OECD care acoperă perioada 1995-2018 şi vom descompune variaţiile anuale în importuri după cauzele care le generează. Am calculat matrici cu aceste importuri de dimensiuni 45 x 4 (45 de sectoare de import şi 4 categorii de cerere finală - Consum privat, Stat, Investiţii, Exporturi) pentru fiecare din cele 66 de ţări şi 24 de ani. Dar ne vom axa pe România în principal şi pe ţările est-europene. Să descompunem importurile pentru România.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1">importuri <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(country<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Romania"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(year, component) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">valoare=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(valoare)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>valoare, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>component)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Importurile după sursa de cerere finală"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"România"</span>, </span>
+<span id="cb2-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sursa: calcule pe OECD ICIO, 2021"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels=</span>scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">number_format</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">big.mark =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm că majoritatea importurilor sunt determinate de consumul gospodăriilor private, o parte de investiţii şi o parte de exporturi. Statul, prea puţin. Trebuie să facem o menţiune aici şi să spunem că acestea nu sunt importuri cerute în mod direct de fiecare din categoriile respective, ci aceste categorii, prin consumul lor - ele pot cumpăra pur domestic, determină producţie pe lanţuri de valoare care vor necesita şi importuri. Acest lucru calculăm aici. Toate, cu excepţia exporturile, au şi consum din import în mod direct, fără să mai treacă prin lanţurile autohtone ca materie de procesat, iar în cazul gospodăriilor procentul este cam jumătate - jumătate din importurile totale generate sunt directe. Restul indirecte - adică trec prin lanţuri de procesare autohtone înainte de a fi vândute. Să vedem acum, sub formă de tabel, importurile pe sectoare după cererea finală. Am ales top 10 sectoare cu cele mai mari variaţii de la o perioadă la alta (cu Marea Criză ca punct de reper).</p>
+<div class="cell" data-layout-align="center">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1">importuri <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(country<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Romania"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2008</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(year) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">total=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(valoare)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(sectoare, component,</span>
+<span id="cb3-5">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">year=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">if_else</span>(year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2008</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'1995-2007'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'2009-2018'</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">valoare=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(valoare)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(total)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">spread</span>(year, valoare) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">delta=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2009-2018</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">1995-2007</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(component) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">abs</span>(delta), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(delta)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-11">  gt<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gt</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gt_theme_538</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt_table_font</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Roboto"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_style</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">style=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cell_fill</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#EEA100"</span>), </span>
+<span id="cb3-14">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">locations =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cells_column_labels</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fmt_percent</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">columns=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scale_values =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-16">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_header</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Procent importuri din total generate"</span>, </span>
+<span id="cb3-17">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"După categorii de cerere finală"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_style</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cell_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">weight =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bold"</span>), </span>
+<span id="cb3-19">              <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cells_title</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">groups=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'title'</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-20">    gt<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">opt_row_striping</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb3-21">    gt<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_style</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cell_fill</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey90"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cells_row_groups</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-22">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_style</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cell_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">weight =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bold'</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cells_title</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">groups=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'title'</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-23">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tab_style</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cell_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">weight=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bold'</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cells_row_groups</span>())</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+
+<div id="arzxquzcev" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>@import url("https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+#arzxquzcev table {
+  font-family: Roboto, Chivo, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#arzxquzcev thead, #arzxquzcev tbody, #arzxquzcev tfoot, #arzxquzcev tr, #arzxquzcev td, #arzxquzcev th {
+  border-style: none;
+}
+
+#arzxquzcev p {
+  margin: 0;
+  padding: 0;
+}
+
+#arzxquzcev .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: 300;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: none;
+  border-top-width: 3px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#arzxquzcev .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#arzxquzcev .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#arzxquzcev .gt_heading {
+  background-color: #FFFFFF;
+  text-align: left;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_bottom_border {
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_col_headings {
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#arzxquzcev .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: normal;
+  text-transform: uppercase;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#arzxquzcev .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#arzxquzcev .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#arzxquzcev .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #000000;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#arzxquzcev .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#arzxquzcev .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#arzxquzcev .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  border-top-style: none;
+  border-top-width: 2px;
+  border-top-color: #000000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #FFFFFF;
+  vertical-align: middle;
+}
+
+#arzxquzcev .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#arzxquzcev .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#arzxquzcev .gt_row {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#arzxquzcev .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 80%;
+  font-weight: bolder;
+  text-transform: uppercase;
+  border-right-style: solid;
+  border-right-width: 0px;
+  border-right-color: #FFFFFF;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#arzxquzcev .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#arzxquzcev .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#arzxquzcev .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#arzxquzcev .gt_sourcenote {
+  font-size: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#arzxquzcev .gt_left {
+  text-align: left;
+}
+
+#arzxquzcev .gt_center {
+  text-align: center;
+}
+
+#arzxquzcev .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#arzxquzcev .gt_font_normal {
+  font-weight: normal;
+}
+
+#arzxquzcev .gt_font_bold {
+  font-weight: bold;
+}
+
+#arzxquzcev .gt_font_italic {
+  font-style: italic;
+}
+
+#arzxquzcev .gt_super {
+  font-size: 65%;
+}
+
+#arzxquzcev .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#arzxquzcev .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#arzxquzcev .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#arzxquzcev .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#arzxquzcev .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#arzxquzcev .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#arzxquzcev .gt_indent_5 {
+  text-indent: 25px;
+}
+
+tbody tr:last-child {
+  border-bottom: 2px solid #ffffff00;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_title gt_font_normal" style="font-weight: bold;">Procent importuri din total generate</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style="">După categorii de cerere finală</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="sectoare">sectoare</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="1995-2007">1995-2007</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="2009-2018">2009-2018</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="border-top-width: 0px; border-top-style: solid; border-top-color: black; background-color: #EEA100;" scope="col" id="delta">delta</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Exporturi">Exporturi</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Exporturi  sectoare" class="gt_row gt_left">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.19%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.68%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">1.49%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Chemical and chemical products</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.89%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">2.02%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">1.13%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Rubber and plastics products</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.57%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.23%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.67%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">1.66%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">2.27%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.61%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Professional, scientific and technical activities</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.20%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">0.79%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.60%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Basic metals</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.94%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">1.50%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.56%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">IT and other information services</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.10%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">0.63%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.54%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Computer, electronic and optical equipment</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">0.58%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">1.11%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">0.52%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left">Electrical equipment</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right">0.66%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right">1.15%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right">0.50%</td></tr>
+    <tr><td headers="Exporturi  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Exporturi  1995-2007" class="gt_row gt_right gt_striped">1.73%</td>
+<td headers="Exporturi  2009-2018" class="gt_row gt_right gt_striped">0.86%</td>
+<td headers="Exporturi  delta" class="gt_row gt_right gt_striped">−0.87%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Gospodării">Gospodării</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Gospodării  sectoare" class="gt_row gt_left">Food products, beverages and tobacco</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">3.30%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">4.68%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">1.38%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Agriculture, hunting, forestry</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">1.21%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.36%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">1.15%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">IT and other information services</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">0.23%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">0.98%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.75%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">2.07%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.73%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">0.65%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Coke and refined petroleum products</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">1.26%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">1.80%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.55%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Professional, scientific and technical activities</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">0.66%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">1.15%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">0.49%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Manufacturing nec; repair and installation of machinery and equipment</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">0.67%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">1.12%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">0.45%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Land transport and transport via pipelines</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">2.69%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">1.65%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">−1.04%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left">Mining and quarrying, energy producing products</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right">3.92%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right">2.20%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right">−1.72%</td></tr>
+    <tr><td headers="Gospodării  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Gospodării  1995-2007" class="gt_row gt_right gt_striped">5.45%</td>
+<td headers="Gospodării  2009-2018" class="gt_row gt_right gt_striped">2.77%</td>
+<td headers="Gospodării  delta" class="gt_row gt_right gt_striped">−2.68%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Investiţii">Investiţii</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Investiţii  sectoare" class="gt_row gt_left">Machinery and equipment, nec</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">5.15%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">6.00%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">0.85%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">IT and other information services</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.72%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">1.02%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">0.29%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Other non-metallic mineral products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">0.55%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">0.80%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">0.25%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">2.71%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">2.50%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.22%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Fabricated metal products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">1.00%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">0.77%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.23%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Mining and quarrying, non-energy producing products</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.47%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">0.22%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.24%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Electrical equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">1.32%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">1.05%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.28%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Other transport equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">0.80%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−0.59%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left">Motor vehicles, trailers and semi-trailers</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right">3.52%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right">2.77%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right">−0.75%</td></tr>
+    <tr><td headers="Investiţii  sectoare" class="gt_row gt_left gt_striped">Computer, electronic and optical equipment</td>
+<td headers="Investiţii  1995-2007" class="gt_row gt_right gt_striped">3.62%</td>
+<td headers="Investiţii  2009-2018" class="gt_row gt_right gt_striped">2.17%</td>
+<td headers="Investiţii  delta" class="gt_row gt_right gt_striped">−1.45%</td></tr>
+    <tr class="gt_group_heading_row">
+      <th colspan="4" class="gt_group_heading" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: black; background-color: #E5E5E5; font-weight: bold;" scope="colgroup" id="Stat">Stat</th>
+    </tr>
+    <tr class="gt_row_group_first"><td headers="Stat  sectoare" class="gt_row gt_left">Pharmaceuticals, medicinal chemical and botanical products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.58%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">1.07%</td>
+<td headers="Stat  delta" class="gt_row gt_right">0.49%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">IT and other information services</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.06%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">0.15%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Computer, electronic and optical equipment</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.37%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.24%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.13%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Air transport</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.21%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.04%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.17%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Paper products and printing</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.30%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.12%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.18%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Chemical and chemical products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.63%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.43%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.20%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Wholesale and retail trade; repair of motor vehicles</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.97%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.74%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.23%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Land transport and transport via pipelines</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.85%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.43%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.42%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left">Mining and quarrying, energy producing products</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right">0.65%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right">0.20%</td>
+<td headers="Stat  delta" class="gt_row gt_right">−0.46%</td></tr>
+    <tr><td headers="Stat  sectoare" class="gt_row gt_left gt_striped">Textiles, textile products, leather and footwear</td>
+<td headers="Stat  1995-2007" class="gt_row gt_right gt_striped">0.83%</td>
+<td headers="Stat  2009-2018" class="gt_row gt_right gt_striped">0.24%</td>
+<td headers="Stat  delta" class="gt_row gt_right gt_striped">−0.59%</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+<p>Aparent ne-am integrat mai bine în lanţurile de producţie auto (mai mult cu Germania) şi le-am părăsit pe cele de materii prime şi textile. La gospodării se vede o creştere a importurilor alimentare. Statul cauzează de două ori mai multe importuri de medicamente decât înainte de Criză.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1">importuri <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb4-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(year, component, country) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">valoare=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(valoare)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb4-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>valoare, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>component)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb4-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Importurile după sursa de cerere finală"</span>, </span>
+<span id="cb4-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sursa: calcule pe OECD ICIO, 2021"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>country, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scales=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'free'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels=</span>scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">number_format</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">big.mark =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Să vedem şi contribuţia relativă la creştere sumarizată în două perioade - înainte şi după criză.</p>
+<div class="cell" data-layout-align="center" data-fig.dpi="200">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1">importuri <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(year, component, country) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">total=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(valoare)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">spread</span>(component, total) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">total=</span>Exporturi<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>Investiţii<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>Gospodării<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span>Stat) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(country) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(Exporturi<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>total, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">diff</span>(.)))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(country, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">year=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">if_else</span>(year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2008</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1995-2007"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2008-2018"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb5-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarise</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">across</span>(Exporturi<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>Stat, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(.)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(total))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ungroup</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">gather</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">key=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'component'</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'valoare'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb5-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span>year, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span>valoare, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>component)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb5-13">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>country, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scales=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'free'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb5-14">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_tableau</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb5-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Contribuţia relativă la creştere a importurilor"</span>, </span>
+<span id="cb5-16">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"1995-2007 vs 2008-2018"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, </span>
+<span id="cb5-17">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sursa: OECD ICIO, 2021'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb5-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels=</span>scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">percent_format</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scale=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Observăm că peste tot ponderea exporturilor în rata de creştere a importurilor a crescut. Lumea devine din ce în ce mai interconectată economic.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>input-output</category>
+  <guid>https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti.html</guid>
+  <pubDate>Mon, 26 Jun 2023 21:00:00 GMT</pubDate>
+  <media:content url="https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/preview.png" medium="image" type="image/png"/>
+</item>
 <item>
   <title>Tiparele geografice ale mortalităţii infantile</title>
   <dc:creator>Petre Buciu</dc:creator>
