@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://petrebuciu.netlify.app/index.html</loc>
-    <lastmod>2023-06-29T13:55:03.998Z</lastmod>
+    <lastmod>2023-08-15T13:50:18.316Z</lastmod>
   </url>
   <url>
     <loc>https://petrebuciu.netlify.app/posts/2023-05-28-inegalitea-romniei-n-context-european/inegalitea-romniei-n-context-european.html</loc>
@@ -67,5 +67,9 @@
   <url>
     <loc>https://petrebuciu.netlify.app/posts/2023-06-27-factorii-determinanti-ai-importurilor-romanesti/importurile-romanesti.html</loc>
     <lastmod>2023-06-29T13:55:02.442Z</lastmod>
+  </url>
+  <url>
+    <loc>https://petrebuciu.netlify.app/posts/2023-08-15-despre-profitabilitatea-multinationalelor/profitabilitatea-multionationalelor.html</loc>
+    <lastmod>2023-08-15T13:50:16.736Z</lastmod>
   </url>
 </urlset>
